@@ -1,20 +1,24 @@
-import { FC } from 'react'
+import { useEffect, FC } from 'react'
+import { AxiosResponse } from 'axios'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { Card } from '@components/ui/card'
 import { Alert, AlertDescription } from '@components/ui/alert'
-import { Link } from 'react-router-dom'
 import { Controller, useForm, FieldErrors } from 'react-hook-form'
-
-interface RegisterForm {
-    firstName: string
-    lastName: string
-    username: string
-    password: string
-    confirmPassword: string
-}
-
+import { UserRegister } from '@interfaces/User'
+import { register } from 'api/auth'
+import { checkSession } from 'api/auth'
+import { User, AuthSession } from '@interfaces/User'
+import { setCredentials } from '@store-actions/authSlice'
+ 
 const Register: FC = () => {
+
+    const { user } = useSelector((state: { auth: AuthSession }) => state.auth)
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const { control, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
@@ -26,13 +30,26 @@ const Register: FC = () => {
         },
     })
 
-    const onSubmit = (data: RegisterForm): void => {
-        console.log(data)
+    const onSubmit = async (data: UserRegister): Promise<void> => {
+        try {
+            const resp = await register(data) as AxiosResponse
+            const token = resp.data.token as string
+            localStorage.setItem('token', token)
+            const user = (await checkSession({ token }) as AxiosResponse).data.user as User
+            dispatch(setCredentials({ user , token, error: null }))
+        } catch (error: any) {
+            console.log(error)
+        }
     }
 
-    const onSubmitError = (errors: FieldErrors<RegisterForm>): void => {
+    const onSubmitError = (errors: FieldErrors<UserRegister>): void => {
         console.log(errors)
     }
+
+    useEffect(() => {
+        if (user) 
+            navigate('/')
+    }, [user])
 
     return (
         <div className="min-h-screen flex items-start justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -106,7 +123,7 @@ const Register: FC = () => {
                                     message: 'Password must be less than 256 characters'
                                 },
                              }}
-                            render={({ field }) => <Input className='mb-4' {...field} placeholder='Password' />}
+                            render={({ field }) => <Input className='mb-4' {...field} placeholder='Password' type='password' />}
                         />
                         <Controller
                             name="confirmPassword"
@@ -119,7 +136,7 @@ const Register: FC = () => {
                                 },
                                 validate: (value: string) => value === watch('password') || 'Passwords do not match'
                              }}
-                            render={({ field }) => <Input className='mb-4' {...field} placeholder='Confirm Password' />}
+                            render={({ field }) => <Input className='mb-4' {...field} placeholder='Confirm Password' type='password' />}
                         />
                         {
                             Object.keys(errors).length > 0 && (

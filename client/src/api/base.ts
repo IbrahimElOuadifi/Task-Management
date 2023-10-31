@@ -12,8 +12,9 @@ const get = (path: string, params?: any, config?: AxiosRequestConfig) => new Pro
         const resp = await base.get(path, { params, ...config })
         return resolve(resp)
     } catch (error) {
-        console.error((error as AxiosError).message)
-        reject({ status: (error as AxiosError).status || 500, message: (error as AxiosError).message })
+        const respError = { status: (error as AxiosError).response?.status || (error as AxiosError).status, message: ((error as AxiosError).response?.data as { message: string }).message || (error as AxiosError).message }
+        console.error(respError)
+        reject(respError)
     }
 })
 
@@ -22,8 +23,9 @@ const post = (path: string, data?: any, config?: AxiosRequestConfig) => new Prom
         const resp = await base.post(path, data, config)
         return resolve(resp)
     } catch (error) {
-        console.error((error as AxiosError).message)
-        reject({ status: (error as AxiosError).status || 500, message: (error as AxiosError).message })
+        const respError = { status: (error as AxiosError).response?.status || (error as AxiosError).status, message: ((error as AxiosError).response?.data as { message: string }).message || (error as AxiosError).message }
+        console.error(respError)
+        reject(respError)
     }
 })
 
@@ -32,8 +34,9 @@ const put = (path: string, data?: any, config?: AxiosRequestConfig) => new Promi
         const resp = await base.put(path, data, config)
         return resolve(resp)
     } catch (error) {
-        console.error((error as AxiosError).message)
-        reject({ status: (error as AxiosError).status || 500, message: (error as AxiosError).message })
+        const respError = { status: (error as AxiosError).response?.status || (error as AxiosError).status, message: ((error as AxiosError).response?.data as { message: string }).message || (error as AxiosError).message }
+        console.error(respError)
+        reject(respError)
     }
 })
 
@@ -42,8 +45,9 @@ const del = (path: string, config?: AxiosRequestConfig) => new Promise<AxiosResp
         const resp = await base.delete(path, config)
         return resolve(resp)
     } catch (error) {
-        console.error((error as AxiosError).message)
-        reject({ status: (error as AxiosError).status || 500, message: (error as AxiosError).message })
+        const respError = { status: (error as AxiosError).response?.status || (error as AxiosError).status, message: ((error as AxiosError).response?.data as { message: string }).message || (error as AxiosError).message }
+        console.error(respError)
+        reject(respError)
     }
 })
 

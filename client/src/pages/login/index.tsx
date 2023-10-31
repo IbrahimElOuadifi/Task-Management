@@ -1,25 +1,22 @@
-import { FC } from 'react'
+import { useEffect, FC } from 'react'
+import { AxiosResponse } from 'axios'
+import { useNavigate, Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { Card } from '@components/ui/card'
 import { Alert, AlertDescription } from '@components/ui/alert'
-import { Link } from 'react-router-dom'
 import { Controller, useForm, FieldErrors } from 'react-hook-form'
-
-interface LoginForm {
-    username: string
-    password: string
-}
-
-const onSubmit = (data: LoginForm): void => {
-    console.log(data)
-}
-
-const onSubmitError = (errors: FieldErrors<LoginForm>): void => {
-    console.log(errors)
-}
-
+import { UserLogin, AuthSession, User } from '@interfaces/User'
+import { login, checkSession } from 'api/auth'
+import { setCredentials } from '@store-actions/authSlice'
+ 
 const Login: FC = () => {
+
+    const { user } = useSelector((state: { auth: AuthSession }) => state.auth)
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
@@ -27,6 +24,27 @@ const Login: FC = () => {
             password: '',
         },
     })
+
+    const onSubmit = async (data: UserLogin): Promise<void> => {
+        try {
+            const resp = await login(data) as AxiosResponse
+            const token = resp.data.token as string
+            localStorage.setItem('token', token)
+            const user = (await checkSession({ token }) as AxiosResponse).data.user as User
+            dispatch(setCredentials({ user, token, error: null }))
+        } catch (error: any) {
+            console.log(error)
+        }
+    }
+    
+    const onSubmitError = (errors: FieldErrors<UserLogin>): void => {
+        console.log(errors)
+    }
+
+    useEffect(() => {
+        if (user) 
+            navigate('/')
+    }, [user])
 
     return (
         <div className="min-h-screen flex items-start justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

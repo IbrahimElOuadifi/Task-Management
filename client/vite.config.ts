@@ -11,9 +11,11 @@ export default defineConfig({
       "@components": path.resolve(__dirname, "./src/components"),
       "@hooks": path.resolve(__dirname, "./src/hooks"),
       "@pages": path.resolve(__dirname, "./src/pages"),
-      "@api": path.resolve(__dirname, "./src/api"),
+      "api": path.resolve(__dirname, "./src/api"),
       "@assets": path.resolve(__dirname, "./src/assets"),
       "@interfaces": path.resolve(__dirname, "./src/interfaces"),
+      "@utils": path.resolve(__dirname, "./src/utils"),
+      "@store-actions": path.resolve(__dirname, "./src/redux"),
     },
   },
 })

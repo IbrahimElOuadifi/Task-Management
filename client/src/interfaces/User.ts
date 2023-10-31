@@ -20,3 +20,14 @@ export interface UserRegister {
     password: string
     confirmPassword: string
 }
+
+export interface SessionError {
+    status: number
+    message: string
+}
+
+export interface AuthSession {
+    user: User | null
+    token?: string | null
+    error: SessionError | null
+}
