@@ -1,4 +1,4 @@
-import { useEffect, FC } from 'react'
+import { useState, useEffect, FC } from 'react'
 import { AxiosResponse } from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
@@ -12,13 +12,18 @@ import { register } from 'api/auth'
 import { checkSession } from 'api/auth'
 import { User, AuthSession } from '@interfaces/User'
 import { setCredentials } from '@store-actions/authSlice'
+import { Spinner } from '@components/ui/spinner'
+import { useToast } from '@components/ui/use-toast'
  
 const Register: FC = () => {
 
     const { user } = useSelector((state: { auth: AuthSession }) => state.auth)
 
+    const [loading, setLoading] = useState<boolean>(false)
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { toast } = useToast()
 
     const { control, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
@@ -32,6 +37,7 @@ const Register: FC = () => {
 
     const onSubmit = async (data: UserRegister): Promise<void> => {
         try {
+            setLoading(true)
             const resp = await register(data) as AxiosResponse
             const token = resp.data.token as string
             localStorage.setItem('token', token)
@@ -39,6 +45,14 @@ const Register: FC = () => {
             dispatch(setCredentials({ user , token, error: null }))
         } catch (error: any) {
             console.log(error)
+            toast({
+                title: 'Error',
+                description: error.message,
+                duration: 2000,
+                variant: 'destructive'
+            })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -140,7 +154,7 @@ const Register: FC = () => {
                         />
                         {
                             Object.keys(errors).length > 0 && (
-                                <Alert className='mb-4'>
+                                <Alert variant="destructive" className='mb-4'>
                                     <AlertDescription>
                                         {
                                             errors.firstName?.message ||
@@ -153,7 +167,9 @@ const Register: FC = () => {
                                 </Alert>
                             )
                         }
-                        <Button type="submit" className='w-full' variant="default">Register</Button>
+                        <Button type="submit" className='w-full' variant="default">
+                            {loading ? <Spinner className='mr-2' /> : 'Register'}
+                        </Button>
                         <div className="text-center my-4">
                             already have an account? <Link to='/login' className="font-medium text-indigo-600 hover:text-indigo-500">Login</Link>
                         </div>

@@ -1,4 +1,4 @@
-import { useEffect, FC } from 'react'
+import { useState, useEffect, FC } from 'react'
 import { AxiosResponse } from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -10,13 +10,18 @@ import { Controller, useForm, FieldErrors } from 'react-hook-form'
 import { UserLogin, AuthSession, User } from '@interfaces/User'
 import { login, checkSession } from 'api/auth'
 import { setCredentials } from '@store-actions/authSlice'
+import { Spinner } from '@components/ui/spinner'
+import { useToast } from '@components/ui/use-toast'
  
 const Login: FC = () => {
 
     const { user } = useSelector((state: { auth: AuthSession }) => state.auth)
 
+    const [loading, setLoading] = useState<boolean>(false)
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { toast } = useToast()
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
@@ -27,6 +32,7 @@ const Login: FC = () => {
 
     const onSubmit = async (data: UserLogin): Promise<void> => {
         try {
+            setLoading(true)
             const resp = await login(data) as AxiosResponse
             const token = resp.data.token as string
             localStorage.setItem('token', token)
@@ -34,6 +40,14 @@ const Login: FC = () => {
             dispatch(setCredentials({ user, token, error: null }))
         } catch (error: any) {
             console.log(error)
+            toast({
+                title: 'Error',
+                description: error.message,
+                duration: 2000,
+                variant: 'destructive'
+            })
+        } finally {
+            setLoading(false)
         }
     }
     
@@ -87,7 +101,9 @@ const Login: FC = () => {
                             </Alert>
                         )
                         }
-                        <Button type="submit" className='w-full' variant="default">Login</Button>
+                        <Button type="submit" className='w-full' variant="default">
+                            {loading ? <Spinner className='mr-2' /> : 'Login'}
+                        </Button>
                         <div className="text-center mt-4">
                             don't have an account? <Link to='/register' className="font-medium text-indigo-600 hover:text-indigo-500">Sign up</Link>
                         </div>

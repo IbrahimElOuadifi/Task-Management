@@ -3,16 +3,18 @@ import { Outlet } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { setCredentials } from '@store-actions/authSlice'
 import { checkSession } from 'api/auth'
-import { User } from '@interfaces/User'
+import { User, AuthSession } from '@interfaces/User'
 import { AxiosResponse } from 'axios'
+import { Spinner } from '@components/ui/spinner'
+import { Toaster } from '@components/ui/toaster'
 
 const App = () => {
 
   const dispatch = useDispatch()
-  const { user, error } = useSelector((state: any) => state.auth)
+  const { user, error } = useSelector((state: { auth: AuthSession }) => state.auth)
 
   useEffect(() => {
-      sessionMiddleware()
+    sessionMiddleware()
   }, [])
 
   const sessionMiddleware = async () => {
@@ -21,7 +23,6 @@ const App = () => {
       const token = localStorage.getItem('token')
       const resp = await checkSession({ token }) as AxiosResponse
       const user = resp.data.user as User
-      console.log(user)
       dispatch(setCredentials({ user , token, error: null }))
     } catch (error: any) {
       dispatch(setCredentials({ user: null, error }))
@@ -30,7 +31,18 @@ const App = () => {
     }
   }
 
-  return (!user && !error) ? <h2>Loading...</h2> : <Outlet /> 
+  if(!user && !error) return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-gray-100 bg-opacity-50">
+      <Spinner />
+    </div>
+  )
+
+  return (
+    <>
+      <Outlet />
+      <Toaster />
+    </>
+  )
 }
   
 export default App
