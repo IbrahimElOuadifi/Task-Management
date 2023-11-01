@@ -41,7 +41,6 @@ const Login: FC = () => {
         } catch (error: any) {
             console.log(error)
             toast({
-                title: 'Error',
                 description: error.message,
                 duration: 2000,
                 variant: 'destructive'
@@ -57,7 +56,7 @@ const Login: FC = () => {
 
     useEffect(() => {
         if (user) 
-            navigate('/')
+            navigate('/', { replace: true })
     }, [user])
 
     return (
@@ -78,7 +77,7 @@ const Login: FC = () => {
                                     message: 'Username is required'
                                 }
                             }}
-                            render={({ field }) => <Input {...field} placeholder='Username' className='mb-4' />}
+                            render={({ field }) => <Input error={Boolean(errors.username)} {...field} placeholder='Username' className='mb-4' />}
                         />
                         <Controller
                             name="password"
@@ -90,7 +89,7 @@ const Login: FC = () => {
                                     message: 'Password is required'
                                 }
                             }}
-                            render={({ field }) => <Input {...field} placeholder='Password' className='mb-4' />}
+                            render={({ field }) => <Input error={Boolean(errors.password)} {...field} placeholder='Password' className='mb-4' />}
                         />
                         {
                          Object.keys(errors).length > 0 && (

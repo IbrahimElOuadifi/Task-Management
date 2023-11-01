@@ -46,7 +46,6 @@ const Register: FC = () => {
         } catch (error: any) {
             console.log(error)
             toast({
-                title: 'Error',
                 description: error.message,
                 duration: 2000,
                 variant: 'destructive'
@@ -62,7 +61,7 @@ const Register: FC = () => {
 
     useEffect(() => {
         if (user) 
-            navigate('/')
+            navigate('/', { replace: true })
     }, [user])
 
     return (
@@ -84,7 +83,7 @@ const Register: FC = () => {
                                         message: 'First name is required'
                                     }
                                 }}
-                                render={({ field }) => <Input {...field} placeholder='First Name' />}
+                                render={({ field }) => <Input error={Boolean(errors.firstName)} {...field} placeholder='First Name' />}
                             />
                             <Controller
                                 name="lastName"
@@ -96,7 +95,7 @@ const Register: FC = () => {
                                         message: 'Last name is required'
                                     }
                                  }}
-                                render={({ field }) => <Input {...field} placeholder='Last Name' />}
+                                render={({ field }) => <Input error={Boolean(errors.lastName)} {...field} placeholder='Last Name' />}
                             />
                         </div>
                         <Controller
@@ -117,7 +116,7 @@ const Register: FC = () => {
                                     message: 'Username must be less than 8 characters'
                                 },
                              }}
-                            render={({ field }) => <Input className='mb-4' {...field} placeholder='Username' />}
+                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.username)} {...field} placeholder='Username' />}
                         />
                         <Controller
                             name="password"
@@ -137,7 +136,7 @@ const Register: FC = () => {
                                     message: 'Password must be less than 256 characters'
                                 },
                              }}
-                            render={({ field }) => <Input className='mb-4' {...field} placeholder='Password' type='password' />}
+                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.password)} {...field} placeholder='Password' type='password' />}
                         />
                         <Controller
                             name="confirmPassword"
@@ -150,7 +149,7 @@ const Register: FC = () => {
                                 },
                                 validate: (value: string) => value === watch('password') || 'Passwords do not match'
                              }}
-                            render={({ field }) => <Input className='mb-4' {...field} placeholder='Confirm Password' type='password' />}
+                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.confirmPassword)} {...field} placeholder='Confirm Password' type='password' />}
                         />
                         {
                             Object.keys(errors).length > 0 && (
