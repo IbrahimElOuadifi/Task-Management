@@ -5,7 +5,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { useSelector, useDispatch } from "react-redux"
 import { setCredentials } from "@store-actions/authSlice"
 import { AuthSession } from "@interfaces/User"
-import { AvatarIcon } from '@radix-ui/react-icons/dist/AvatarIcon'
 
 const NavBar: FC = () => {
 
@@ -30,13 +29,13 @@ const NavBar: FC = () => {
             <div className="flex flex-row justify-between items-center">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                        <Avatar className="h-8 w-8">
-                            {/* <AvatarImage src="https://randomuser.me/api/portraits/men/62.jpg" alt="Avatar" /> */}
-                            <AvatarFallback>
-                                {user?.firstName[0].toUpperCase()}{user?.lastName[0].toUpperCase()}
-                            </AvatarFallback>
-                        </Avatar>
+                        <Button variant="ghost" className="relative h-8 w-8 rounded-full ring-1">
+                            <Avatar className="h-8 w-8">
+                                <AvatarImage src="" alt="Avatar" />
+                                <AvatarFallback>
+                                    {user?.firstName[0].toUpperCase()}{user?.lastName[0].toUpperCase()}
+                                </AvatarFallback>
+                            </Avatar>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56" align="end" forceMount>
