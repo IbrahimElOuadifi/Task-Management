@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { useSelector, useDispatch } from "react-redux"
 import { setCredentials } from "@store-actions/authSlice"
 import { AuthSession } from "@interfaces/User"
+import userPic from '@assets/svg/user.svg'
 
 const NavBar: FC = () => {
 
@@ -22,7 +23,7 @@ const NavBar: FC = () => {
     }
 
     return (
-        <div className="flex flex-row justify-between items-center bg-gray-100 px-8 h-16">
+        <div className="flex flex-row justify-between items-center px-8 h-16 drop-shadow-sm">
             <div className="flex flex-row justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800">Task Manager</h1>
             </div>
@@ -31,7 +32,7 @@ const NavBar: FC = () => {
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="relative h-8 w-8 rounded-full ring-1">
                             <Avatar className="h-8 w-8">
-                                <AvatarImage src="" alt="Avatar" />
+                                <AvatarImage src={userPic} alt="Avatar" />
                                 <AvatarFallback>
                                     {user?.firstName[0].toUpperCase()}{user?.lastName[0].toUpperCase()}
                                 </AvatarFallback>

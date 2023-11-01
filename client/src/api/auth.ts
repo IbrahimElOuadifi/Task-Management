@@ -23,7 +23,6 @@ export const register = (data: UserRegister) => new Promise(async (resolve, reje
 
 export const checkSession = ({ token }: { token: string | null }) => new Promise(async (resolve, reject) => {
     try {
-        console.log(token)
         const resp = await base.get('/auth/session', {}, { headers: { Authorization: `Bearer ${token || ''}` } })
         return resolve(resp)
     } catch (error) {

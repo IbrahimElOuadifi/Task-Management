@@ -2,16 +2,24 @@ import { FC } from 'react'
 import { Card, CardContent, CardTitle } from '@components/ui/card'
 
 export interface WorkspaceCardProps {
-    title: string        
+    id: string,
+    title: string
 }
 
-const WorkspaceCard: FC<WorkspaceCardProps> = ({ title }) => {
+const WorkspaceCard: FC<WorkspaceCardProps> = ({ id, title }) => {
+
+    const handleClick = () => {
+        console.log(`Workspace ${id} clicked`)
+    }
+
     return (
-        <Card className='rounded-sm p-2 mr-2 mb-2 w-72 h-28 pt-8 cursor-default hover:bg-gray-50 hover:shadow-md'>
-            <CardContent>
-                <CardTitle>{title}</CardTitle>
-            </CardContent>
-        </Card>
+        <div className='w-full h-28 md:px-2 mb-4 md:w-1/2 lg:w-1/3 xl:w-1/4 2xl:w-1/5'>
+            <Card className='rounded-sm p-2 h-full pt-8 cursor-pointer hover:bg-gray-50 hover:shadow-md' onClick={handleClick}>
+                <CardContent>
+                    <CardTitle>{title}</CardTitle>
+                </CardContent>
+            </Card>
+        </div>
     )
 }
 
