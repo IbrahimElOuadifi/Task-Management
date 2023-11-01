@@ -17,9 +17,9 @@ import { useToast } from '@components/ui/use-toast'
  
 const Register: FC = () => {
 
-    const { user } = useSelector((state: { auth: AuthSession }) => state.auth)
+    const { user, loading } = useSelector((state: { auth: AuthSession }) => state.auth)
 
-    const [loading, setLoading] = useState<boolean>(false)
+    const [submitting, setSubmitting] = useState<boolean>(false)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -37,12 +37,12 @@ const Register: FC = () => {
 
     const onSubmit = async (data: UserRegister): Promise<void> => {
         try {
-            setLoading(true)
+            setSubmitting(true)
             const resp = await register(data) as AxiosResponse
             const token = resp.data.token as string
             localStorage.setItem('token', token)
             const user = (await checkSession({ token }) as AxiosResponse).data.user as User
-            dispatch(setCredentials({ user , token, error: null }))
+            dispatch(setCredentials({ user , token, loading: false }))
         } catch (error: any) {
             console.log(error)
             toast({
@@ -51,7 +51,7 @@ const Register: FC = () => {
                 variant: 'destructive'
             })
         } finally {
-            setLoading(false)
+            setSubmitting(false)
         }
     }
 
@@ -60,9 +60,9 @@ const Register: FC = () => {
     }
 
     useEffect(() => {
-        if (user) 
+        if (user && !loading) 
             navigate('/', { replace: true })
-    }, [user])
+    }, [user, loading])
 
     return (
         <div className="min-h-screen flex items-start justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -167,7 +167,7 @@ const Register: FC = () => {
                             )
                         }
                         <Button type="submit" className='w-full' variant="default">
-                            {loading ? <Spinner className='mr-2' /> : 'Register'}
+                            {submitting ? <Spinner className='mr-2' /> : 'Register'}
                         </Button>
                         <div className="text-center my-4">
                             already have an account? <Link to='/login' className="font-medium text-indigo-600 hover:text-indigo-500">Login</Link>

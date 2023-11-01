@@ -29,5 +29,5 @@ export interface SessionError {
 export interface AuthSession {
     user: User | null
     token?: string | null
-    error: SessionError | null
+    loading: boolean
 }

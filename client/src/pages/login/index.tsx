@@ -15,9 +15,9 @@ import { useToast } from '@components/ui/use-toast'
  
 const Login: FC = () => {
 
-    const { user } = useSelector((state: { auth: AuthSession }) => state.auth)
+    const { user, loading } = useSelector((state: { auth: AuthSession }) => state.auth)
 
-    const [loading, setLoading] = useState<boolean>(false)
+    const [submitting, setSubmitting] = useState<boolean>(false)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -32,12 +32,12 @@ const Login: FC = () => {
 
     const onSubmit = async (data: UserLogin): Promise<void> => {
         try {
-            setLoading(true)
+            setSubmitting(true)
             const resp = await login(data) as AxiosResponse
             const token = resp.data.token as string
             localStorage.setItem('token', token)
             const user = (await checkSession({ token }) as AxiosResponse).data.user as User
-            dispatch(setCredentials({ user, token, error: null }))
+            dispatch(setCredentials({ user, token, loading: false }))
         } catch (error: any) {
             console.log(error)
             toast({
@@ -46,7 +46,7 @@ const Login: FC = () => {
                 variant: 'destructive'
             })
         } finally {
-            setLoading(false)
+            setSubmitting(false)
         }
     }
     
@@ -55,9 +55,9 @@ const Login: FC = () => {
     }
 
     useEffect(() => {
-        if (user) 
+        if (user && !loading) 
             navigate('/', { replace: true })
-    }, [user])
+    }, [user, loading])
 
     return (
         <div className="min-h-screen flex items-start justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -77,7 +77,7 @@ const Login: FC = () => {
                                     message: 'Username is required'
                                 }
                             }}
-                            render={({ field }) => <Input error={Boolean(errors.username)} {...field} placeholder='Username' className='mb-4' />}
+                            render={({ field }) => <Input {...field} error={Boolean(errors.username)} type='text' placeholder='Username' className='mb-4' />}
                         />
                         <Controller
                             name="password"
@@ -89,7 +89,7 @@ const Login: FC = () => {
                                     message: 'Password is required'
                                 }
                             }}
-                            render={({ field }) => <Input error={Boolean(errors.password)} {...field} placeholder='Password' className='mb-4' />}
+                            render={({ field }) => <Input {...field} error={Boolean(errors.password)} type='password' placeholder='Password' className='mb-4' />}
                         />
                         {
                          Object.keys(errors).length > 0 && (
@@ -101,7 +101,7 @@ const Login: FC = () => {
                         )
                         }
                         <Button type="submit" className='w-full' variant="default">
-                            {loading ? <Spinner className='mr-2' /> : 'Login'}
+                            {submitting ? <Spinner className='mr-2' /> : 'Login'}
                         </Button>
                         <div className="text-center mt-4">
                             don't have an account? <Link to='/register' className="font-medium text-indigo-600 hover:text-indigo-500">Sign up</Link>

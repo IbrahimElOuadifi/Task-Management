@@ -6,15 +6,16 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
       "@hooks/*": ["src/hooks/*"],
       "pages/*": ["src/pages/*"],
       "api/*": ["src/api/*"],
       "@assets/*": ["src/assets/*"],
       "@interfaces/*": ["src/interfaces/*"],
       "@utils/*": ["src/utils/*"],
-      "@store-actions/*": ["src/redux/*"]
+      "@store-actions/*": ["src/redux/*"],
+      "@/*": ["src/*"],
     },
 
     /* Bundler mode */

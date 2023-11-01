@@ -4,7 +4,7 @@ import { AuthSession } from '@interfaces/User'
 const initialState: AuthSession = {
     user: null,
     token: null,
-    error: null,
+    loading: true
 }
 
 const authSlice = createSlice({

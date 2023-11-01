@@ -1,34 +1,25 @@
 import { useEffect } from 'react'
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { AuthSession } from '@interfaces/User'
-import { useToast } from '@components/ui/use-toast'
+import HomeLayout from '@layouts/home'
 
 const Private = () => {
 
-  const { error } = useSelector((state:  { auth: AuthSession }) => state.auth)
+  const { user, loading } = useSelector((state:  { auth: AuthSession }) => state.auth)
   
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const { toast } = useToast()
 
   useEffect(() => {
-    if(error) {
-      toast({
-        description: error.message,
-        duration: 2000,
-        variant: 'destructive',
-      })
+    if(!user && !loading)
       navigate('/login', { replace: true })
-    }
-  }, [error, navigate, pathname])
+  }, [loading, user, pathname])
 
   return (
-      <div>
-        <h1>Private</h1>
-        <Link to='/login'>Login</Link>
+      <HomeLayout>
         <Outlet />
-      </div>
+      </HomeLayout>
     )
   }
   

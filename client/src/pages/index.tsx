@@ -7,11 +7,13 @@ import { User, AuthSession } from '@interfaces/User'
 import { AxiosResponse } from 'axios'
 import { Spinner } from '@components/ui/spinner'
 import { Toaster } from '@components/ui/toaster'
+import { useToast } from '@components/ui/use-toast'
 
 const App = () => {
 
+  const { toast } = useToast()
   const dispatch = useDispatch()
-  const { user, error } = useSelector((state: { auth: AuthSession }) => state.auth)
+  const { loading } = useSelector((state: { auth: AuthSession }) => state.auth)
 
   useEffect(() => {
     sessionMiddleware()
@@ -19,19 +21,23 @@ const App = () => {
 
   const sessionMiddleware = async () => {
     try {
-      console.log('loading ...')
       const token = localStorage.getItem('token')
+      if(!token) return dispatch(setCredentials({ user: null, loading: false }))
       const resp = await checkSession({ token }) as AxiosResponse
       const user = resp.data.user as User
-      dispatch(setCredentials({ user , token, error: null }))
+      dispatch(setCredentials({ user , token, loading: false  }))
     } catch (error: any) {
-      dispatch(setCredentials({ user: null, error }))
-    } finally {
-      console.log('loaded ...')
+      toast({
+        description: error.message,
+        duration: 2000,
+        variant: 'destructive'
+      })
+      dispatch(setCredentials({ user: null, loading: false }))
+      localStorage.removeItem('token')
     }
   }
 
-  if(!user && !error) return (
+  if(loading) return (
     <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-gray-100 bg-opacity-50">
       <Spinner />
     </div>
