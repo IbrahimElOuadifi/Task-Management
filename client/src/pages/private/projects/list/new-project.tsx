@@ -1,12 +1,12 @@
 import { FC } from 'react'
 import { Card, CardHeader } from '@components/ui/card'
 
-export interface NewWorkspaceProps {
+export interface NewProjectProps {
     onSuccessfulCreate?: () => void,
     onFailedCreate?: () => void
 }
 
-const NewWorkspace: FC<NewWorkspaceProps> = ({  }) => {
+const NewProject: FC<NewProjectProps> = ({  }) => {
 
     const handleClick = () => {
         console.log('New workspace clicked')
@@ -23,4 +23,4 @@ const NewWorkspace: FC<NewWorkspaceProps> = ({  }) => {
     )
 }
 
-export default NewWorkspace
+export default NewProject

@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Card, CardContent, CardTitle } from '@components/ui/card'
+import { useNavigate } from 'react-router-dom'
 
 export interface WorkspaceCardProps {
     id: string,
@@ -8,8 +9,11 @@ export interface WorkspaceCardProps {
 
 const WorkspaceCard: FC<WorkspaceCardProps> = ({ id, title }) => {
 
+    const navigate = useNavigate()
+
     const handleClick = () => {
         console.log(`Workspace ${id} clicked`)
+        navigate(`/projects/${id}`)
     }
 
     return (
