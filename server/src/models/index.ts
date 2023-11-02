@@ -1,2 +1,8 @@
 export { default as User } from './User.js'
 export { IUser as IUser } from './User.js'
+export { default as Project } from './Project.js'
+export { IProject as IProject } from './Project.js'
+export { default as List } from './List.js'
+export { IList as IList } from './List.js'
+export { default as Task } from './Task.js'
+export { ITask as ITask } from './Task.js'

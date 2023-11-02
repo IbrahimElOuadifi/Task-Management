@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { config } from 'dotenv'
 
-import { authRouter } from './routes/index.js'
+import { authRouter, projectRouter, listRouter, taskRouter } from './routes/index.js'
 
 config()
 
@@ -15,6 +15,9 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/projects', projectRouter)
+app.use('/api/v1/lists', listRouter)
+app.use('/api/v1/tasks', taskRouter)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')
