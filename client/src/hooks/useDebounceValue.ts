@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
-const useDebounceValue = (value, delay) => {
-    const [debouncedValue, setDebouncedValue] = useState(value)
-    const [isDebouncing, setIsDebouncing] = useState(false)
+const useDebounceValue = <T>(value: any, delay: number) => {
+    const [debouncedValue, setDebouncedValue] = useState<T>(value)
+    const [isDebouncing, setIsDebouncing] = useState<Boolean>(false)
     
     useEffect(() => {
         if (debouncedValue !== value)  setIsDebouncing(true)

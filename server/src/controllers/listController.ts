@@ -39,3 +39,19 @@ export const createList = async (req: RequestWithUser, res: Response) => {
         res.status(400).json({ message: error.message })
     }
 }
+
+export const updateManyLists = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { lists, projectId } = req.body
+        const user = req.user?._id
+        if (!user) throw new Error('User not found')
+        const updatedLists = await Promise.all(lists.map(async (list: IList, index: number) => {
+            const { _id } = list
+            const updatedList = await List.findOneAndUpdate({ _id, createdBy: user }, { index, project: projectId }, { new: true })
+            return updatedList
+        }))
+        res.json(updatedLists)
+    } catch (error: any) {
+        res.status(500).json({ message: error.message })
+    }
+}

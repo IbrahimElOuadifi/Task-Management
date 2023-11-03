@@ -55,7 +55,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
             setTasks(newTask)
             const resp = await updateManyTasks({ tasks: newTask, token: token as string, listId: list._id })
             if (resp) {
-                refetch()
+                // refetch()
                 console.log('updated', resp)
             }
         } catch (error) {
@@ -65,12 +65,12 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
 
     return (
         <Card className='min-w-[280px] mr-4 bg-gray-50'>
-            <CardHeader className='px-1 py-2'>
+            <CardHeader className='px-1 py-2 handle'>
                 <CardTitle>
                     <Input className='text-sm border-none ring-0' value={list.title} readOnly />
                 </CardTitle>
             </CardHeader>
-            <CardContent className='px-1 py-4'>
+            <CardContent className='px-1 py-4 handle'>
                 <div className='flex flex-col gap-2'>
                     <ReactSortable list={tasks.map(({ _id, ...rest}) => ({ id: _id, ...rest }))} setList={handleUpdate} group={{ name: projectId }} animation={150}>
                     {
@@ -87,7 +87,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                     </ReactSortable>
                 </div>
             </CardContent>
-            <CardFooter className='px-1 pb-2'>
+            <CardFooter className='px-1 pb-2 handle'>
                 <Button variant='ghost' className='text-sm w-full' onClick={handleCreate}>Add Card</Button>
             </CardFooter>
         </Card>

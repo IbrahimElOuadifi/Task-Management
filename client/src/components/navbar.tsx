@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar"
 import { Button } from "@components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@components/ui/dropdown-menu"
 import { useSelector, useDispatch } from "react-redux"
-import { setCredentials } from "@store-actions/authSlice"
+import { logout } from "@store-actions/authSlice"
 import { AuthSession } from "@interfaces/User"
 import userPic from '@assets/svg/user.svg'
 
@@ -15,11 +15,7 @@ const NavBar: FC = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('token')
-        dispatch(setCredentials({
-            user: null,
-            token: null,
-            loading: false
-        }))
+        dispatch(logout())
     }
 
     return (

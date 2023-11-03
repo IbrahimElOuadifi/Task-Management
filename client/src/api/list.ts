@@ -12,6 +12,11 @@ interface createListParams {
     token: string | null
 }
 
+interface updateManyListsParams {
+    lists: any[]
+    projectId: string
+    token: string
+}
 
 export const getLists = ({ id: projectId, token }: getListsParams) => new Promise(async (resolve, reject) => {
     try {
@@ -26,6 +31,16 @@ export const getLists = ({ id: projectId, token }: getListsParams) => new Promis
 export const createList = ({ token, ...data }: createListParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.post('/lists', data, { headers: { Authorization: `Bearer ${token}` } })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const updateManyLists = ({ token, ...data }: updateManyListsParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.put('/lists', data, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)
     } catch (error) {
         console.error(error)

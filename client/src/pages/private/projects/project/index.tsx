@@ -1,16 +1,43 @@
-import { FC } from 'react'
+import { useState, useEffect, FC } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { ReactSortable } from 'react-sortablejs'
 import { IList } from '@interfaces/List'
+import { AuthSession } from '@interfaces/User'
 import { useFetchData } from 'hooks/index'
-import { getLists } from 'api/list'
+import { getLists, updateManyLists } from 'api/list'
 import ListCard from './list-card'
 import CreateNewCardList from './create-list-card'
 
 const Project: FC = () => {
 
     const { id } = useParams() as { id: string }
+    const { token } = useSelector((state: { auth: AuthSession }) => state.auth)
 
     const { data, loading, error, refetch } = useFetchData<IList>(getLists, { id })
+
+    const [lists, setLists] = useState<IList[]>([])
+
+    useEffect(() => {
+        if (data) {
+            setLists(data)
+        }
+    }, [data])
+
+    const handleUpdate = async (newData: any) => {
+        const newList: IList[] = newData.map(({ id, ...rest }: { id: string }) => ({ _id: id, ...rest }))
+        if(JSON.stringify(newList.map(({ _id }) => _id)) == JSON.stringify(data.map(({_id}) => _id))) return console.log('same list')
+        try {
+            setLists(newList)
+            const resp = await updateManyLists({ lists: newList, projectId: id, token: token as string })
+            if (resp) {
+                // refetch()
+                console.log('updated', resp)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <>
@@ -23,11 +50,13 @@ const Project: FC = () => {
             {/* project */}
             <div className='overflow-x-auto -mr-4 h-[calc(100%-64px)] justify-start align-top'>
                 <div className='flex flex-nowrap justify-start align-top'>
-                {
-                    loading ? <p>Loading...</p> :
-                    error ? <p>{error.message}</p> :
-                    data.map((list) => (<ListCard list={list} key={list._id} projectId={id} />))
-                }
+                    <ReactSortable list={lists.map(({ _id, ...rest }) => ({ id: _id, ...rest }))} setList={handleUpdate} className='flex flex-nowrap justify-start align-top' animation={150} handle='.handle'>
+                        {
+                            loading ? <p>Loading...</p> :
+                            error ? <p>{error.message}</p> :
+                            lists.map((list) => (<ListCard list={list} key={list._id} projectId={id} />))
+                        }
+                    </ReactSortable>
                     <CreateNewCardList onSuccessfulSubmit={refetch} />
                 </div>
             </div>

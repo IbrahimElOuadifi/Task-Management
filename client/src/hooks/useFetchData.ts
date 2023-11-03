@@ -1,6 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AxiosResponse } from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { logout } from '@store-actions/authSlice'
 
 const parseJSON = (obj: string): Record<string, unknown> => {
     try {
@@ -23,6 +26,9 @@ const useFetchData = <T>(
     callback?: Function
 ) => {
 
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
     const { id, query, page, limit } = options
     const { token } = useSelector((state: any) => state.auth)
 
@@ -37,6 +43,10 @@ const useFetchData = <T>(
             setData(response.data)
             if (callback && response) callback(response)
         } catch (error: any) {
+            if(error.status === 401) {
+                dispatch(logout())
+                navigate('/login')
+            }
             setError(error)
         } finally {
             setLoading(false)

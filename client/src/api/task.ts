@@ -13,6 +13,12 @@ interface createTaskParams {
     token: string | null
 }
 
+interface updateManyTasksParams {
+    tasks: ITask[]
+    listId: string
+    token: string
+}
+
 export const getTasks = ({ id, token }: getTasksParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.get(`/tasks/${id}`, {}, { headers: { Authorization: `Bearer ${token}` }  })
@@ -33,7 +39,7 @@ export const createTask = ({token, ...data}: createTaskParams) => new Promise(as
     }
 })
 
-export const updateManyTasks = ({token, ...data}: { tasks: ITask[], listId: string, token: string }) => new Promise(async (resolve, reject) => {
+export const updateManyTasks = ({token, ...data}: updateManyTasksParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.put('/tasks', data, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)
