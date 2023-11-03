@@ -1,0 +1,55 @@
+import { useState, useEffect, useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { AxiosResponse } from 'axios'
+
+const parseJSON = (obj: string): Record<string, unknown> => {
+    try {
+        return JSON.parse(obj)
+    } catch (error) {
+        return {}
+    }
+}
+
+export interface Options {
+    id?: string | null;
+    query?: string;
+    page?: number;
+    limit?: number;
+}
+
+const useFetchData = <T>(
+    request: Function,
+    options: Options = { id: null, query: '{}', page: 1, limit: 10 },
+    callback?: Function
+) => {
+
+    const { id, query, page, limit } = options
+    const { token } = useSelector((state: any) => state.auth)
+
+    const [data, setData] = useState<T[]>([])
+    const [error, setError] = useState<Error | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
+
+    const fetchData = async () => {
+        try {
+            setLoading(true)
+            const response: AxiosResponse = await request({ id, page, limit, ...parseJSON(query as string), token })
+            setData(response.data)
+            if (callback && response) callback(response)
+        } catch (error: any) {
+            setError(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const memoizedFetchData = useMemo(() => fetchData, [id, query, page, limit])
+
+    useEffect(() => {
+        fetchData()
+    }, [memoizedFetchData])
+
+    return { data, error, loading, refetch: fetchData }
+}
+
+export default useFetchData

@@ -23,8 +23,8 @@ export const createTask = async (req: RequestWithUser, res: Response) => {
         const { text, listId } = await createTaskSchema.validate(req.body)
         const user = req.user?._id
         if (!user) throw new Error('User not found')
-        // const listIsExist = await List.findById(listId)
-        // if (!listIsExist) throw new Error('List not found')
+        const listIsExist = await List.findOne({ _id: listId, createdBy: user})
+        if (!listIsExist) throw new Error('List not found')
         console.log(listId)
         const index = await Task.countDocuments({ list: listId })
         console.log(index)

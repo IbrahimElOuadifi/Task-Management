@@ -23,8 +23,8 @@ export const createList = async (req: RequestWithUser, res: Response) => {
         const { title, description, projectId } = await createListSchema.validate(req.body)
         const user = req.user?._id
         if (!user) throw new Error('User not found')
-        // const ProjectIsExist = await Project.findById(projectId)
-        // if (!ProjectIsExist) throw new Error('Project not found')
+        const ProjectIsExist = await Project.findOne({ _id: projectId, owner: user })
+        if (!ProjectIsExist) throw new Error('Project not found')
         const index = await List.countDocuments({ project: projectId })
         const list = new List({
             title,

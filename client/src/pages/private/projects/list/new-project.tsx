@@ -1,15 +1,29 @@
 import { FC } from 'react'
 import { Card, CardHeader } from '@components/ui/card'
+import { createProject } from 'api/project'
+import { useSelector } from 'react-redux'
 
 export interface NewProjectProps {
     onSuccessfulCreate?: () => void,
     onFailedCreate?: () => void
 }
 
-const NewProject: FC<NewProjectProps> = ({  }) => {
+const NewProject: FC<NewProjectProps> = ({ onSuccessfulCreate }) => {
 
-    const handleClick = () => {
-        console.log('New workspace clicked')
+    const { token } = useSelector((state: any) => state.auth)
+
+    const handleClick = async () => {
+        try {
+            const name = prompt('Enter project name') as string
+            if (name) {
+                const resp = await createProject({ name, token })
+                if (resp) {
+                    onSuccessfulCreate && onSuccessfulCreate()
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
