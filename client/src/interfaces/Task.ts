@@ -3,7 +3,7 @@ export interface ITask {
     text: string;
     description: string;
     index: number;
-    List: string;
+    list: string;
     createdBy: string;
     createdAt: Date;
     updatedAt?: Date;
