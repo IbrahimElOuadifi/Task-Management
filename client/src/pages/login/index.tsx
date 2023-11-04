@@ -1,27 +1,17 @@
-import { useState, useEffect, FC } from 'react'
-import { AxiosResponse } from 'axios'
-import { useNavigate, Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { Card } from '@components/ui/card'
 import { Alert, AlertDescription } from '@components/ui/alert'
 import { Controller, useForm, FieldErrors } from 'react-hook-form'
-import { UserLogin, AuthSession, User } from '@interfaces/User'
-import { login, checkSession } from 'api/auth'
-import { setCredentials } from '@store-actions/authSlice'
+import { UserLogin } from '@interfaces/User'
 import { Spinner } from '@components/ui/spinner'
-import { useToast } from '@components/ui/use-toast'
+import useAuth from 'hooks/useAuth'
  
 const Login: FC = () => {
 
-    const { user, loading } = useSelector((state: { auth: AuthSession }) => state.auth)
-
-    const [submitting, setSubmitting] = useState<boolean>(false)
-
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const { toast } = useToast()
+    const { submitting, login } = useAuth('login')
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
@@ -30,34 +20,13 @@ const Login: FC = () => {
         },
     })
 
-    const onSubmit = async (data: UserLogin): Promise<void> => {
-        try {
-            setSubmitting(true)
-            const resp = await login(data) as AxiosResponse
-            const token = resp.data.token as string
-            localStorage.setItem('token', token)
-            const user = (await checkSession({ token }) as AxiosResponse).data.user as User
-            dispatch(setCredentials({ user, token, loading: false }))
-        } catch (error: any) {
-            console.log(error)
-            toast({
-                description: error.message,
-                duration: 2000,
-                variant: 'destructive'
-            })
-        } finally {
-            setSubmitting(false)
-        }
+    const onSubmit = (data: UserLogin): void => {
+        login(data)
     }
     
     const onSubmitError = (errors: FieldErrors<UserLogin>): void => {
         console.log(errors)
     }
-
-    useEffect(() => {
-        if (user && !loading) 
-            navigate('/', { replace: true })
-    }, [user, loading])
 
     return (
         <div className="min-h-screen flex items-start justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -77,7 +46,7 @@ const Login: FC = () => {
                                     message: 'Username is required'
                                 }
                             }}
-                            render={({ field }) => <Input {...field} error={Boolean(errors.username)} type='text' placeholder='Username' className='mb-4' />}
+                            render={({ field }) => <Input {...field} error={Boolean(errors.username)} type='text' placeholder='Username' className='mb-4' autoComplete='username' />}
                         />
                         <Controller
                             name="password"
@@ -89,7 +58,7 @@ const Login: FC = () => {
                                     message: 'Password is required'
                                 }
                             }}
-                            render={({ field }) => <Input {...field} error={Boolean(errors.password)} type='password' placeholder='Password' className='mb-4' />}
+                            render={({ field }) => <Input {...field} error={Boolean(errors.password)} type='password' placeholder='Password' className='mb-4' autoComplete='password' />}
                         />
                         {
                          Object.keys(errors).length > 0 && (

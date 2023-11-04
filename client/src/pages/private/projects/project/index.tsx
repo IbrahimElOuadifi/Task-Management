@@ -1,20 +1,20 @@
 import { useState, useEffect, FC } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { ReactSortable } from 'react-sortablejs'
+import { AxiosResponse } from 'axios'
 import { IList } from '@interfaces/List'
-import { AuthSession } from '@interfaces/User'
-import { useFetchData } from 'hooks/index'
-import { getLists, updateManyLists } from 'api/list'
+import { useFetchData, usePOSTData } from 'hooks/index'
+import { getLists, updateManyLists, updateManyListsParams } from 'api/list'
 import ListCard from './list-card'
 import CreateNewCardList from './create-list-card'
 
 const Project: FC = () => {
 
     const { id } = useParams() as { id: string }
-    const { token } = useSelector((state: { auth: AuthSession }) => state.auth)
 
     const { data, loading, error, refetch } = useFetchData<IList>(getLists, { id })
+
+    const { postData } = usePOSTData<updateManyListsParams>(updateManyLists, (resp: AxiosResponse) => console.log('updated list', resp), refetch)
 
     const [lists, setLists] = useState<IList[]>([])
 
@@ -24,19 +24,11 @@ const Project: FC = () => {
         }
     }, [data])
 
-    const handleUpdate = async (newData: any) => {
+    const handleUpdate = (newData: any) => {
         const newList: IList[] = newData.map(({ id, ...rest }: { id: string }) => ({ _id: id, ...rest }))
         if(JSON.stringify(newList.map(({ _id }) => _id)) == JSON.stringify(data.map(({_id}) => _id))) return console.log('same list')
-        try {
-            setLists(newList)
-            const resp = await updateManyLists({ lists: newList, projectId: id, token: token as string })
-            if (resp) {
-                // refetch()
-                console.log('updated', resp)
-            }
-        } catch (error) {
-            console.log(error)
-        }
+        setLists(newList)
+        postData({ lists: newList, projectId: id })
     }
 
     return (

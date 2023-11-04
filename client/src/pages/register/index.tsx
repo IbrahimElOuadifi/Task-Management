@@ -1,29 +1,17 @@
-import { useState, useEffect, FC } from 'react'
-import { AxiosResponse } from 'axios'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { Card } from '@components/ui/card'
 import { Alert, AlertDescription } from '@components/ui/alert'
 import { Controller, useForm, FieldErrors } from 'react-hook-form'
 import { UserRegister } from '@interfaces/User'
-import { register } from 'api/auth'
-import { checkSession } from 'api/auth'
-import { User, AuthSession } from '@interfaces/User'
-import { setCredentials } from '@store-actions/authSlice'
 import { Spinner } from '@components/ui/spinner'
-import { useToast } from '@components/ui/use-toast'
+import useAuth from 'hooks/useAuth'
  
 const Register: FC = () => {
 
-    const { user, loading } = useSelector((state: { auth: AuthSession }) => state.auth)
-
-    const [submitting, setSubmitting] = useState<boolean>(false)
-
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const { toast } = useToast()
+    const { register, submitting } = useAuth('register')
 
     const { control, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
@@ -35,34 +23,13 @@ const Register: FC = () => {
         },
     })
 
-    const onSubmit = async (data: UserRegister): Promise<void> => {
-        try {
-            setSubmitting(true)
-            const resp = await register(data) as AxiosResponse
-            const token = resp.data.token as string
-            localStorage.setItem('token', token)
-            const user = (await checkSession({ token }) as AxiosResponse).data.user as User
-            dispatch(setCredentials({ user , token, loading: false }))
-        } catch (error: any) {
-            console.log(error)
-            toast({
-                description: error.message,
-                duration: 2000,
-                variant: 'destructive'
-            })
-        } finally {
-            setSubmitting(false)
-        }
+    const onSubmit = (data: UserRegister): void => {
+        register(data)
     }
 
     const onSubmitError = (errors: FieldErrors<UserRegister>): void => {
         console.log(errors)
     }
-
-    useEffect(() => {
-        if (user && !loading) 
-            navigate('/', { replace: true })
-    }, [user, loading])
 
     return (
         <div className="min-h-screen flex items-start justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -116,7 +83,7 @@ const Register: FC = () => {
                                     message: 'Username must be less than 8 characters'
                                 },
                              }}
-                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.username)} {...field} placeholder='Username' />}
+                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.username)} {...field} placeholder='Username' autoComplete='username' />}
                         />
                         <Controller
                             name="password"
@@ -136,7 +103,7 @@ const Register: FC = () => {
                                     message: 'Password must be less than 256 characters'
                                 },
                              }}
-                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.password)} {...field} placeholder='Password' type='password' />}
+                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.password)} {...field} placeholder='Password' type='password' autoComplete='new-password' />}
                         />
                         <Controller
                             name="confirmPassword"
@@ -149,7 +116,7 @@ const Register: FC = () => {
                                 },
                                 validate: (value: string) => value === watch('password') || 'Passwords do not match'
                              }}
-                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.confirmPassword)} {...field} placeholder='Confirm Password' type='password' />}
+                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.confirmPassword)} {...field} placeholder='Confirm Password' type='password' autoComplete='new-password' />}
                         />
                         {
                             Object.keys(errors).length > 0 && (

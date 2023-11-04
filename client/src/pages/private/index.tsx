@@ -1,20 +1,18 @@
-import { useEffect } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { AuthSession } from '@interfaces/User'
+import { FC } from 'react'
+import { Outlet } from 'react-router-dom'
 import HomeLayout from '@layouts/home'
+import { useAuth } from 'hooks/index'
+import { Spinner } from '@components/ui/spinner'
 
-const Private = () => {
+const Private: FC = () => {
 
-  const { user, loading } = useSelector((state:  { auth: AuthSession }) => state.auth)
-  
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
+  const { user, loading } = useAuth()
 
-  useEffect(() => {
-    if(!user && !loading)
-      navigate('/login', { replace: true })
-  }, [loading, user, pathname])
+  if(!user && loading) return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-gray-100 bg-opacity-50">
+      <Spinner />
+    </div>
+  )
 
   return (
       <HomeLayout>

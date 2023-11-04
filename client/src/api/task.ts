@@ -1,22 +1,20 @@
 import { ITask } from '@interfaces/Task'
 import base from './base'
 
-interface getTasksParams {
+export interface getTasksParams {
     id: string
     token: string
 }
 
-interface createTaskParams {
+export interface createTaskParams {
     text: string
     description?: string
     listId: string
-    token: string | null
 }
 
-interface updateManyTasksParams {
+export interface updateManyTasksParams {
     tasks: ITask[]
     listId: string
-    token: string
 }
 
 export const getTasks = ({ id, token }: getTasksParams) => new Promise(async (resolve, reject) => {
@@ -29,7 +27,7 @@ export const getTasks = ({ id, token }: getTasksParams) => new Promise(async (re
     }
 })
 
-export const createTask = ({token, ...data}: createTaskParams) => new Promise(async (resolve, reject) => {
+export const createTask = ({ data, token }: { data: createTaskParams , token: string}) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.post('/tasks', data, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)
@@ -39,7 +37,7 @@ export const createTask = ({token, ...data}: createTaskParams) => new Promise(as
     }
 })
 
-export const updateManyTasks = ({token, ...data}: updateManyTasksParams) => new Promise(async (resolve, reject) => {
+export const updateManyTasks = ({ data, token }: { data: updateManyTasksParams , token: string}) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.put('/tasks', data, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)

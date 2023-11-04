@@ -1,13 +1,12 @@
 import base from './base'
 
-interface getProjectsParams {
+export interface getProjectsParams {
     token: string;
 }
 
-interface createProjectParams {
+export interface createProjectParams {
     name: string;
     description?: string;
-    token: string;
 }
 
 export const getProjects = ({ token }: getProjectsParams) => new Promise(async (resolve, reject) => {
@@ -20,7 +19,7 @@ export const getProjects = ({ token }: getProjectsParams) => new Promise(async (
     }
 })
 
-export const createProject = ({ token, ...data }: createProjectParams) => new Promise(async (resolve, reject) => {
+export const createProject = ({ data, token }: { data: createProjectParams, token: string }) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.post('/projects', data, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)

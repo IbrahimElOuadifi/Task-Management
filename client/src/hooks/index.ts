@@ -1,4 +1,6 @@
 export { default as useFetchData } from './useFetchData'
+export { default as usePOSTData } from './usePOSTData'
+export { default as useAuth } from './useAuth'
 export { default as useDebounceValue } from './useDebounceValue'
 export { default as useDebounceState } from './useDebounceState'
 // export { default as useModal } from './useModal'

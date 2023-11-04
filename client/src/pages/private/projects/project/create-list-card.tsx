@@ -1,31 +1,25 @@
 import { FC } from 'react'
 import { Card, CardHeader } from '@components/ui/card'
 import { Button } from '@components/ui/button'
-import { createList } from 'api/list'
-import { useSelector } from 'react-redux'
+import { createList, createListParams } from 'api/list'
 import { useParams } from 'react-router-dom'
-import { AuthSession } from '@interfaces/User'
+import { usePOSTData } from 'hooks/index'
 
 export interface CardProps {
     onSuccessfulSubmit?: () => void
     onFailedSubmit?: () => void
 }
 
-
 const CreateNewCardList: FC<CardProps> = ({ onSuccessfulSubmit }) => {
 
     const { id } = useParams() as { id: string }
-    const { token } = useSelector((state: { auth: AuthSession }) => state.auth)
+
+    const { postData } = usePOSTData<createListParams>(createList, onSuccessfulSubmit)
     
-    const handleCreate = async () => {
+    const handleCreate = () => {
         const title = prompt('Enter list title') as string
         if (title) {
-            const resp = await createList({ title, projectId: id, token: token as string })
-            if (resp) {
-                if (onSuccessfulSubmit) {
-                    onSuccessfulSubmit()
-                }
-            }
+            postData({ title, projectId: id })
         }
     }
 

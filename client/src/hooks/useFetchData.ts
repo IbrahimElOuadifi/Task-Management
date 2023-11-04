@@ -40,7 +40,7 @@ const useFetchData = <T>(
         try {
             setLoading(true)
             const response: AxiosResponse = await request({ id, page, limit, ...parseJSON(query as string), token })
-            setData(response.data)
+            setData(Array.isArray(response.data) ? response.data : [response.data])
             if (callback && response) callback(response)
         } catch (error: any) {
             if(error.status === 401) {

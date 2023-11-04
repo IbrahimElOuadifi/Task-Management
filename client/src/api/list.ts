@@ -1,21 +1,19 @@
 import base from './base'
 
-interface getListsParams {
+export interface getListsParams {
     id: string
     token: string
 }
 
-interface createListParams {
+export interface createListParams {
     title: string
     description?: string
     projectId: string  
-    token: string | null
 }
 
-interface updateManyListsParams {
+export interface updateManyListsParams {
     lists: any[]
     projectId: string
-    token: string
 }
 
 export const getLists = ({ id: projectId, token }: getListsParams) => new Promise(async (resolve, reject) => {
@@ -28,7 +26,7 @@ export const getLists = ({ id: projectId, token }: getListsParams) => new Promis
     }
 })
 
-export const createList = ({ token, ...data }: createListParams) => new Promise(async (resolve, reject) => {
+export const createList = ({ data, token }: { data: createListParams, token: string }) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.post('/lists', data, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)
@@ -38,7 +36,7 @@ export const createList = ({ token, ...data }: createListParams) => new Promise(
     }
 })
 
-export const updateManyLists = ({ token, ...data }: updateManyListsParams) => new Promise(async (resolve, reject) => {
+export const updateManyLists = ({ data, token }: { data: updateManyListsParams, token: string }) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.put('/lists', data, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)

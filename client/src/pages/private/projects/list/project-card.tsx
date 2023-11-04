@@ -12,7 +12,6 @@ const WorkspaceCard: FC<WorkspaceCardProps> = ({ id, name }) => {
     const navigate = useNavigate()
 
     const handleClick = () => {
-        console.log(`Workspace ${id} clicked`)
         navigate(`/projects/${id}`)
     }
 
