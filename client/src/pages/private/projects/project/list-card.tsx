@@ -46,8 +46,8 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
     }
 
     const handleUpdate = (newData: any) => {
-        const newTask: ITask[] = newData.map(({ id, ...rest }: { id: string }) => ({ _id: id, ...rest }))
-        if(JSON.stringify(newData.map(({ id }: { id: string }) => id)) == JSON.stringify(data.map(({_id}) => _id))) return console.log('same')
+        const newTask: ITask[] = newData.map(({ id, ...rest }: { id: string }) => (rest))
+        if(JSON.stringify(newData.map(({ id }: { id: string }) => id)) == JSON.stringify(data.map(({_id}) => _id))) return null
         setTasks(newTask)
         postUpdateTasks({ tasks: newTask, listId: list._id })
     }
@@ -62,7 +62,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                 </CardHeader>
                 <CardContent className='px-2 py-4 handle w-[280px]'>
                     <div className='flex flex-col'>
-                        <ReactSortable list={tasks.map(({ _id, ...rest}) => ({ id: _id, ...rest }))} setList={handleUpdate} group={{ name: projectId }} animation={150}>
+                        <ReactSortable list={tasks.map((props) => ({ id: props._id, ...props }))} setList={handleUpdate} group={{ name: projectId }} animation={150}>
                         {
                             tasks?.map((card) => (
                                 <Card className='p-2 cursor-pointer hover:bg-gray-100 mb-2' key={card._id}>

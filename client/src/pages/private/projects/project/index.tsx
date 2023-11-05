@@ -25,8 +25,8 @@ const Project: FC = () => {
     }, [data])
 
     const handleUpdate = (newData: any) => {
-        const newList: IList[] = newData.map(({ id, ...rest }: { id: string }) => ({ _id: id, ...rest }))
-        if(JSON.stringify(newList.map(({ _id }) => _id)) == JSON.stringify(data.map(({_id}) => _id))) return console.log('same list')
+        const newList: IList[] = newData.map(({ id, ...rest }: { id: string }) => (rest))
+        if(JSON.stringify(newList.map(({ _id }) => _id)) == JSON.stringify(data.map(({_id}) => _id))) return null
         setLists(newList)
         postData({ lists: newList, projectId: id })
     }
@@ -42,7 +42,7 @@ const Project: FC = () => {
             {/* project */}
             <div className='overflow-x-auto -mr-4 h-[calc(100%-64px)] justify-start align-top'>
                 <div className='flex flex-nowrap justify-start align-top'>
-                    <ReactSortable list={lists.map(({ _id, ...rest }) => ({ id: _id, ...rest }))} setList={handleUpdate} className='flex flex-nowrap justify-start align-top' animation={150} handle='.handle'>
+                    <ReactSortable list={lists.map((props) => ({ id: props._id, ...props }))} setList={handleUpdate} className='flex flex-nowrap justify-start align-top' animation={150} handle='.handle'>
                         {
                             loading ? <p>Loading...</p> :
                             error ? <p>{error.message}</p> :
