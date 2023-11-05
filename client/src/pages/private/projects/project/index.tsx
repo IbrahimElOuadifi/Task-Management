@@ -2,15 +2,20 @@ import { useState, useEffect, FC } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ReactSortable } from 'react-sortablejs'
 import { AxiosResponse } from 'axios'
+import { IProject } from '@interfaces/Project'
 import { IList } from '@interfaces/List'
 import { useFetchData, usePOSTData } from 'hooks/index'
 import { getLists, updateManyLists, updateManyListsParams } from 'api/list'
+import { getProject } from 'api/project'
 import ListCard from './list-card'
 import CreateNewCardList from './create-list-card'
 
 const Project: FC = () => {
 
     const { id } = useParams() as { id: string }
+
+
+    const { data: [projectData], loading: projectLoading, error: projectError } = useFetchData<IProject>(getProject, { id })
 
     const { data, loading, error, refetch } = useFetchData<IList>(getLists, { id })
 
@@ -34,7 +39,9 @@ const Project: FC = () => {
     return (
         <>
             <div className='flex flex-row justify-between'>
-                <h1 className='text-2xl font-bold'>PROJECT {id}</h1>
+                <h1 className='text-2xl font-bold'>
+                    {projectLoading ? 'Loading...' : projectError ? projectError.message : `PROJECT ${projectData?.name}` || 'Project'}
+                </h1>
                 <Link to='/projects' className='text-blue-500 hover:text-blue-600'>Back to Projects</Link>
             </div>
             {/* divider */}

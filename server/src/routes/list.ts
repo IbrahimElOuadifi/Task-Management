@@ -1,10 +1,11 @@
 import { Router } from 'express'
-import { getLists, createList, updateManyLists } from '../controllers/listController.js'
+import { getLists, getList, createList, updateManyLists } from '../controllers/listController.js'
 import authMiddleware from '../middleware/auth.js'
 
 const router = Router()
 
-router.get('/:projectId', authMiddleware, getLists)
+router.get('/', authMiddleware, getLists)
+router.get('/:id', authMiddleware, getList)
 router.post('/', authMiddleware, createList)
 router.put('/', authMiddleware, updateManyLists)
 

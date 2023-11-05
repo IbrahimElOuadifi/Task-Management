@@ -4,6 +4,11 @@ export interface getProjectsParams {
     token: string;
 }
 
+export interface getProjectParams {
+    id: string;
+    token: string;
+}
+
 export interface createProjectParams {
     name: string;
     description?: string;
@@ -12,6 +17,16 @@ export interface createProjectParams {
 export const getProjects = ({ token }: getProjectsParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.get('/projects', {}, { headers: { Authorization: `Bearer ${token}` } })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const getProject = ({ id: projectId, token }: getProjectParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get(`/projects/${projectId}`, {}, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)
     } catch (error) {
         console.error(error)

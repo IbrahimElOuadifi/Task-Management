@@ -18,7 +18,17 @@ export interface updateManyListsParams {
 
 export const getLists = ({ id: projectId, token }: getListsParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get(`/lists/${projectId}`, {}, { headers: { Authorization: `Bearer ${token}` } })
+        const resp = await base.get('/lists', { projectId }, { headers: { Authorization: `Bearer ${token}` } })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const getList = ({ id: listId, token }: getListsParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get(`/lists/${listId}`, {}, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)
     } catch (error) {
         console.error(error)

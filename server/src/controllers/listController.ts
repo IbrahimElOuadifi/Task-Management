@@ -11,8 +11,20 @@ const createListSchema = yup.object().shape({
 
 export const getLists = async (req: RequestWithUser, res: Response) => {
     try {
-        const lists = await List.find({ project: req.params.projectId }).sort({ index: 1 })
+        const { projectId } = req.query
+        if (!projectId)
+            return res.status(400).json({ message: 'Project id is required' })
+        const lists = await List.find({ project: projectId }).sort({ index: 1 })
         res.json(lists)
+    } catch (error: any) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+export const getList = async (req: RequestWithUser, res: Response) => {
+    try {
+        const list = await List.findById(req.params.id)
+        res.json(list)
     } catch (error: any) {
         res.status(500).json({ message: error.message })
     }

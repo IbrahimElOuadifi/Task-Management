@@ -11,8 +11,20 @@ const createTaskSchema = yup.object().shape({
 
 export const getTasks = async (req: RequestWithUser, res: Response) => {
     try {
-        const tasks = await Task.find({ list: req.params.listId }).sort({ index: 1 })
+        const { listId } = req.query
+        if (!listId)
+            return res.status(400).json({ message: 'List id is required' })
+        const tasks = await Task.find({ list: listId }).sort({ index: 1 })
         res.json(tasks)
+    } catch (error: any) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+export const getTask = async (req: RequestWithUser, res: Response) => {
+    try {
+        const task = await Task.findById(req.params.id)
+        res.json(task)
     } catch (error: any) {
         res.status(500).json({ message: error.message })
     }

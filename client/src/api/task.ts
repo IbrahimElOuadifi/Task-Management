@@ -6,6 +6,11 @@ export interface getTasksParams {
     token: string
 }
 
+export interface getTaskParams {
+    id: string
+    token: string
+}
+
 export interface createTaskParams {
     text: string
     description?: string
@@ -17,9 +22,19 @@ export interface updateManyTasksParams {
     listId: string
 }
 
-export const getTasks = ({ id, token }: getTasksParams) => new Promise(async (resolve, reject) => {
+export const getTasks = ({ id: listId, token }: getTasksParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get(`/tasks/${id}`, {}, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.get('/tasks', { listId }, { headers: { Authorization: `Bearer ${token}` }  })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const getTask = ({ id: taskId, token }: getTaskParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get(`/tasks/${taskId}`, {}, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)

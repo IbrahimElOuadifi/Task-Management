@@ -17,6 +17,15 @@ export const getProjects = async (req: RequestWithUser, res: Response) => {
     }
 }
 
+export const getProject = async (req: RequestWithUser, res: Response) => {
+    try {
+        const project = await Project.findById(req.params.id)
+        res.json(project)
+    } catch (error: any) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 export const createProject = async (req: RequestWithUser, res: Response) => {
     try {
         const { name, description } = await createProjectSchema.validate(req.body)
