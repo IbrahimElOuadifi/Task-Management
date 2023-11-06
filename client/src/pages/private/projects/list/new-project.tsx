@@ -3,13 +3,14 @@ import { Card, CardHeader } from '@components/ui/card'
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@components/ui/dialog'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
+import { Separator } from '@components/ui/separator'
 import { createProject } from 'api/project'
 import { usePOSTData } from 'hooks/index'
 import { useForm, Controller } from 'react-hook-form'
-import { Separator } from '@components/ui/separator'
+import { IProject } from '@interfaces/Project'
 
 export interface NewProjectProps {
-    onSuccessfulCreate?: () => void,
+    onSuccessfulCreate?: ({ data: { _id } }: { data: IProject }) => void,
     onFailedCreate?: () => void
 }
 
