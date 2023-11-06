@@ -21,7 +21,7 @@ const NavBar: FC = () => {
     return (
         <div className="flex flex-row justify-between items-center px-8 h-16 drop-shadow-sm">
             <div className="flex flex-row justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-800">Task Manager</h1>
+                <h1 className="text-2xl font-bold text-gray-800">Task Management</h1>
             </div>
             <div className="flex flex-row justify-between items-center">
                 <DropdownMenu>

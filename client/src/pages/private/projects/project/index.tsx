@@ -50,7 +50,7 @@ const Project: FC = () => {
                 <div className='flex flex-nowrap justify-start align-top'>
                     <ReactSortable list={lists.map((props) => ({ id: props._id, ...props }))} setList={handleUpdate} className='flex flex-nowrap justify-start align-top' animation={150} handle='.handle'>
                         {
-                            loading ? <p>Loading...</p> :
+                            loading && !lists.length ? <p>Loading...</p> :
                             error ? <p>{error.message}</p> :
                             lists.map((list) => (<ListCard list={list} key={list._id} projectId={id} />))
                         }
