@@ -6,6 +6,7 @@ import { Input } from '@components/ui/input'
 import { createProject } from 'api/project'
 import { usePOSTData } from 'hooks/index'
 import { useForm, Controller } from 'react-hook-form'
+import { Separator } from '@components/ui/separator'
 
 export interface NewProjectProps {
     onSuccessfulCreate?: () => void,
@@ -51,7 +52,7 @@ const NewProject: FC<NewProjectProps> = ({ onSuccessfulCreate, onFailedCreate })
                 <DialogContent className='sm:max-w-[425px]'>
                     <DialogHeader>
                         <DialogTitle>New Project</DialogTitle>
-                        <hr className='my-2' />
+                        <Separator className='my-2' />
                     </DialogHeader>
                         <form onSubmit={handleSubmit(onSubmit, onError)} className='flex flex-col gap-4'>
                             <Controller

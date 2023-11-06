@@ -8,6 +8,7 @@ import { getLists, updateManyLists, updateManyListsParams } from 'api/list'
 import { getProject } from 'api/project'
 import ListCard from './list-card'
 import CreateNewCardList from './create-list-card'
+import { Separator } from '@components/ui/separator'
 
 const Project: FC = () => {
 
@@ -44,7 +45,7 @@ const Project: FC = () => {
                 <Link to='/projects' className='text-blue-500 hover:text-blue-600'>Back to Projects</Link>
             </div>
             {/* divider */}
-            <hr className='my-4' />
+            <Separator className='my-4' />
             {/* project */}
             <div className='overflow-x-auto -mr-4 h-[calc(100%-64px)] justify-start align-top'>
                 <div className='flex flex-nowrap justify-start align-top'>

@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { Separator } from '@components/ui/separator'
 import ProjectCard from './project-card'
 import NewProject from './new-project'
 import { useFetchData } from 'hooks/index'
@@ -13,7 +14,7 @@ const ProjectList: FC = () => {
         <>
             <h1 className='text-2xl font-bold'>YOUR PROJECTS</h1>
             {/* divider */}
-            <hr className='my-4' />
+            <Separator className='my-4' />
             {/* projects */}
             <div className='flex flex-wrap'>
                 {

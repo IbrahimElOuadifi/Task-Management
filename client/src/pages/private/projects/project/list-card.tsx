@@ -1,13 +1,13 @@
-import { useState, useEffect, FC } from 'react'
+import { useState, useEffect, useRef, FC } from 'react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover'
+import { Separator } from '@/components/ui/separator'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { ReactSortable } from 'react-sortablejs'
 import { IList } from '@interfaces/List'
 import { ITask } from '@interfaces/Task'
 import { useForm, Controller } from 'react-hook-form'
-import { useFetchData, usePOSTData } from 'hooks/index'
+import { useFetchData, usePOSTData, useOutsideAlerter } from 'hooks/index'
 import { getTasks, createTask, updateManyTasks, createTaskParams, updateManyTasksParams } from 'api/task'
 
 export interface iCard {
@@ -32,6 +32,8 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
 
     const [submitting, setSubmitting] = useState<boolean>(false)
     const [open, setOpen] = useState<boolean>(false)
+
+    const ref = useRef(null)
 
     const { handleSubmit, control, formState: { errors }, reset } = useForm<createTaskParams>({
         defaultValues: {
@@ -62,12 +64,19 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
         console.log(errors)
     }
 
+    const handleCancel = () => {
+        setOpen(false)
+        reset()
+    }
+
     const handleUpdate = (newData: any) => {
         const newTask: ITask[] = newData.map(({ id, ...rest }: { id: string }) => (rest))
         if(JSON.stringify(newData.map(({ id }: { id: string }) => id)) == JSON.stringify(data.map(({_id}) => _id))) return null
         setTasks(newTask)
         postUpdateTasks({ tasks: newTask, listId: list._id })
     }
+
+    useOutsideAlerter(ref, handleCancel)
 
     return (
         <div>
@@ -82,7 +91,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                         <ReactSortable list={tasks.map((props) => ({ id: props._id, ...props }))} setList={handleUpdate} group={{ name: projectId }} animation={150}>
                         {
                             tasks?.map((card) => (
-                                <Card className='p-2 cursor-pointer hover:bg-gray-100 mb-2' key={card._id}>
+                                <Card className='p-2 cursor-pointer hover:bg-gray-100 mb-3' key={card._id}>
                                     <CardContent className='p-0'>
                                         <p className='text-sm ring-0 px-1 break-words'>
                                             {/* {card.text.split('\n').map((text, index) => (<>{text}{index === card.text.length - 1 ? '' : <br />}</>))} */}
@@ -95,19 +104,12 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                         </ReactSortable>
                     </div>
                 </CardContent>
-                <CardFooter className='px-4 pb-2 handle'>
-
-
-                    <Popover open={open} onOpenChange={open => setOpen(open)}>
-                        <PopoverTrigger asChild>
-                            {/* {
-                                open ? <div className='h-0 w-full'></div> : <Button variant='ghost' className='text-sm w-full'>Add Another Task</Button>
-                            } */}
-                            <Button variant='ghost' className='text-sm w-full'>Add Task</Button>
-                            {/* <Button className='text-sm' variant='outline'>Add Another List</Button> */}
-                        </PopoverTrigger>
-                        <PopoverContent className='bg-white shadow-lg rounded-md p-4 w-[280px]'>
-                            <form onSubmit={handleSubmit(onSubmit, onError)} className='flex flex-col gap-4'>
+                <CardFooter className='px-4 pb-2 handle' ref={ref}>
+                    {
+                        open ?
+                        (
+                            <form onSubmit={handleSubmit(onSubmit, onError)} className='flex flex-col gap-4 w-full'>
+                                <Separator />
                                 <Controller
                                     name='text'
                                     control={control}
@@ -116,14 +118,21 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                                         <Input {...field} placeholder='List title' error={Boolean(errors.text)} />
                                     )}
                                 />
-                                <Button type='submit' disabled={submitting}>
-                                {
-                                    submitting ? 'Creating...' : 'Create Task'
-                                }
-                                </Button>
+                                <div className='flex flex-row justify-between items-center gap-1'>
+                                    <Button type='submit' className='flex-1' disabled={submitting}>
+                                        {submitting ? 'Creating...' : 'Create Task'}
+                                    </Button>
+                                    <Button type='button' variant='outline' className='flex-1' onClick={handleCancel}>
+                                        Cancel
+                                    </Button>
+                                </div>
                             </form>
-                        </PopoverContent>
-                    </Popover>
+                        )
+                        : 
+                        (
+                            <Button variant='outline' className='text-sm w-full' onClick={() => setOpen(true)}>Add Task</Button>
+                        )
+                    }
                 </CardFooter>
             </Card>
         </div>
