@@ -1,10 +1,12 @@
 import { useState, useEffect, FC } from 'react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { ReactSortable } from 'react-sortablejs'
 import { IList } from '@interfaces/List'
 import { ITask } from '@interfaces/Task'
+import { useForm, Controller } from 'react-hook-form'
 import { useFetchData, usePOSTData } from 'hooks/index'
 import { getTasks, createTask, updateManyTasks, createTaskParams, updateManyTasksParams } from 'api/task'
 
@@ -28,6 +30,15 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
 
     const [tasks, setTasks] = useState<ITask[]>([])
 
+    const [submitting, setSubmitting] = useState<boolean>(false)
+    const [open, setOpen] = useState<boolean>(false)
+
+    const { handleSubmit, control, formState: { errors }, reset } = useForm<createTaskParams>({
+        defaultValues: {
+            text: ''
+        }
+    })
+
     const { data, refetch } = useFetchData<ITask>(getTasks, { id: list._id })
     const { postData: postCreateTasks } = usePOSTData<createTaskParams>(createTask, refetch, refetch)
     const { postData: postUpdateTasks } = usePOSTData<updateManyTasksParams>(updateManyTasks, refetch, refetch)
@@ -38,11 +49,17 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
         }
     }, [data])
 
-    const handleCreate = () => {
-        const text = prompt('Enter card text') as string
-        if (text) {
-            postCreateTasks({ text, listId: list._id })
-        }
+    const onSubmit = (data: createTaskParams) => {
+        setSubmitting(true)
+        postCreateTasks({ ...data, listId: list._id }).then(() => {
+            reset()
+            setOpen(false)
+            setSubmitting(false)
+        })
+    }
+
+    const onError = (errors: any) => {
+        console.log(errors)
     }
 
     const handleUpdate = (newData: any) => {
@@ -79,7 +96,34 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                     </div>
                 </CardContent>
                 <CardFooter className='px-4 pb-2 handle'>
-                    <Button variant='ghost' className='text-sm w-full' onClick={handleCreate}>Add Card</Button>
+
+
+                    <Popover open={open} onOpenChange={open => setOpen(open)}>
+                        <PopoverTrigger asChild>
+                            {/* {
+                                open ? <div className='h-0 w-full'></div> : <Button variant='ghost' className='text-sm w-full'>Add Another Task</Button>
+                            } */}
+                            <Button variant='ghost' className='text-sm w-full'>Add Task</Button>
+                            {/* <Button className='text-sm' variant='outline'>Add Another List</Button> */}
+                        </PopoverTrigger>
+                        <PopoverContent className='bg-white shadow-lg rounded-md p-4 w-[280px]'>
+                            <form onSubmit={handleSubmit(onSubmit, onError)} className='flex flex-col gap-4'>
+                                <Controller
+                                    name='text'
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field }) => (
+                                        <Input {...field} placeholder='List title' error={Boolean(errors.text)} />
+                                    )}
+                                />
+                                <Button type='submit' disabled={submitting}>
+                                {
+                                    submitting ? 'Creating...' : 'Create Task'
+                                }
+                                </Button>
+                            </form>
+                        </PopoverContent>
+                    </Popover>
                 </CardFooter>
             </Card>
         </div>

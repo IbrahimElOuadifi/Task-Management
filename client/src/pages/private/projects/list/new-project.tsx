@@ -14,10 +14,10 @@ export interface NewProjectProps {
 
 const NewProject: FC<NewProjectProps> = ({ onSuccessfulCreate, onFailedCreate }) => {
 
-
     const [dialogOpen, setDialogOpen] = useState(false)
+    const [submitting, setSubmitting] = useState(false)
 
-    const { handleSubmit, control, formState: { errors } } = useForm({
+    const { handleSubmit, control, formState: { errors }, reset } = useForm({
         defaultValues: {
             name: ''
         }
@@ -26,7 +26,12 @@ const NewProject: FC<NewProjectProps> = ({ onSuccessfulCreate, onFailedCreate })
     const { postData } = usePOSTData<{ name: string }>(createProject, onSuccessfulCreate, onFailedCreate)
 
     const onSubmit = ({ name }: { name: string }) => {
-        postData({ name }).then(() => setDialogOpen(false))
+        setSubmitting(true)
+        postData({ name }).then(() => {
+            reset()
+            setSubmitting(false)
+            setDialogOpen(false)
+        })
     }
 
     const onError = (errors: any) => {
@@ -57,7 +62,11 @@ const NewProject: FC<NewProjectProps> = ({ onSuccessfulCreate, onFailedCreate })
                                     <Input {...field} placeholder='Project name' error={Boolean(errors.name)} />
                                 )}
                             />
-                            <Button type='submit'>Submit</Button>
+                            <Button type='submit' disabled={submitting}>
+                                {
+                                    submitting ? 'Creating...' : 'Create'
+                                }
+                            </Button>
                         </form>
                     <DialogFooter>
                     </DialogFooter>

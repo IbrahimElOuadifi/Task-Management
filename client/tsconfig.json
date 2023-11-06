@@ -15,6 +15,7 @@
       "@interfaces/*": ["src/interfaces/*"],
       "@utils/*": ["src/utils/*"],
       "@store-actions/*": ["src/redux/*"],
+      "@contexts/*": ["src/contexts/*"],
       "@/*": ["src/*"],
     },
 

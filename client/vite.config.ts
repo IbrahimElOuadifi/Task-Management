@@ -17,6 +17,7 @@ export default defineConfig({
       "@interfaces": path.resolve(__dirname, "./src/interfaces"),
       "@utils": path.resolve(__dirname, "./src/utils"),
       "@store-actions": path.resolve(__dirname, "./src/redux"),
+      "@contexts": path.resolve(__dirname, "./src/contexts"),
     },
   },
 })

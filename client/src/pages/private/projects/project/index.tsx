@@ -1,7 +1,6 @@
 import { useState, useEffect, FC } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ReactSortable } from 'react-sortablejs'
-import { AxiosResponse } from 'axios'
 import { IProject } from '@interfaces/Project'
 import { IList } from '@interfaces/List'
 import { useFetchData, usePOSTData } from 'hooks/index'
@@ -19,7 +18,7 @@ const Project: FC = () => {
 
     const { data, loading, error, refetch } = useFetchData<IList>(getLists, { id })
 
-    const { postData } = usePOSTData<updateManyListsParams>(updateManyLists, (resp: AxiosResponse) => console.log('updated list', resp), refetch)
+    const { postData } = usePOSTData<updateManyListsParams>(updateManyLists, refetch, refetch)
 
     const [lists, setLists] = useState<IList[]>([])
 
@@ -40,7 +39,7 @@ const Project: FC = () => {
         <>
             <div className='flex flex-row justify-between'>
                 <h1 className='text-2xl font-bold'>
-                    {projectLoading ? 'Loading...' : projectError ? projectError.message : `PROJECT ${projectData?.name}` || 'Project'}
+                    {projectLoading ? 'Loading...' : projectError ? projectError.message : projectData?.name || 'Project'}
                 </h1>
                 <Link to='/projects' className='text-blue-500 hover:text-blue-600'>Back to Projects</Link>
             </div>
