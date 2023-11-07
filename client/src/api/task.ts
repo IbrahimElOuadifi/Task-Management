@@ -1,28 +1,33 @@
-import { ITask } from '@interfaces/Task'
 import base from './base'
+import { getTaskOptions, getTasksOptions, createTaskOptions, updateManyTasksOptions } from '@interfaces/Task'
 
-export interface getTasksParams {
-    id: string
+interface getTasksParams extends getTasksOptions {
     token: string
 }
 
-export interface getTaskParams {
-    id: string
+interface getTaskParams extends getTaskOptions {
     token: string
 }
 
-export interface createTaskParams {
-    text: string
-    description?: string
-    listId: string
+interface createTaskParams extends createTaskOptions {
+    token: string
 }
 
-export interface updateManyTasksParams {
-    tasks: ITask[]
-    listId: string
+interface updateManyTasksParams extends updateManyTasksOptions {
+    token: string
 }
 
-export const getTasks = ({ id: listId, token }: getTasksParams) => new Promise(async (resolve, reject) => {
+export const getTask = ({ id, token }: getTaskParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get(`/tasks/${id}`, {}, { headers: { Authorization: `Bearer ${token}` }  })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const getTasks = ({ listId, token }: getTasksParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.get('/tasks', { listId }, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)
@@ -32,17 +37,7 @@ export const getTasks = ({ id: listId, token }: getTasksParams) => new Promise(a
     }
 })
 
-export const getTask = ({ id: taskId, token }: getTaskParams) => new Promise(async (resolve, reject) => {
-    try {
-        const resp = await base.get(`/tasks/${taskId}`, {}, { headers: { Authorization: `Bearer ${token}` }  })
-        return resolve(resp)
-    } catch (error) {
-        console.error(error)
-        reject(error)
-    }
-})
-
-export const createTask = ({ data, token }: { data: createTaskParams , token: string}) => new Promise(async (resolve, reject) => {
+export const createTask = ({ token, ...data }: createTaskParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.post('/tasks', data, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)
@@ -52,7 +47,7 @@ export const createTask = ({ data, token }: { data: createTaskParams , token: st
     }
 })
 
-export const updateManyTasks = ({ data, token }: { data: updateManyTasksParams , token: string}) => new Promise(async (resolve, reject) => {
+export const updateManyTasks = ({ token, ...data }: updateManyTasksParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.put('/tasks', data, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)

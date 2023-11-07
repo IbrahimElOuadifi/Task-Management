@@ -1,22 +1,33 @@
 import base from './base'
+import { getListOptions, getListsOptions, createListOptions, updateManyListsOptions } from '@interfaces/List'
 
-export interface getListsParams {
-    id: string
+interface getListsParams extends getListsOptions {
     token: string
 }
 
-export interface createListParams {
-    title: string
-    description?: string
-    projectId: string  
+interface getListParams extends getListOptions {
+    token: string
 }
 
-export interface updateManyListsParams {
-    lists: any[]
-    projectId: string
+interface createListParams extends createListOptions {
+    token: string
 }
 
-export const getLists = ({ id: projectId, token }: getListsParams) => new Promise(async (resolve, reject) => {
+interface updateManyListsParams extends updateManyListsOptions {
+    token: string
+}
+
+export const getList = ({ id, token }: getListParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get(`/lists/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const getLists = ({ projectId, token }: getListsParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.get('/lists', { projectId }, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)
@@ -26,17 +37,7 @@ export const getLists = ({ id: projectId, token }: getListsParams) => new Promis
     }
 })
 
-export const getList = ({ id: listId, token }: getListsParams) => new Promise(async (resolve, reject) => {
-    try {
-        const resp = await base.get(`/lists/${listId}`, {}, { headers: { Authorization: `Bearer ${token}` } })
-        return resolve(resp)
-    } catch (error) {
-        console.error(error)
-        reject(error)
-    }
-})
-
-export const createList = ({ data, token }: { data: createListParams, token: string }) => new Promise(async (resolve, reject) => {
+export const createList = ({ token, ...data }: createListParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.post('/lists', data, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)
@@ -46,7 +47,7 @@ export const createList = ({ data, token }: { data: createListParams, token: str
     }
 })
 
-export const updateManyLists = ({ data, token }: { data: updateManyListsParams, token: string }) => new Promise(async (resolve, reject) => {
+export const updateManyLists = ({ token, ...data }: updateManyListsParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.put('/lists', data, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)

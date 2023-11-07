@@ -3,7 +3,8 @@ import { Card, CardHeader } from '@components/ui/card'
 import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
-import { createList, createListParams } from 'api/list'
+import { createList } from 'api/list'
+import { createListOptions } from '@interfaces/List'
 import { useParams } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { usePOSTData } from 'hooks/index'
@@ -20,20 +21,24 @@ const CreateNewCardList: FC<CardProps> = ({ onSuccessfulSubmit, onFailedSubmit }
     const [submitting, setSubmitting] = useState<boolean>(false)
     const [open, setOpen] = useState<boolean>(false)
 
-    const { postData } = usePOSTData<createListParams>(createList, onSuccessfulSubmit, onFailedSubmit)
+    const { postData } = usePOSTData<createListOptions>(createList, onSuccessfulSubmit, onFailedSubmit)
 
-    const { handleSubmit, control, formState: { errors }, reset } = useForm<createListParams>({
+    const { handleSubmit, control, formState: { errors }, reset } = useForm<createListOptions>({
         defaultValues: {
             title: ''
         }
     })
+
+    const handlePopover = (open: boolean) => {
+        reset()
+        setOpen(open)
+    }
     
-    const onSubmit = (data: createListParams) => {
+    const onSubmit = (data: createListOptions) => {
         setSubmitting(true)
         postData({ ...data, projectId: id }).then(() => {
-            reset()
-            setOpen(false)
             setSubmitting(false)
+            handlePopover(false)
         })
     }
 
@@ -45,7 +50,7 @@ const CreateNewCardList: FC<CardProps> = ({ onSuccessfulSubmit, onFailedSubmit }
         <div>
             <Card className='min-w-[280px] mr-4 p-0 shadow-none'>
                 <CardHeader className='p-0'>
-                    <Popover open={open} onOpenChange={open => setOpen(open)}>
+                    <Popover open={open} onOpenChange={handlePopover}>
                         <PopoverTrigger asChild>
                             <Button className='text-sm' variant='outline'>Add Another List</Button>
                         </PopoverTrigger>

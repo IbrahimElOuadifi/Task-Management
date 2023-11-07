@@ -8,3 +8,22 @@ export interface ITask {
     createdAt: Date;
     updatedAt?: Date;
 }
+
+export interface getTasksOptions {
+    listId: string
+}
+
+export interface getTaskOptions {
+    id: string
+}
+
+export interface createTaskOptions {
+    text: string
+    description?: string
+    listId: string
+}
+
+export interface updateManyTasksOptions {
+    tasks: ITask[]
+    listId: string
+}

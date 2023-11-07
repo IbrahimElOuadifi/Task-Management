@@ -11,3 +11,22 @@ export interface IList {
     createdAt: Date;
     updatedAt?: Date;
 }
+
+export interface getListOptions {
+    id: string
+}
+
+export interface getListsOptions {
+    projectId: string
+}
+
+export interface createListOptions {
+    title: string
+    description?: string
+    projectId: string  
+}
+
+export interface updateManyListsOptions {
+    lists: IList[]
+    projectId: string
+}

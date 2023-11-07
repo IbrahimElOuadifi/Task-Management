@@ -27,12 +27,16 @@ const NewProject: FC<NewProjectProps> = ({ onSuccessfulCreate, onFailedCreate })
 
     const { postData } = usePOSTData<{ name: string }>(createProject, onSuccessfulCreate, onFailedCreate)
 
+    const handleDialog = (open: boolean) => {
+        reset()
+        setDialogOpen(open)
+    }
+
     const onSubmit = ({ name }: { name: string }) => {
         setSubmitting(true)
         postData({ name }).then(() => {
-            reset()
             setSubmitting(false)
-            setDialogOpen(false)
+            handleDialog(false)
         })
     }
 
@@ -42,7 +46,7 @@ const NewProject: FC<NewProjectProps> = ({ onSuccessfulCreate, onFailedCreate })
 
     return (
         <div className='w-full h-28 md:px-2 mb-4 lg:w-1/3 xl:w-1/4 2xl:w-1/5'>
-            <Dialog open={dialogOpen} onOpenChange={open => setDialogOpen(open)}>
+            <Dialog open={dialogOpen} onOpenChange={handleDialog}>
                 <DialogTrigger asChild>
                     <Card className='h-full rounded-sm mb-4 cursor-pointer hover:bg-gray-50 hover:shadow-md'>
                         <CardHeader className='flex justify-center align-middle h-full text-center'>

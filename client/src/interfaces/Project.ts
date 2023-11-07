@@ -6,3 +6,16 @@ export interface IProject {
     createdAt: Date;
     updatedAt?: Date;
 }
+
+export interface getProjectOptions {
+    id: string;
+}
+
+export interface getProjectsOptions {
+    
+}
+
+export interface createProjectOptions {
+    name: string;
+    description?: string;
+}

@@ -1,5 +1,5 @@
 import base from './base'
-import { UserLogin, UserRegister } from '@interfaces/User'
+import { UserLogin, UserRegister, Session } from '@interfaces/User'
 
 export const login = (data: UserLogin) => new Promise(async (resolve, reject) => {
     try {
@@ -21,7 +21,7 @@ export const register = (data: UserRegister) => new Promise(async (resolve, reje
     }
 })
 
-export const checkSession = ({ token }: { token: string | null }) => new Promise(async (resolve, reject) => {
+export const checkSession = ({ token }: Session) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.get('/auth/session', {}, { headers: { Authorization: `Bearer ${token || ''}` } })
         return resolve(resp)

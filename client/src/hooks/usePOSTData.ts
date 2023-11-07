@@ -18,7 +18,7 @@ const usePOSTData = <T>(
     const postData = async (data: T) => {
         try {
             setLoading(true)
-            const response: AxiosResponse = await request({ data, token })
+            const response: AxiosResponse = await request({ ...data, token })
             setData(Array.isArray(response.data) ? response.data : [response.data])
             if(onSuccess) onSuccess(response)
         } catch (error: any) {

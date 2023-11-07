@@ -1,28 +1,17 @@
 import base from './base'
+import { getProjectsOptions, getProjectOptions, createProjectOptions } from '@interfaces/Project'
 
-export interface getProjectsParams {
+export interface getProjectsParams extends getProjectsOptions {
     token: string;
 }
 
-export interface getProjectParams {
-    id: string;
+export interface getProjectParams extends getProjectOptions {
     token: string;
 }
 
-export interface createProjectParams {
-    name: string;
-    description?: string;
+export interface createProjectParams extends createProjectOptions {
+    token: string;
 }
-
-export const getProjects = ({ token }: getProjectsParams) => new Promise(async (resolve, reject) => {
-    try {
-        const resp = await base.get('/projects', {}, { headers: { Authorization: `Bearer ${token}` } })
-        return resolve(resp)
-    } catch (error) {
-        console.error(error)
-        reject(error)
-    }
-})
 
 export const getProject = ({ id: projectId, token }: getProjectParams) => new Promise(async (resolve, reject) => {
     try {
@@ -34,7 +23,17 @@ export const getProject = ({ id: projectId, token }: getProjectParams) => new Pr
     }
 })
 
-export const createProject = ({ data, token }: { data: createProjectParams, token: string }) => new Promise(async (resolve, reject) => {
+export const getProjects = ({ token }: getProjectsParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get('/projects', {}, { headers: { Authorization: `Bearer ${token}` } })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const createProject = ({ token, ...data }: createProjectParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.post('/projects', data, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)

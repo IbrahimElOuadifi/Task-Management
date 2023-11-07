@@ -21,6 +21,11 @@ export interface UserRegister {
     confirmPassword: string
 }
 
+export interface Session {
+    user: User
+    token: string | null
+}
+
 export interface SessionError {
     status: number
     message: string

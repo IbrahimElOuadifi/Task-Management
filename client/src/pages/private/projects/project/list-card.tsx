@@ -5,10 +5,10 @@ import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { ReactSortable } from 'react-sortablejs'
 import { IList } from '@interfaces/List'
-import { ITask } from '@interfaces/Task'
+import { ITask, createTaskOptions, updateManyTasksOptions } from '@interfaces/Task'
 import { useForm, Controller } from 'react-hook-form'
 import { useFetchData, usePOSTData, useOutsideAlerter } from 'hooks/index'
-import { getTasks, createTask, updateManyTasks, createTaskParams, updateManyTasksParams } from 'api/task'
+import { getTasks, createTask, updateManyTasks } from 'api/task'
 
 export interface iCard {
     id: number
@@ -35,15 +35,15 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
 
     const ref = useRef(null)
 
-    const { handleSubmit, control, formState: { errors }, reset } = useForm<createTaskParams>({
+    const { handleSubmit, control, formState: { errors }, reset } = useForm<createTaskOptions>({
         defaultValues: {
             text: ''
         }
     })
 
-    const { data, refetch } = useFetchData<ITask>(getTasks, { id: list._id })
-    const { postData: postCreateTasks } = usePOSTData<createTaskParams>(createTask, refetch, refetch)
-    const { postData: postUpdateTasks } = usePOSTData<updateManyTasksParams>(updateManyTasks, refetch, refetch)
+    const { data, refetch } = useFetchData<ITask>(getTasks, { query: JSON.stringify({ listId: list._id }) })
+    const { postData: postCreateTasks } = usePOSTData<createTaskOptions>(createTask, refetch, refetch)
+    const { postData: postUpdateTasks } = usePOSTData<updateManyTasksOptions>(updateManyTasks, refetch, refetch)
 
     useEffect(() => {
         if (data) {
@@ -51,7 +51,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
         }
     }, [data])
 
-    const onSubmit = (data: createTaskParams) => {
+    const onSubmit = (data: createTaskOptions) => {
         setSubmitting(true)
         postCreateTasks({ ...data, listId: list._id }).then(() => {
             reset()

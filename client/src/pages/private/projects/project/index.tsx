@@ -2,9 +2,9 @@ import { useState, useEffect, FC } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ReactSortable } from 'react-sortablejs'
 import { IProject } from '@interfaces/Project'
-import { IList } from '@interfaces/List'
+import { IList, updateManyListsOptions } from '@interfaces/List'
 import { useFetchData, usePOSTData } from 'hooks/index'
-import { getLists, updateManyLists, updateManyListsParams } from 'api/list'
+import { getLists, updateManyLists } from 'api/list'
 import { getProject } from 'api/project'
 import ListCard from './list-card'
 import CreateNewCardList from './create-list-card'
@@ -17,9 +17,9 @@ const Project: FC = () => {
 
     const { data: [projectData], loading: projectLoading, error: projectError } = useFetchData<IProject>(getProject, { id })
 
-    const { data, loading, error, refetch } = useFetchData<IList>(getLists, { id })
+    const { data, loading, error, refetch } = useFetchData<IList>(getLists, { query: JSON.stringify({ projectId: id }) })
 
-    const { postData } = usePOSTData<updateManyListsParams>(updateManyLists, refetch, refetch)
+    const { postData } = usePOSTData<updateManyListsOptions>(updateManyLists, refetch, refetch)
 
     const [lists, setLists] = useState<IList[]>([])
 
