@@ -9,17 +9,7 @@ import { ITask, createTaskOptions, updateManyTasksOptions } from '@interfaces/Ta
 import { useForm, Controller } from 'react-hook-form'
 import { useFetchData, usePOSTData, useOutsideAlerter } from 'hooks/index'
 import { getTasks, createTask, updateManyTasks } from 'api/task'
-
-export interface iCard {
-    id: number
-    text: string
-}
-
-export interface iList {
-    id: number
-    name: string
-    cards: iCard[]
-}
+import TaskDialog from './task-dialog/index'
 
 export interface ListCardProps {
     list: IList
@@ -29,6 +19,7 @@ export interface ListCardProps {
 const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
 
     const [tasks, setTasks] = useState<ITask[]>([])
+    const [currentTask, setCurrentTask] = useState<ITask | null>(null)
 
     const [submitting, setSubmitting] = useState<boolean>(false)
     const [open, setOpen] = useState<boolean>(false)
@@ -76,6 +67,14 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
         postUpdateTasks({ tasks: newTask, listId: list._id })
     }
 
+    const handleClick = (task: ITask | null) => {
+        if(task) {
+            setCurrentTask(task)
+        } else {
+            setCurrentTask(null)
+        }
+    }
+
     useOutsideAlerter(ref, handleCancel)
 
     return (
@@ -90,12 +89,12 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                     <div className='flex flex-col'>
                         <ReactSortable list={tasks.map((props) => ({ id: props._id, ...props }))} setList={handleUpdate} group={{ name: projectId }} animation={150}>
                         {
-                            tasks?.map((card) => (
-                                <Card className='p-2 cursor-pointer hover:bg-gray-100 mb-3' key={card._id}>
+                            tasks?.map((task) => (
+                                <Card className='p-2 cursor-pointer hover:bg-gray-100 mb-3' key={task._id} onClick={handleClick.bind(this, task)}>
                                     <CardContent className='p-0'>
                                         <p className='text-sm ring-0 px-1 break-words'>
-                                            {/* {card.text.split('\n').map((text, index) => (<>{text}{index === card.text.length - 1 ? '' : <br />}</>))} */}
-                                            {card.text}
+                                            {/* {task.text.split('\n').map((text, index) => (<>{text}{index === task.text.length - 1 ? '' : <br />}</>))} */}
+                                            {task.text}
                                         </p>
                                     </CardContent>
                                 </Card>
@@ -135,6 +134,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                     }
                 </CardFooter>
             </Card>
+            <TaskDialog handleClose={() => setCurrentTask(null)} task={currentTask} list={list} />
         </div>
     )
 }
