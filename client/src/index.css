@@ -73,4 +73,32 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+      display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-0.5;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-slate-100;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-slate-300;
+    border-radius: 6px;
+    /* border: 1px solid #f1f1f1; */
+  }
+
+  .custom-scrollbar {
+    @apply overflow-y-auto;
+  }
 }

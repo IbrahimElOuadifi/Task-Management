@@ -2,11 +2,20 @@ import { FC } from 'react'
 import { ITask } from '@interfaces/Task'
 import { IList } from '@interfaces/List'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@components/ui/dialog'
-import { Avatar, AvatarImage, AvatarFallback } from '@components/ui/avatar'
 import { Button } from '@components/ui/button'
 import { Separator } from '@components/ui/separator'
-import { Textarea } from '@components/ui/textarea'
-import { PlusIcon } from '@radix-ui/react-icons'
+import MembersSection from './members-section'
+import LabelsSection from './labels-section'
+import DueDateSection from './due-date-section'
+import AttachmentSection from './attachment-section'
+import DetailsSection from './details-section'
+import MembersButton from './members-button'
+import LabelsButton from './labels-button'
+import DueDateButton from './due-date-button'
+import AttachmentButton from './attachment-button'
+import MoveActionButton from './move-action-button'
+import CopyActionButton from './copy-action-button'
+import ArchiveActionButton from './archive-action-button'
 
 interface TaskDialogProps {
     handleClose?: () => void
@@ -37,68 +46,31 @@ const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list }) => {
                 </DialogTitle>
                 {/* grid */}
                 <div className='grid grid-cols-12 gap-4 pb-4'>
-                        <div className='col-span-12 sm:col-span-8'>
-
+                        <div className='col-span-12 sm:col-span-8 max-h-[580px] overflow-y-auto custom-scrollbar p-1'>
                             <h5 className='text-sm font-medium mb-2 mt-4'>Members</h5>
-                            <div className='flex flex-row gap-2'>
-                                <Avatar>
-                                    <AvatarImage src='' />
-                                    <AvatarFallback>
-                                        JD
-                                    </AvatarFallback>
-                                </Avatar>
-                                <Avatar>
-                                    <AvatarImage src='' />
-                                    <AvatarFallback>
-                                        JD
-                                    </AvatarFallback>
-                                </Avatar>
-                                <Avatar>
-                                    <AvatarImage src='' />
-                                    <AvatarFallback>
-                                        JD
-                                    </AvatarFallback>
-                                </Avatar>
-                                <Button variant='outline' size='icon' className='rounded-full'>
-                                    <PlusIcon />
-                                </Button>
-                            </div>
-
+                            <MembersSection />
                             <h5 className='text-sm font-medium mb-2 mt-4'>Labels</h5>
-                            <div className='flex flex-row gap-2'>
-                                <div className='w-9 h-9 rounded-sm bg-red-500'></div>
-                                <div className='w-9 h-9 rounded-sm bg-blue-500'></div>
-                                <div className='w-9 h-9 rounded-sm bg-green-500'></div>
-                                <div className='w-9 h-9 rounded-sm bg-yellow-500'></div>
-                                <div className='w-9 h-9 rounded-sm bg-purple-500'></div>
-                                <Button variant='outline' size='icon'>
-                                    <PlusIcon />
-                                </Button>
-                            </div>
-
+                            <LabelsSection />
                             <h5 className='text-sm font-medium mb-2 mt-4'>Due Date</h5>
-                            <div className='flex flex-row gap-2'>
-                                <Button variant='outline' className='text-sm'>Today at 12:00 PM</Button>
-                            </div>
-
+                            <DueDateSection />
+                            <h5 className='text-sm font-medium mb-2 mt-4'>Attachment</h5>
+                            <AttachmentSection />
                             <h5 className='text-sm font-medium mb-2 mt-4'>Add to task</h5>
-                            <Textarea className='text-sm resize-none' rows={4} value={task?.description || ''} readOnly placeholder='Add a more detailed description...' />
-
+                            <DetailsSection task={task} />
                         </div>
-                        <div className='col-span-12 sm:col-span-4'>
+                        <div className='col-span-12 sm:col-span-4 px-1'>
                             <h5 className='text-sm font-medium mb-2 mt-4'>Add to task</h5>
                             <div className='flex flex-col gap-2'>
-                                <Button variant='outline' className='text-sm'>Members</Button>
-                                <Button variant='outline' className='text-sm'>Labels</Button>
-                                <Button variant='outline' className='text-sm'>Due Date</Button>
-                                <Button variant='outline' className='text-sm'>Checklist</Button>
-                                <Button variant='outline' className='text-sm'>Attachment</Button>
+                                <MembersButton />
+                                <LabelsButton />
+                                <DueDateButton />
+                                <AttachmentButton />
                             </div>
                             <h5 className='text-sm font-medium mb-2 mt-4'>Actions</h5>
                             <div className='flex flex-col gap-2'>
-                                <Button variant='outline' className='text-sm'>Move</Button>
-                                <Button variant='outline' className='text-sm'>Copy</Button>
-                                <Button variant='outline' className='text-sm'>Archive</Button>                                   
+                                <MoveActionButton />
+                                <CopyActionButton />
+                                <ArchiveActionButton />                                  
                             </div>
                         </div>
                 </div>
