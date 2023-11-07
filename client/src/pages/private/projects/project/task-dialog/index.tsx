@@ -55,7 +55,7 @@ const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list }) => {
                             <DueDateSection />
                             <h5 className='text-sm font-medium mb-2 mt-4'>Attachment</h5>
                             <AttachmentSection />
-                            <h5 className='text-sm font-medium mb-2 mt-4'>Add to task</h5>
+                            <h5 className='text-sm font-medium mb-2 mt-4'>Details</h5>
                             <DetailsSection task={task} />
                         </div>
                         <div className='col-span-12 sm:col-span-4 px-1'>

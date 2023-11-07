@@ -9,7 +9,7 @@ interface DetailsSectionProps {
 const DetailsSection:FC<DetailsSectionProps> = ({ task }) => {
     return (
         <div className='flex flex-row gap-2'>
-            <Textarea className='text-sm resize-none cursor-pointer' rows={3} value={task?.description || ''} readOnly placeholder='Add a more detailed description...' />
+            <Textarea className='text-sm resize-none cursor-pointer' rows={4} value={task?.description || ''} readOnly placeholder='Add a more detailed description...' />
         </div>
     )
 }
