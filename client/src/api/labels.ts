@@ -20,8 +20,7 @@ interface createLabelParams extends createLabelOptions {
 
 export const createLabel = ({ token, ...data }: createLabelParams) => new Promise(async (resolve, reject) => {
     try {
-        const response = await base.post('/labels', data, { headers: { Authorization: `Bearer ${token}` }
-        })
+        const response = await base.post('/labels', data, { headers: { Authorization: `Bearer ${token}` } })
         resolve(response.data)
     } catch (error) {
         reject(error)
