@@ -40,7 +40,8 @@ const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list }) => {
                 <DialogTitle>
                     {task?.text}
                     <DialogDescription className='text-sm my-1'>
-                        in list <Button variant='link' className='text-sm px-0'>{list.title}</Button>
+                        in list {list.title}
+                        {/* in list <Button variant='link' className='text-sm px-0'>{list.title}</Button> */}
                     </DialogDescription>
                     <Separator />
                 </DialogTitle>

@@ -10,7 +10,7 @@ const labelSchema = yup.object().shape({
 export const getLabels = async (req: Request, res: Response) => {
     try {
         const labels = await Label.find()
-        res.status(200).json({ labels })
+        res.status(200).json(labels)
     } catch (error: any) {
         console.log(error)
         res.status(400).json({ message: error.message })
@@ -26,7 +26,7 @@ export const createLabel = async (req: Request, res: Response) => {
             color
         })
         const resp = await label.save()
-        res.status(201).json({ label: resp })
+        res.status(201).json(resp)
     } catch (error: any) {
         console.log(error)
         res.status(400).json({ message: error.message })

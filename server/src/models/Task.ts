@@ -3,6 +3,7 @@ import { Schema, model, Document } from 'mongoose'
 export interface ITask extends Document {
     text: string;
     description: string;
+    dueDate?: Date | null;
     index: number;
     listId: string;
     createdBy: string;
@@ -18,6 +19,10 @@ const taskSchema = new Schema({
     description: {
         type: String,
         default: '',
+    },
+    dueDate: {
+        type: Date,
+        default: null,
     },
     index: {
         type: Number,

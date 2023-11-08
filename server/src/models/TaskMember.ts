@@ -1,6 +1,6 @@
 import { Schema, model, Document } from 'mongoose'
 
-export interface ITask_Member extends Document {
+export interface ITaskMember extends Document {
     taskId: string;
     memberId: string;
     createdBy: string;
@@ -31,4 +31,4 @@ const task_memberSchema = new Schema({
     updatedAt: Date,
 })
 
-export default model<ITask_Member>('Task_Member', task_memberSchema)
+export default model<ITaskMember>('Task_Member', task_memberSchema)

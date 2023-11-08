@@ -1,6 +1,6 @@
 import { Schema, model, Document } from 'mongoose'
 
-export interface ITask_Label extends Document {
+export interface ITaskLabel extends Document {
     taskId: string;
     labelId: string;
     createdBy: string;
@@ -31,4 +31,4 @@ const task_labelSchema = new Schema({
     updatedAt: Date,
 })
 
-export default model<ITask_Label>('Task_Label', task_labelSchema)
+export default model<ITaskLabel>('Task_Label', task_labelSchema)
