@@ -36,3 +36,7 @@ export interface AuthSession {
     token?: string | null
     loading: boolean
 }
+
+export interface getMembersOptions {
+    
+}
