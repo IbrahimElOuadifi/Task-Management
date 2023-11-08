@@ -27,3 +27,42 @@ export interface updateManyTasksOptions {
     tasks: ITask[]
     listId: string
 }
+
+export interface deleteTaskOptions {
+    id: string
+}
+
+export interface moveTaskOptions {
+    id: string
+    listId: string
+}
+
+export interface copyTaskOptions {
+    id: string
+    listId: string
+}
+
+export interface updateTaskTextOptions {
+    id: string
+    text: string
+}
+
+export interface updateTaskDescriptionOptions {
+    id: string
+    description: string
+}
+
+export interface updateTaskDueDateOptions {
+    id: string
+    dueDate: Date
+}
+
+export interface updateTaskMemberOptions {
+    id: string
+    memberId: string
+}
+
+export interface updateTaskLabelOptions {
+    id: string
+    labelId: string
+}

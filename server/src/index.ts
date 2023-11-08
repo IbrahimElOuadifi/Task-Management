@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { config } from 'dotenv'
 
-import { authRouter, projectRouter, listRouter, taskRouter } from './routes/index.js'
+import { authRouter, projectRouter, listRouter, taskRouter, labelRouter, memberRouter } from './routes/index.js'
 
 config()
 
@@ -18,6 +18,8 @@ app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/projects', projectRouter)
 app.use('/api/v1/lists', listRouter)
 app.use('/api/v1/tasks', taskRouter)
+app.use('/api/v1/labels', labelRouter)
+app.use('/api/v1/members', memberRouter)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')

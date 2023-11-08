@@ -112,7 +112,6 @@ export const updateTaskMembers = async (req: RequestWithUser, res: Response) => 
         const { memberId } = req.body
         const user = req.user?._id
         if (!user) throw new Error('User not found')
-        const date = new Date()
         const isTaskMemberExist = await TaskMember.findOne({ taskId: req.params.id, memberId })
         // delete if exist else create
         if (isTaskMemberExist) {
@@ -133,7 +132,6 @@ export const updateTaskLabels = async (req: RequestWithUser, res: Response) => {
         const { labelId } = req.body
         const user = req.user?._id
         if (!user) throw new Error('User not found')
-        const date = new Date()
         const isTaskLabelExist = await TaskLabel.findOne({ taskId: req.params.id, labelId })
         // delete if exist else create
         if (isTaskLabelExist) {
