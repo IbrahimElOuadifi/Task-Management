@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import yup from 'yup'
 import { RequestWithUser } from '../middleware/auth.js'
-import { Project, IProject } from '../models/index.js'
+import { Project } from '../models/index.js'
 
 const createProjectSchema = yup.object().shape({
     name: yup.string().required(),
@@ -10,7 +10,7 @@ const createProjectSchema = yup.object().shape({
 
 export const getProjects = async (req: RequestWithUser, res: Response) => {
     try {
-        const projects = await Project.find({ owner: req.user?._id })
+        const projects = await Project.find({ ownerId: req.user?._id })
         res.json(projects)
     } catch (error: any) {
         res.status(500).json({ message: error.message })
@@ -34,7 +34,7 @@ export const createProject = async (req: RequestWithUser, res: Response) => {
         const project = new Project({
             name,
             description,
-            owner: user._id,
+            ownerId: user._id,
         })
         await project.save()
         res.status(201).json(project)

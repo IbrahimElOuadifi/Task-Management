@@ -1,23 +1,23 @@
 import { Schema, model, Document } from 'mongoose'
 
-export interface IProject extends Document {
+export interface ILabel extends Document {
     name: string;
-    description: string;
-    ownerId: string;
+    color: string;
+    createdBy: string;
     createdAt: Date;
     updatedAt?: Date;
 }
 
-const projectSchema = new Schema({
+const labelSchema = new Schema({
     name: {
         type: String,
         required: true,
     },
-    description: {
+    color: {
         type: String,
-        default: '',
+        default: '#000000',
     },
-    ownerId: {
+    createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -29,4 +29,4 @@ const projectSchema = new Schema({
     updatedAt: Date,
 })
 
-export default model<IProject>('Project', projectSchema)
+export default model<ILabel>('Label', labelSchema)

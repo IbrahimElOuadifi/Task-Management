@@ -5,8 +5,7 @@ export interface IList extends Document {
     title: string;
     description: string;
     index: number;
-    tasks?: ITask[];
-    project: string;
+    projectId: string;
     createdBy: string;
     createdAt: Date;
     updatedAt?: Date;
@@ -26,11 +25,7 @@ const listSchema = new Schema({
         required: true,
         min: 0,
     },
-    // tasks: [{
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Task',
-    // }],
-    project: {
+    projectId: {
         type: Schema.Types.ObjectId,
         ref: 'Project',
         required: true,

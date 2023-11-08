@@ -14,7 +14,7 @@ export const getLists = async (req: RequestWithUser, res: Response) => {
         const { projectId } = req.query
         if (!projectId)
             return res.status(400).json({ message: 'Project id is required' })
-        const lists = await List.find({ project: projectId }).sort({ index: 1 })
+        const lists = await List.find({ projectId }).sort({ index: 1 })
         res.json(lists)
     } catch (error: any) {
         res.status(500).json({ message: error.message })
@@ -35,14 +35,14 @@ export const createList = async (req: RequestWithUser, res: Response) => {
         const { title, description, projectId } = await createListSchema.validate(req.body)
         const user = req.user?._id
         if (!user) throw new Error('User not found')
-        const ProjectIsExist = await Project.findOne({ _id: projectId, owner: user })
+        const ProjectIsExist = await Project.findOne({ _id: projectId, ownerId: user })
         if (!ProjectIsExist) throw new Error('Project not found')
-        const index = await List.countDocuments({ project: projectId })
+        const index = await List.countDocuments({ projectId })
         const list = new List({
             title,
             description,
             index,
-            project: projectId,
+            projectId,
             createdBy: user._id,
         })
         await list.save()

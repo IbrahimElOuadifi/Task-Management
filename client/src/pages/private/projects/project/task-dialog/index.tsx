@@ -53,8 +53,8 @@ const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list }) => {
                             <LabelsSection />
                             <h5 className='text-sm font-medium mb-2 mt-4'>Due Date</h5>
                             <DueDateSection />
-                            <h5 className='text-sm font-medium mb-2 mt-4'>Attachment</h5>
-                            <AttachmentSection />
+                            {/* <h5 className='text-sm font-medium mb-2 mt-4'>Attachment</h5>
+                            <AttachmentSection /> */}
                             <h5 className='text-sm font-medium mb-2 mt-4'>Details</h5>
                             <DetailsSection task={task} />
                         </div>
@@ -64,7 +64,7 @@ const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list }) => {
                                 <MembersButton />
                                 <LabelsButton />
                                 <DueDateButton />
-                                <AttachmentButton />
+                                {/* <AttachmentButton /> */}
                             </div>
                             <h5 className='text-sm font-medium mb-2 mt-4'>Actions</h5>
                             <div className='flex flex-col gap-2'>

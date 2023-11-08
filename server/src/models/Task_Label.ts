@@ -1,32 +1,22 @@
 import { Schema, model, Document } from 'mongoose'
 
-export interface ITask extends Document {
-    text: string;
-    description: string;
-    index: number;
-    listId: string;
+export interface ITask_Label extends Document {
+    taskId: string;
+    labelId: string;
     createdBy: string;
     createdAt: Date;
     updatedAt?: Date;
 }
 
-const taskSchema = new Schema({
-    text: {
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        default: '',
-    },
-    index: {
-        type: Number,
-        required: true,
-        min: 0,
-    },
-    listId: {
+const task_labelSchema = new Schema({
+    taskId: {
         type: Schema.Types.ObjectId,
-        ref: 'List',
+        ref: 'Task',
+        required: true,
+    },
+    labelId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Label',
         required: true,
     },
     createdBy: {
@@ -41,4 +31,4 @@ const taskSchema = new Schema({
     updatedAt: Date,
 })
 
-export default model<ITask>('Task', taskSchema)
+export default model<ITask_Label>('Task_Label', task_labelSchema)
