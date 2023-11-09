@@ -57,9 +57,17 @@ export interface updateTaskDueDateOptions {
     dueDate: Date
 }
 
+export interface getTaskMembersOptions {
+    id: string
+}
+
 export interface updateTaskMemberOptions {
     id: string
     memberId: string
+}
+
+export interface getTaskLabelsOptions {
+    id: string
 }
 
 export interface updateTaskLabelOptions {

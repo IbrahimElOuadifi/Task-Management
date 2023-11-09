@@ -10,7 +10,9 @@ import {
     updateTaskTextOptions,
     updateTaskDescriptionOptions,
     updateTaskDueDateOptions,
+    getTaskMembersOptions,
     updateTaskMemberOptions,
+    getTaskLabelsOptions,
     updateTaskLabelOptions
 } from '@interfaces/Task'
 
@@ -154,6 +156,20 @@ export const updateTaskDueDate = ({ id, token, ...data }: updateTaskDueDateParam
     }
 })
 
+interface getTaskMembersParams extends getTaskMembersOptions {
+    token: string
+}
+
+export const getTaskMembers = ({ id, token }: getTaskMembersParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get(`/tasks/${id}/members`, {}, { headers: { Authorization: `Bearer ${token}` }  })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
 interface updateTaskMemberParams extends updateTaskMemberOptions {
     token: string
 }
@@ -161,6 +177,20 @@ interface updateTaskMemberParams extends updateTaskMemberOptions {
 export const updateTaskMember = ({ id, token, ...data }: updateTaskMemberParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.put(`/tasks/${id}/members`, data, { headers: { Authorization: `Bearer ${token}` }  })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+interface getTaskLabelsParams extends getTaskLabelsOptions {
+    token: string
+}
+
+export const getTaskLabels = ({ id, token }: getTaskLabelsParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get(`/tasks/${id}/labels`, {}, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)

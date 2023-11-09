@@ -8,7 +8,9 @@ export interface ILabel {
 }
 
 export interface getLabelsOptions {
-    
+    query: string
+    limit: number
+    page: number
 }
 
 export interface createLabelOptions {

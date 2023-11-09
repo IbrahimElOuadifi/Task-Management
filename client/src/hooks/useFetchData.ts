@@ -35,12 +35,22 @@ const useFetchData = <T>(
     const [data, setData] = useState<T[]>([])
     const [error, setError] = useState<Error | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
+    const [count, setCount] = useState<number>(0)
 
     const fetchData = async () => {
         try {
             setLoading(true)
             const response: AxiosResponse = await request({ id, page, limit, ...parseJSON(query as string), token })
-            setData(Array.isArray(response.data) ? response.data : [response.data])
+            console.log(response.data)
+            if(Array.isArray(response.data)) {
+                setData(response.data)
+            } else if (response.data && !isNaN(response.data.count)) {
+                setData(response.data.results)
+                setCount(response.data.count)
+            } else {
+                setData([response.data])
+            }
+            // setData(Array.isArray(response.data) ? response.data : [response.data])
             if (callback && response) callback(response)
         } catch (error: any) {
             if(error.status === 401) {
@@ -59,7 +69,7 @@ const useFetchData = <T>(
         fetchData()
     }, [memoizedFetchData])
 
-    return { data, error, loading, refetch: fetchData }
+    return { data, error, loading, count, refetch: fetchData }
 }
 
 export default useFetchData

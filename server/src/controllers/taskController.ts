@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import yup from 'yup'
 import { RequestWithUser } from '../middleware/auth.js'
-import { Task, ITask, List, TaskLabel, TaskMember } from '../models/index.js'
+import { User, Task, ITask, List, Label, TaskLabel, TaskMember } from '../models/index.js'
 
 const createTaskSchema = yup.object().shape({
     text: yup.string().required(),
@@ -107,6 +107,18 @@ export const updateTaskDueDate = async (req: RequestWithUser, res: Response) => 
     }
 }
 
+export const getTaskMembers = async (req: RequestWithUser, res: Response) => {
+    try {
+        if(!req.params.id) throw new Error('Task id is required')
+        const taskMembers = await TaskMember.find({ taskId: req.params.id })
+        const allMembers = await User.find({})
+        const members = allMembers.filter((member) => taskMembers.find((taskMember) => taskMember.memberId.toString() === member._id.toString())).map(({ _id, firstName, lastName, username, createdAt }) => ({ _id, firstName, lastName, username, createdAt }))
+        res.json(members)
+    } catch (error: any) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 export const updateTaskMembers = async (req: RequestWithUser, res: Response) => {
     try {
         const { memberId } = req.body
@@ -123,6 +135,19 @@ export const updateTaskMembers = async (req: RequestWithUser, res: Response) => 
             res.status(201).json(newTaskMember)
         }
     } catch (error: any) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+export const getTaskLabels = async (req: RequestWithUser, res: Response) => {
+    try {
+        if(!req.params.id) throw new Error('Task id is required')
+        const taskLabels = await TaskLabel.find({ taskId: req.params.id })
+        const allLabels = await Label.find({})
+        const labels = allLabels.filter((label) => taskLabels.find((taskLabel) => taskLabel.labelId.toString() === label._id.toString())).map(({ _id, name, color, createdAt }) => ({ _id, name, color, createdAt }))
+        res.json(labels)
+    } catch (error: any) {
+        console.log(error)
         res.status(500).json({ message: error.message })
     }
 }

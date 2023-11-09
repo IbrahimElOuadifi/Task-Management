@@ -37,6 +37,15 @@ export interface AuthSession {
     loading: boolean
 }
 
+export interface IMember {
+    _id: string
+    firstName: string
+    lastName: string
+    username: string
+}
+
 export interface getMembersOptions {
-    
+    query: string
+    limit: number
+    page: number
 }
