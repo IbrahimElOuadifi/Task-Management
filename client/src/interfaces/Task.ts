@@ -2,6 +2,7 @@ export interface ITask {
     _id: string;
     text: string;
     description: string;
+    dueDate: Date | null;
     index: number;
     list: string;
     createdBy: string;

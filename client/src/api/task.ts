@@ -162,6 +162,7 @@ interface getTaskMembersParams extends getTaskMembersOptions {
 
 export const getTaskMembers = ({ id, token }: getTaskMembersParams) => new Promise(async (resolve, reject) => {
     try {
+        if(!id) return resolve({ data: [] })
         const resp = await base.get(`/tasks/${id}/members`, {}, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)
     } catch (error) {
@@ -190,6 +191,7 @@ interface getTaskLabelsParams extends getTaskLabelsOptions {
 
 export const getTaskLabels = ({ id, token }: getTaskLabelsParams) => new Promise(async (resolve, reject) => {
     try {
+        if(!id) return resolve({ data: [] })
         const resp = await base.get(`/tasks/${id}/labels`, {}, { headers: { Authorization: `Bearer ${token}` }  })
         return resolve(resp)
     } catch (error) {

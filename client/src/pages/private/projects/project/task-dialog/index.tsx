@@ -26,7 +26,7 @@ interface TaskDialogProps {
     onFailed?: () => void
 }
 
-const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list }) => {
+const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list, onSuccessful }) => {
 
     const onOpenChange = (open: boolean) => {
         // task: ITask | null
@@ -82,7 +82,7 @@ const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list }) => {
                                     <div className='flex flex-col gap-2'>
                                         <MembersButton taskId={task?._id} members={members.data} count={members.count} onUpdate={members.refetch} />
                                         <LabelsButton taskId={task?._id} labels={labels.data} count={labels.count} onUpdate={labels.refetch} />
-                                        <DueDateButton />
+                                        <DueDateButton taskId={task?._id} date={task.dueDate} onSuccessChange={onSuccessful} />
                                         {/* <AttachmentButton /> */}
                                     </div>
                                     <h5 className='text-sm font-medium mb-2 mt-4'>Actions</h5>

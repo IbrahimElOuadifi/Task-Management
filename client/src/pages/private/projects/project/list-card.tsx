@@ -134,7 +134,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                     }
                 </CardFooter>
             </Card>
-            <TaskDialog handleClose={() => setCurrentTask(null)} task={currentTask} list={list} />
+            <TaskDialog handleClose={() => setCurrentTask(null)} task={currentTask} list={list} onSuccessful={refetch} />
         </div>
     )
 }
