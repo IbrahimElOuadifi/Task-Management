@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { useState, useEffect, FC } from 'react'
 import { Button } from '@components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { Calendar } from '@components/ui/calendar'
@@ -6,12 +6,14 @@ import { usePOSTData } from 'hooks/index'
 import { updateTaskDueDate } from 'api/task'
 
 interface DueDateButtonProps {
-    date: Date | null
+    date: string | null
     taskId: string
-    onSuccessChange?: (date: Date) => void
+    onSuccessChange?: (date: String) => void
 }
 
 const DueDateButton:FC<DueDateButtonProps> = ({ date, onSuccessChange, taskId }) => {
+
+    const [dueDate, setDueDate] = useState<Date | undefined>(date ? new Date(date) : undefined)
 
     const { postData } = usePOSTData(updateTaskDueDate, onSuccessChange)
 
@@ -19,6 +21,10 @@ const DueDateButton:FC<DueDateButtonProps> = ({ date, onSuccessChange, taskId })
         postData({ dueDate, id: taskId })
         console.log(dueDate, date)
     }
+
+    useEffect(() => {
+        setDueDate(date ? new Date(date) : undefined)
+    }, [date])
 
     return (
         <Popover>
@@ -28,7 +34,7 @@ const DueDateButton:FC<DueDateButtonProps> = ({ date, onSuccessChange, taskId })
             <PopoverContent>
                 <Calendar
                     mode='single'
-                    selected={date || undefined}
+                    selected={dueDate}
                     onSelect={date => handleDateChange(date || null)}
                     // disable all past dates
                     // disabled={(date) => date < new Date()}

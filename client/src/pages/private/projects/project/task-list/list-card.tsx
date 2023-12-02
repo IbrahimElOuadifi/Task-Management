@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@components/ui/button'
@@ -9,17 +10,19 @@ import { ITask, createTaskOptions, updateManyTasksOptions } from '@interfaces/Ta
 import { useForm, Controller } from 'react-hook-form'
 import { useFetchData, usePOSTData, useOutsideAlerter } from 'hooks/index'
 import { getTasks, createTask, updateManyTasks } from 'api/task'
-import TaskDialog from './task-dialog/index'
+import Item from './item'
 
 export interface ListCardProps {
     list: IList
     projectId: string
+    onSuccessful?: () => void
 }
 
 const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
 
+    const navigate = useNavigate()
+
     const [tasks, setTasks] = useState<ITask[]>([])
-    const [currentTask, setCurrentTask] = useState<ITask | null>(null)
 
     const [submitting, setSubmitting] = useState<boolean>(false)
     const [open, setOpen] = useState<boolean>(false)
@@ -35,13 +38,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
     const { data, refetch } = useFetchData<ITask>(getTasks, { query: JSON.stringify({ listId: list._id }) })
     const { postData: postCreateTasks } = usePOSTData<createTaskOptions>(createTask, refetch, refetch)
     const { postData: postUpdateTasks } = usePOSTData<updateManyTasksOptions>(updateManyTasks, refetch, refetch)
-
-    useEffect(() => {
-        if (data) {
-            setTasks(data)
-        }
-    }, [data])
-
+    
     const onSubmit = (data: createTaskOptions) => {
         setSubmitting(true)
         postCreateTasks({ ...data, listId: list._id }).then(() => {
@@ -50,33 +47,37 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
             setSubmitting(false)
         })
     }
-
+    
     const onError = (errors: any) => {
         console.log(errors)
     }
-
+    
     const handleCancel = () => {
         setOpen(false)
         reset()
     }
-
+    
     const handleUpdate = (newData: any) => {
         const newTask: ITask[] = newData.map(({ id, ...rest }: { id: string }) => (rest))
         if(JSON.stringify(newData.map(({ id }: { id: string }) => id)) == JSON.stringify(data.map(({_id}) => _id))) return null
         setTasks(newTask)
         postUpdateTasks({ tasks: newTask, listId: list._id })
     }
-
+    
     const handleClick = (task: ITask | null) => {
         if(task) {
-            setCurrentTask(task)
-        } else {
-            setCurrentTask(null)
+            navigate(`/projects/${projectId}/${task._id}`)
         }
     }
-
+    
+    useEffect(() => {
+        if (data) {
+            setTasks(data)
+        }
+    }, [data])
+    
     useOutsideAlerter(ref, handleCancel)
-
+    
     return (
         <div>
             <Card className='mr-4 bg-gray-50'>
@@ -89,16 +90,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                     <div className='flex flex-col'>
                         <ReactSortable list={tasks.map((props) => ({ id: props._id, ...props }))} setList={handleUpdate} group={{ name: projectId }} animation={150}>
                         {
-                            tasks?.map((task) => (
-                                <Card className='p-2 cursor-pointer hover:bg-gray-100 mb-3' key={task._id} onClick={handleClick.bind(this, task)}>
-                                    <CardContent className='p-0'>
-                                        <p className='text-sm ring-0 px-1 break-words'>
-                                            {/* {task.text.split('\n').map((text, index) => (<>{text}{index === task.text.length - 1 ? '' : <br />}</>))} */}
-                                            {task.text}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            ))
+                            tasks?.map((task) => <Item key={task._id} task={task} handleClick={handleClick} />)
                         }
                         </ReactSortable>
                     </div>
@@ -134,7 +126,6 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                     }
                 </CardFooter>
             </Card>
-            <TaskDialog handleClose={() => setCurrentTask(null)} task={currentTask} list={list} onSuccessful={refetch} />
         </div>
     )
 }

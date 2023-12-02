@@ -2,9 +2,9 @@ export interface ITask {
     _id: string;
     text: string;
     description: string;
-    dueDate: Date | null;
+    dueDate: string | null;
     index: number;
-    list: string;
+    listId: string;
     createdBy: string;
     createdAt: Date;
     updatedAt?: Date;

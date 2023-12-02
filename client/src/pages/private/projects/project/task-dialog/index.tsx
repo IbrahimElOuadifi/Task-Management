@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ITask } from '@interfaces/Task'
 import { IList } from '@interfaces/List'
 import { IMember } from '@interfaces/User'
@@ -16,37 +17,40 @@ import MoveActionButton from './move-action-button'
 import CopyActionButton from './copy-action-button'
 import ArchiveActionButton from './archive-action-button'
 import { useFetchData } from 'hooks/index'
-import { getTaskLabels, getTaskMembers } from 'api/task'
+import { getList } from 'api/list'
+import { getTaskLabels, getTaskMembers, getTask } from 'api/task'
 
-interface TaskDialogProps {
-    handleClose?: () => void
-    task: ITask | null
-    list: IList
-    onSuccessful?: () => void
-    onFailed?: () => void
-}
+const TaskDialog: FC = () => {
 
-const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list, onSuccessful }) => {
+    const navigate = useNavigate()
+    const { taskId, projectId } = useParams<{ taskId: string, projectId: string }>()
 
     const onOpenChange = (open: boolean) => {
         // task: ITask | null
-        if (handleClose && !open) {
-            handleClose()
-        }
+        if(!open) navigate(`/projects/${projectId}`)
     }
 
+    const { data: [task], refetch } = useFetchData<ITask>(getTask, { id: taskId })
+    const { data: [list], refetch: refetchList } = useFetchData<IList>(getList, { id: task?.listId })
     const labels = useFetchData<ILabel>(getTaskLabels, { id: task?._id })
     const members = useFetchData<IMember>(getTaskMembers, { id: task?._id })
 
+    const handleSuccessful = () => {
+        if (refetch) {
+            refetch()
+            refetchList()
+        }
+    }
+
     return (
-        <Dialog open={Boolean(task)} onOpenChange={onOpenChange} >
+        <Dialog open={Boolean(taskId)} onOpenChange={onOpenChange} >
             {
-                task && task._id && (
+                task && (
                     <DialogContent className='w-11/12 max-w-4xl'>
                         <DialogTitle>
                             {task?.text}
                             <DialogDescription className='text-sm my-1'>
-                                in list {list.title}
+                                in list {list?.title}
                                 {/* in list <Button variant='link' className='text-sm px-0'>{list.title}</Button> */}
                             </DialogDescription>
                             <Separator />
@@ -70,8 +74,14 @@ const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list, onSuccessful
                                             </>
                                         )
                                     }
-                                    <h5 className='text-sm font-medium mb-2 mt-4'>Due Date</h5>
-                                    <DueDateSection />
+                                    {
+                                        task?.dueDate && (
+                                            <>
+                                                <h5 className='text-sm font-medium mb-2 mt-4'>Due Date</h5>
+                                                <DueDateSection date={task.dueDate} />
+                                            </>
+                                        )
+                                    }
                                     {/* <h5 className='text-sm font-medium mb-2 mt-4'>Attachment</h5>
                                     <AttachmentSection /> */}
                                     <h5 className='text-sm font-medium mb-2 mt-4'>Details</h5>
@@ -82,14 +92,14 @@ const TaskDialog: FC<TaskDialogProps> = ({ handleClose, task, list, onSuccessful
                                     <div className='flex flex-col gap-2'>
                                         <MembersButton taskId={task?._id} members={members.data} count={members.count} onUpdate={members.refetch} />
                                         <LabelsButton taskId={task?._id} labels={labels.data} count={labels.count} onUpdate={labels.refetch} />
-                                        <DueDateButton taskId={task?._id} date={task.dueDate} onSuccessChange={onSuccessful} />
+                                        <DueDateButton taskId={task?._id} date={task.dueDate} onSuccessChange={refetch} />
                                         {/* <AttachmentButton /> */}
                                     </div>
                                     <h5 className='text-sm font-medium mb-2 mt-4'>Actions</h5>
                                     <div className='flex flex-col gap-2'>
-                                        <MoveActionButton />
-                                        <CopyActionButton />
-                                        <ArchiveActionButton />                                  
+                                        <MoveActionButton taskId={task._id} listId={task.listId} onSuccessful={handleSuccessful} />
+                                        <CopyActionButton taskId={task._id} listId={task.listId} onSuccessful={handleSuccessful} />
+                                        <ArchiveActionButton taskId={task._id} onSuccessful={onOpenChange.bind(this, false)} />                                  
                                     </div>
                                 </div>
                         </div>
