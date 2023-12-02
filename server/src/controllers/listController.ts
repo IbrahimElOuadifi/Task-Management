@@ -67,3 +67,22 @@ export const updateManyLists = async (req: RequestWithUser, res: Response) => {
         res.status(500).json({ message: error.message })
     }
 }
+
+export const updateListTitle = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { title } = req.body
+        const list = await List.findByIdAndUpdate(req.params.id, { title }, { new: true })
+        res.json(list)
+    } catch (error: any) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+export const deleteList = async (req: RequestWithUser, res: Response) => {
+    try {
+        const list = await List.findByIdAndDelete(req.params.id)
+        res.json(list)
+    } catch (error: any) {
+        res.status(500).json({ message: error.message })
+    }
+}

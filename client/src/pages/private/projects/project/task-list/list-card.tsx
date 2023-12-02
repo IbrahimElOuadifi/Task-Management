@@ -5,11 +5,12 @@ import { Separator } from '@/components/ui/separator'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { ReactSortable } from 'react-sortablejs'
-import { IList } from '@interfaces/List'
+import { IList, updateListTitleOptions } from '@interfaces/List'
 import { ITask, createTaskOptions, updateManyTasksOptions } from '@interfaces/Task'
 import { useForm, Controller } from 'react-hook-form'
-import { useFetchData, usePOSTData, useOutsideAlerter } from 'hooks/index'
+import { useFetchData, usePOSTData, useOutsideAlerter, useDebounceValue } from 'hooks/index'
 import { getTasks, createTask, updateManyTasks } from 'api/task'
+import { updateListTitle } from 'api/list'
 import Item from './item'
 
 export interface ListCardProps {
@@ -18,26 +19,37 @@ export interface ListCardProps {
     onSuccessful?: () => void
 }
 
-const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
+const ListCard: FC<ListCardProps> = ({ list, projectId, onSuccessful }) => {
 
     const navigate = useNavigate()
 
     const [tasks, setTasks] = useState<ITask[]>([])
+    const [isEdit, setIsEdit] = useState<boolean>(false)
 
     const [submitting, setSubmitting] = useState<boolean>(false)
     const [open, setOpen] = useState<boolean>(false)
 
-    const ref = useRef(null)
+    const cardRef = useRef(null)
+    const inputRef = useRef(null)
 
-    const { handleSubmit, control, formState: { errors }, reset } = useForm<createTaskOptions>({
+    const { handleSubmit, control, reset } = useForm<createTaskOptions>({
         defaultValues: {
             text: ''
         }
     })
 
+    const listTitleForm = useForm<{ title: string  }>({
+        defaultValues: {
+            title: ''
+        }
+    })
+
+    const [title] = useDebounceValue<string>((listTitleForm.watch('title') as string), 500)
+
     const { data, refetch } = useFetchData<ITask>(getTasks, { query: JSON.stringify({ listId: list._id }) })
     const { postData: postCreateTasks } = usePOSTData<createTaskOptions>(createTask, refetch, refetch)
     const { postData: postUpdateTasks } = usePOSTData<updateManyTasksOptions>(updateManyTasks, refetch, refetch)
+    const { postData: postUpdateListTitle } = usePOSTData<updateListTitleOptions>(updateListTitle, onSuccessful, onSuccessful) 
     
     const onSubmit = (data: createTaskOptions) => {
         setSubmitting(true)
@@ -75,15 +87,29 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
             setTasks(data)
         }
     }, [data])
+
+    useEffect(() => {
+        listTitleForm.setValue('title', list.title)
+    }, [list])
+
+    useEffect(() => {
+       postUpdateListTitle({ title, id: list._id })
+    }, [title])
     
-    useOutsideAlerter(ref, handleCancel)
+    useOutsideAlerter(cardRef, handleCancel)
+    useOutsideAlerter(inputRef, () => setIsEdit(false))
     
     return (
         <div>
             <Card className='mr-4 bg-gray-50'>
                 <CardHeader className='px-1 py-2 handle'>
                     <CardTitle>
-                        <Input className='text-sm border-none ring-0' value={list.title} readOnly />
+                        <Controller
+                            name='title'
+                            control={listTitleForm.control}
+                            render={({ field: { ref, disabled, ...field } }) => (
+                                <Input className='text-sm border-none ring-0' readOnly={!isEdit} ref={inputRef} onClick={() => setIsEdit(true)} {...field} />
+                            )} />
                     </CardTitle>
                 </CardHeader>
                 <CardContent className='px-2 py-4 handle w-[280px]'>
@@ -95,7 +121,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                         </ReactSortable>
                     </div>
                 </CardContent>
-                <CardFooter className='px-4 pb-2 handle' ref={ref}>
+                <CardFooter className='px-4 pb-2 handle' ref={cardRef}>
                     {
                         open ?
                         (
@@ -105,8 +131,8 @@ const ListCard: FC<ListCardProps> = ({ list, projectId }) => {
                                     name='text'
                                     control={control}
                                     rules={{ required: true }}
-                                    render={({ field }) => (
-                                        <Input {...field} placeholder='List title' error={Boolean(errors.text)} />
+                                    render={({ field, fieldState: { error } }) => (
+                                        <Input {...field} placeholder='List title' error={Boolean(error)} />
                                     )}
                                 />
                                 <div className='flex flex-row justify-between items-center gap-1'>

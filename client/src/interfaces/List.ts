@@ -30,3 +30,12 @@ export interface updateManyListsOptions {
     lists: IList[]
     projectId: string
 }
+
+export interface updateListTitleOptions {
+    title: string | Boolean
+    id: string
+}
+
+export interface deleteListOptions {
+    id: string
+}

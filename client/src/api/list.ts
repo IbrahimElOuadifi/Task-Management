@@ -1,5 +1,5 @@
 import base from './base'
-import { getListOptions, getListsOptions, createListOptions, updateManyListsOptions } from '@interfaces/List'
+import { getListOptions, getListsOptions, createListOptions, updateManyListsOptions, updateListTitleOptions, deleteListOptions } from '@interfaces/List'
 
 interface getListsParams extends getListsOptions {
     token: string
@@ -14,6 +14,14 @@ interface createListParams extends createListOptions {
 }
 
 interface updateManyListsParams extends updateManyListsOptions {
+    token: string
+}
+
+interface updateListTitleParams extends updateListTitleOptions {
+    token: string
+}
+
+interface deleteListParams extends deleteListOptions {
     token: string
 }
 
@@ -50,6 +58,26 @@ export const createList = ({ token, ...data }: createListParams) => new Promise(
 export const updateManyLists = ({ token, ...data }: updateManyListsParams) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.put('/lists', data, { headers: { Authorization: `Bearer ${token}` } })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const updateListTitle = ({ token, id, ...data }: updateListTitleParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.put(`/lists/${id}/title`, data, { headers: { Authorization: `Bearer ${token}` } })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const deleteList = ({ token, id }: deleteListParams) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.del(`/lists/${id}`, { headers: { Authorization: `Bearer ${token}` } })
         return resolve(resp)
     } catch (error) {
         console.error(error)
