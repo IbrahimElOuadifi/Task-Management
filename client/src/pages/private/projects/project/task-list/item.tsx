@@ -1,5 +1,7 @@
 import { FC } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent } from '@components/ui/card'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar' 
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent } from '@components/ui/dropdown-menu'
 import { ITask } from '@interfaces/Task'
 import { ILabel } from '@interfaces/Label'
 import { IMember } from '@interfaces/User'
@@ -30,12 +32,48 @@ const Item: FC<ItemProps> = ({ task, handleClick }) => {
                     {/* {task.text.split('\n').map((text, index) => (<>{text}{index === task.text.length - 1 ? '' : <br />}</>))} */}
                     {task.text}
                 </p>
-                <p>
-                    {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}
-                    {/* {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'} */}
-                </p>
+                <div className='flex justify-between items-center'>
+                    <p>
+                        {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}
+                        {/* {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'} */}
+                    </p>
+                    <div>
+                        {
+                            !members.data?.length ? '' :
+                            members.data?.length === 1 ?
+                                <Avatar className='mr-2' onClick={e => e.stopPropagation()}>
+                                    <AvatarImage src={''} />
+                                    <AvatarFallback>{members.data[0].firstName.charAt(0)}{members.data[0].lastName.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                            :
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <Avatar className='mr-2'>
+                                        <AvatarImage src={''} />
+                                        <AvatarFallback>+{members.data?.length}</AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className='w-52'>
+                                    {
+                                        members.data?.map((member) => (
+                                            <DropdownMenuItem key={member._id} onClick={e => e.stopPropagation()}>
+                                                <Avatar className='mr-2'>
+                                                    <AvatarImage src={''} />
+                                                    <AvatarFallback>{member.firstName.charAt(0)}{member.lastName.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <h2 className='text-sm'>
+                                                    {member.firstName} {member.lastName}
+                                                </h2>
+                                            </DropdownMenuItem>
+                                        ))
+                                    }
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        }
+                    </div>
+                </div>
             </CardContent>
-        </Card>                       
+        </Card>
     )
 }
 
