@@ -49,7 +49,7 @@ const LabelsButton:FC<LabelsButtonProps> = ({ labels, taskId, onUpdate }) => {
                                 data.map((label) => (
                                     <div key={label._id} className='flex items-center justify-between space-x-2'>
                                         <div className='flex items-center justify-start gap-2'>
-                                            <div className={`w-9 h-9 rounded-sm bg-${label.color} border`}></div>
+                                            <div className={`w-9 h-9 rounded-sm border`} style={{ backgroundColor: label.color }}></div>
                                             <span>{label.name}</span>
                                         </div>
                                         <div className='flex items-center justify-end gap-2'>

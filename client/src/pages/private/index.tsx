@@ -1,7 +1,7 @@
 import { useEffect, FC } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import HomeLayout from '@layouts/home'
+import MainLayout from '@layouts/main'
 import { useAuth } from 'hooks/index'
 import { Spinner } from '@components/ui/spinner'
 import { usePOSTData } from 'hooks/index'
@@ -35,9 +35,9 @@ const Private: FC = () => {
   )
 
   return (
-    <HomeLayout>
+    <MainLayout>
       <Outlet />
-    </HomeLayout>
+    </MainLayout>
   )
 }
   

@@ -24,7 +24,11 @@ const Item: FC<ItemProps> = ({ task, handleClick }) => {
                 <div className='flex gap-1 overflow-hidden'>
                     {
                         labels.data?.map((label) => (
-                            <div key={label._id} className={`w-8 h-2 bg-${label.color} rounded-sm border-black ${label.name === 'white' ? 'border' : 'border-0'}`}></div>
+                            <div
+                                key={label._id}
+                                className='w-8 h-2 rounded-sm border'
+                                // className={`w-8 h-2 rounded-sm  ${label.name === 'white' ? 'border' : 'border-0'}` }
+                                style={{ backgroundColor: label.color }}></div>
                         ))
                     }
                 </div>

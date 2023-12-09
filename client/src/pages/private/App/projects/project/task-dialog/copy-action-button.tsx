@@ -20,7 +20,7 @@ const CopyActionButton:FC<CopyActionButtonProps> = ({ taskId, onSuccessful }) =>
 
     const [open, setOpen] = useState(false)
 
-    const { data, loading, error } = useFetchData<IList>(getLists, { query: JSON.stringify({ projectId }) })
+    const { data, loading, error } = useFetchData<IList>(getLists, { query: JSON.stringify({ projectId }) }, console.log)
 
     const { postData } = usePOSTData(copyTask, onSuccessful)
 
@@ -54,13 +54,12 @@ const CopyActionButton:FC<CopyActionButtonProps> = ({ taskId, onSuccessful }) =>
                             loading ? (<h5>loading...</h5>) :
                             error? (<h5>{error.message}</h5>) :
                             data.length === 0 ? (<h5>No list found</h5>) :
-                            data.map((list) => (
+                            data.map(list => (
                                 <Button
                                     // variant={list._id === listId ? 'default' : 'outline'}
                                     variant='outline'
                                     key={list._id}
-                                    onClick={handleMoveTask.bind(this, list._id)}
-                                >
+                                    onClick={handleMoveTask.bind(this, list._id)}>
                                     {list.title}
                                 </Button>
                             ))

@@ -17,7 +17,7 @@ const Link = ({ children, ...props }: any) => {
     )
 }
 
-const SideBar: FC = () => {
+const HomeSideBar: FC = () => {
     return (
         <div className='h-full py-4 px-2'>
             <ul className='space-y-2'>
@@ -29,4 +29,4 @@ const SideBar: FC = () => {
     )
 }
 
-export default SideBar
+export default HomeSideBar

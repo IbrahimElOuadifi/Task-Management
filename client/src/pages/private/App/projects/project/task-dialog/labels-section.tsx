@@ -14,7 +14,10 @@ const LabelsSection:FC<LabelsSectionProps> = ({ labels }) => {
         <div className='flex flex-row gap-2'>
             {
                 labels.map(label => (
-                    <div key={label._id} className={`w-9 h-9 rounded-sm bg-${label.color} border`}></div>
+                    <div
+                        key={label._id}
+                        className={`w-9 h-9 rounded-sm border`}
+                        style={{ backgroundColor: label.color }}></div>
                 ))
             }
             <Button variant='outline' size='icon'>
