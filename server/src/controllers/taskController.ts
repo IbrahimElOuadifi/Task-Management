@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import yup from 'yup'
-import { RequestWithUser } from '../middleware/auth.js'
+import { RequestWithUser } from '../middlewares/auth.js'
 import { User, Task, ITask, List, Label, TaskLabel, TaskMember } from '../models/index.js'
 
 const createTaskSchema = yup.object().shape({

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { AxiosResponse } from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { checkSession, login, register } from 'api/auth'
+import { checkSession, login, register, logoutUser } from 'api/auth'
 import { AuthSession, User, UserLogin, UserRegister } from '@interfaces/User'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, setCredentials } from '@store-actions/authSlice'
+import { handleTokenRefresh } from '@utils'
 import { useToast } from "@components/ui/use-toast"
 
 const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
@@ -21,12 +22,13 @@ const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
     const loginHandler = async (credentials: UserLogin) => {
         try {
             setSubmitting(true)
-            const response = await login(credentials) as AxiosResponse<{ token: string }>
-            localStorage.setItem('token', response.data.token)
+            const response = await login(credentials) as AxiosResponse<{ accessToken: string, refreshToken?: string, user: User }>
+            localStorage.setItem('accessToken', response.data.accessToken)
+            if(response.data.refreshToken) localStorage.setItem('refreshToken', response.data.refreshToken)
             checkSessionHandler()
         } catch (error: any) {
             setError(error)
-            dispatch(setCredentials({ user: null, token: null, loading: false }))
+            dispatch(setCredentials({ user: null, accessToken: null, loading: false }))
             toast({
                 description: error.message,
                 duration: 2000,
@@ -40,12 +42,13 @@ const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
     const registerHandler = async (credentials: UserRegister) => {
         try {
             setSubmitting(true)
-            const response = await register(credentials) as AxiosResponse<{ token: string }>
-            localStorage.setItem('token', response.data.token)
+            const response = await register(credentials) as AxiosResponse<{ accessToken: string, refreshToken?: string, user: User }>
+            localStorage.setItem('accessToken', response.data.accessToken)
+            if(response.data.refreshToken) localStorage.setItem('refreshToken', response.data.refreshToken)
             checkSessionHandler()
         } catch (error: any) {
             setError(error)
-            dispatch(setCredentials({ user: null, token: null, loading: false }))
+            dispatch(setCredentials({ user: null, accessToken: null, loading: false }))
             toast({
                 description: error.message,
                 duration: 2000,
@@ -56,27 +59,48 @@ const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
         }
     }
 
-    const logoutHandler = () => {
-        localStorage.removeItem('token')
-        dispatch(logout())
+    const logoutHandler = async () => {
+        try {
+            const refreshToken = localStorage.getItem('refreshToken')
+            if (refreshToken)
+                await logoutUser({ refreshToken })
+            localStorage.removeItem('accessToken')
+            localStorage.removeItem('refreshToken')
+            dispatch(logout())
+        } catch (error) {
+            console.log(error)
+        } 
     }
+
 
     const checkSessionHandler = async () => {
         try {
             setError(null)
-            dispatch(setCredentials({ user: null, token: null, loading: true }))
-            const token = localStorage.getItem('token')
-            const response = await checkSession({ token }) as AxiosResponse<{ user: User }>
-            dispatch(setCredentials({  user: response.data.user, token, loading: false }))
+            dispatch(setCredentials({ user: null, accessToken: null, loading: true }))
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await checkSession({ accessToken }) as AxiosResponse<{ user: User }>
+            dispatch(setCredentials({  user: response.data.user, accessToken, loading: false }))
         } catch (error: any) {
-            setError(error)
-            dispatch(setCredentials({ user: null, token: null, loading: false }))
-            if(page === 'private') toast({
-                description: error.message,
-                duration: 2000,
-                variant: 'destructive'
-            })
-            localStorage.removeItem('token')
+            if(error.status === 401) {
+                handleTokenRefresh()
+                    .then(({ accessToken, user }) => {
+                        dispatch(setCredentials({  user, accessToken, loading: false }))
+                        if(page !== 'private') navigate('/')
+                    }).catch(error => {
+                        setError(error)
+                        dispatch(setCredentials({ user: null, accessToken: null, loading: false }))
+                        if(page === 'private') {
+                            toast({
+                                description: error.message,
+                                duration: 2000,
+                                variant: 'destructive'
+                            })
+                            navigate('/login')
+                        }
+                    })
+            } else {
+                setError(error)
+            }
         }
     }
 

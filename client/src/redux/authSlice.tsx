@@ -3,7 +3,7 @@ import { AuthSession } from '@interfaces/User'
 
 const initialState: AuthSession = {
     user: null,
-    token: null,
+    accessToken: null,
     loading: true
 }
 

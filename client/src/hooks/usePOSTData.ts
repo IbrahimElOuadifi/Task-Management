@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { AxiosResponse } from 'axios'
-import { useSelector } from 'react-redux'
-import { AuthSession } from '@interfaces/User'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { logout, setCredentials } from '@store-actions/authSlice'
+import { handleTokenRefresh } from '@utils'
+import { useToast } from "@components/ui/use-toast"
 
 const usePOSTData = <T>(
     request: Function,
@@ -9,7 +12,9 @@ const usePOSTData = <T>(
     onFailure?: Function,
 ) => {
 
-    const { token } = useSelector((state: { auth: AuthSession }) => state.auth)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { toast } = useToast()
 
     const [data, setData] = useState<T[]>([])
     const [error, setError] = useState<Error | null>(null)
@@ -17,13 +22,32 @@ const usePOSTData = <T>(
 
     const postData = async (data: T) => {
         try {
+            const token = localStorage.getItem('accessToken')
             setLoading(true)
+            setError(null)
             const response: AxiosResponse = await request({ ...data, token })
             setData(Array.isArray(response.data) ? response.data : [response.data])
             if(onSuccess) onSuccess(response)
         } catch (error: any) {
-            setError(error)
-            if(onFailure) onFailure(error)
+            if(error.status === 401) {
+                handleTokenRefresh()
+                    .then(({ user, accessToken }) => {
+                        dispatch(setCredentials({ user, accessToken, loading: false }))
+                        postData(data)
+                    }).catch(error => {
+                        navigate('/login')
+                        setError(error)
+                        dispatch(logout())
+                        toast({
+                            description: error.message,
+                            duration: 2000,
+                            variant: 'destructive'
+                        })
+                    })
+            } else {
+                setError(error)
+                if(onFailure) onFailure(error)
+            }
         } finally {
             setLoading(false)
         }

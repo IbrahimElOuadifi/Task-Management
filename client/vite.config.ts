@@ -15,7 +15,7 @@ export default defineConfig({
       "api": path.resolve(__dirname, "./src/api"),
       "@assets": path.resolve(__dirname, "./src/assets"),
       "@interfaces": path.resolve(__dirname, "./src/interfaces"),
-      "@utils": path.resolve(__dirname, "./src/utils"),
+      "@utils": path.resolve(__dirname, "./src/lib/utils"),
       "@store-actions": path.resolve(__dirname, "./src/redux"),
       "@contexts": path.resolve(__dirname, "./src/contexts"),
     },

@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import yup from 'yup'
-import { RequestWithUser } from '../middleware/auth.js'
+import { RequestWithUser } from '../middlewares/auth.js'
 import { Project } from '../models/index.js'
 
 const createProjectSchema = yup.object().shape({

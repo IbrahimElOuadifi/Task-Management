@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import { AxiosResponse } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { logout } from '@store-actions/authSlice'
+import { logout, setCredentials } from '@store-actions/authSlice'
+import { handleTokenRefresh } from '@utils'
+import { useToast } from "@components/ui/use-toast"
 
 const parseJSON = (obj: string): Record<string, unknown> => {
     try {
@@ -28,10 +29,9 @@ const useFetchData = <T>(
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const { toast } = useToast()
 
     const { id, query, page, limit } = options
-    const { token } = useSelector((state: any) => state.auth)
-
     const [data, setData] = useState<T[]>([])
     const [error, setError] = useState<Error | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
@@ -39,9 +39,10 @@ const useFetchData = <T>(
 
     const fetchData = async () => {
         try {
+            const token = localStorage.getItem('accessToken')
             setLoading(true)
+            setError(null)
             const response: AxiosResponse = await request({ id, page, limit, ...parseJSON(query as string), token })
-            console.log(response.data)
             if(Array.isArray(response.data)) {
                 setData(response.data)
             } else if (response.data && !isNaN(response.data.count)) {
@@ -54,8 +55,22 @@ const useFetchData = <T>(
             if (callback && response) callback(response)
         } catch (error: any) {
             if(error.status === 401) {
-                dispatch(logout())
-                navigate('/login')
+                handleTokenRefresh()
+                    .then(({ accessToken, user }) => {
+                        dispatch(setCredentials({ user, accessToken, loading: false }))
+                        fetchData()
+                    }).catch(error => {
+                        navigate('/login')
+                        setError(error)
+                        dispatch(logout())
+                        toast({
+                            description: error.message,
+                            duration: 2000,
+                            variant: 'destructive'
+                        })
+                    })
+            } else {
+                setError(error)
             }
             setError(error)
         } finally {

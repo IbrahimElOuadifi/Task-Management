@@ -22,8 +22,16 @@ export interface UserRegister {
 }
 
 export interface Session {
-    user: User
-    token: string | null
+    user?: User
+    accessToken: string | null
+}
+
+export interface refreshProps {
+    refreshToken: string
+}
+
+export interface logoutProps {
+    refreshToken: string
 }
 
 export interface SessionError {
@@ -33,7 +41,7 @@ export interface SessionError {
 
 export interface AuthSession {
     user: User | null
-    token?: string | null
+    accessToken?: string | null
     loading: boolean
 }
 

@@ -10,7 +10,6 @@ const base = axios.create({
 const get = (path: string, params?: any, config?: AxiosRequestConfig) => new Promise<AxiosResponse>(async (resolve, reject) => {
     try {
         const resp = await base.get(path, { params, ...config })
-        console.log(resp.data)
         return resolve(resp)
     } catch (error) {
         const respError = { status: (error as AxiosError).response?.status || (error as AxiosError).status, message: ((error as AxiosError).response?.data as { message: string }).message || (error as AxiosError).message }

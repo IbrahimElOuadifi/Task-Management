@@ -1,5 +1,5 @@
 import base from './base'
-import { UserLogin, UserRegister, Session } from '@interfaces/User'
+import { UserLogin, UserRegister, Session, refreshProps, logoutProps } from '@interfaces/User'
 
 export const login = (data: UserLogin) => new Promise(async (resolve, reject) => {
     try {
@@ -21,9 +21,29 @@ export const register = (data: UserRegister) => new Promise(async (resolve, reje
     }
 })
 
-export const checkSession = ({ token }: Session) => new Promise(async (resolve, reject) => {
+export const refreshSession = ({ refreshToken }: refreshProps) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get('/auth/session', {}, { headers: { Authorization: `Bearer ${token || ''}` } })
+        const resp = await base.post('/auth/refresh', { refreshToken })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const checkSession = ({ accessToken }: Session) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get('/auth/session', {}, { headers: { Authorization: `Bearer ${accessToken || ''}` } })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const logoutUser = ({ refreshToken }: logoutProps) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.post('/auth/logout', { refreshToken })
         return resolve(resp)
     } catch (error) {
         console.error(error)

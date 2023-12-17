@@ -13,7 +13,7 @@
       "api/*": ["src/api/*"],
       "@assets/*": ["src/assets/*"],
       "@interfaces/*": ["src/interfaces/*"],
-      "@utils/*": ["src/utils/*"],
+      "@utils": ["src/lib/utils"],
       "@store-actions/*": ["src/redux/*"],
       "@contexts/*": ["src/contexts/*"],
       "@/*": ["src/*"],

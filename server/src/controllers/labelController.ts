@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { RequestWithUser } from '../middleware/auth.js'
+import { RequestWithUser } from '../middlewares/auth.js'
 import { Label } from '../models/index.js'
 import yup from 'yup'
 

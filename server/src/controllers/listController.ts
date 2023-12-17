@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import yup from 'yup'
-import { RequestWithUser } from '../middleware/auth.js'
+import { RequestWithUser } from '../middlewares/auth.js'
 import { List, IList, Project } from '../models/index.js'
 
 const createListSchema = yup.object().shape({

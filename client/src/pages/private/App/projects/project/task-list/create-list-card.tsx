@@ -16,7 +16,7 @@ export interface CardProps {
 
 const CreateNewCardList: FC<CardProps> = ({ onSuccessfulSubmit, onFailedSubmit }) => {
 
-    const { id } = useParams() as { id: string }
+    const { projectId } = useParams() as { projectId: string }
 
     const [submitting, setSubmitting] = useState<boolean>(false)
     const [open, setOpen] = useState<boolean>(false)
@@ -36,7 +36,7 @@ const CreateNewCardList: FC<CardProps> = ({ onSuccessfulSubmit, onFailedSubmit }
     
     const onSubmit = (data: createListOptions) => {
         setSubmitting(true)
-        postData({ ...data, projectId: id }).then(() => {
+        postData({ ...data, projectId }).then(() => {
             setSubmitting(false)
             handlePopover(false)
         })
