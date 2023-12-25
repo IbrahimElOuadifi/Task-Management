@@ -8,7 +8,7 @@ import { updateTaskDescription } from 'api/task'
 
 interface DetailsSectionProps {
     task: ITask | null,
-    onSave: (description: string) => void,
+    onSave?: (description: string) => void,
 }
 
 const DetailsSection:FC<DetailsSectionProps> = ({ task, onSave }) => {
