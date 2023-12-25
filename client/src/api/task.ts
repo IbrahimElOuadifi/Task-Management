@@ -17,12 +17,12 @@ import {
 } from '@interfaces/Task'
 
 interface getTaskParams extends getTaskOptions {
-    token: string
+    accessToken: string
 }
 
-export const getTask = ({ id, token }: getTaskParams) => new Promise(async (resolve, reject) => {
+export const getTask = ({ id, accessToken }: getTaskParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get(`/tasks/${id}`, {}, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.get(`/tasks/${id}`, {}, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -31,12 +31,12 @@ export const getTask = ({ id, token }: getTaskParams) => new Promise(async (reso
 })
 
 interface getTasksParams extends getTasksOptions {
-    token: string
+    accessToken: string
 }
 
-export const getTasks = ({ listId, token }: getTasksParams) => new Promise(async (resolve, reject) => {
+export const getTasks = ({ listId, accessToken }: getTasksParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get('/tasks', { listId }, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.get('/tasks', { listId }, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -45,12 +45,12 @@ export const getTasks = ({ listId, token }: getTasksParams) => new Promise(async
 })
 
 interface createTaskParams extends createTaskOptions {
-    token: string
+    accessToken: string
 }
 
-export const createTask = ({ token, ...data }: createTaskParams) => new Promise(async (resolve, reject) => {
+export const createTask = ({ accessToken, ...data }: createTaskParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.post('/tasks', data, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.post('/tasks', data, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -59,12 +59,12 @@ export const createTask = ({ token, ...data }: createTaskParams) => new Promise(
 })
 
 interface updateManyTasksParams extends updateManyTasksOptions {
-    token: string
+    accessToken: string
 }
 
-export const updateManyTasks = ({ token, ...data }: updateManyTasksParams) => new Promise(async (resolve, reject) => {
+export const updateManyTasks = ({ accessToken, ...data }: updateManyTasksParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.put('/tasks', data, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.put('/tasks', data, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -73,12 +73,12 @@ export const updateManyTasks = ({ token, ...data }: updateManyTasksParams) => ne
 })
 
 interface deleteTaskParams extends deleteTaskOptions {
-    token: string
+    accessToken: string
 }
 
-export const deleteTask = ({ id, token }: deleteTaskParams) => new Promise(async (resolve, reject) => {
+export const deleteTask = ({ id, accessToken }: deleteTaskParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.del(`/tasks/${id}`, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.del(`/tasks/${id}`, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -87,12 +87,12 @@ export const deleteTask = ({ id, token }: deleteTaskParams) => new Promise(async
 })
 
 interface moveTaskParams extends moveTaskOptions {
-    token: string
+    accessToken: string
 }
 
-export const moveTask = ({ id, token, ...data }: moveTaskParams) => new Promise(async (resolve, reject) => {
+export const moveTask = ({ id, accessToken, ...data }: moveTaskParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.put(`/tasks/${id}/move`, data, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.put(`/tasks/${id}/move`, data, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -101,12 +101,12 @@ export const moveTask = ({ id, token, ...data }: moveTaskParams) => new Promise(
 })
 
 interface copyTaskParams extends copyTaskOptions {
-    token: string
+    accessToken: string
 }
 
-export const copyTask = ({ id, token, ...data }: copyTaskParams) => new Promise(async (resolve, reject) => {
+export const copyTask = ({ id, accessToken, ...data }: copyTaskParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.put(`/tasks/${id}/copy`, data, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.put(`/tasks/${id}/copy`, data, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -115,12 +115,12 @@ export const copyTask = ({ id, token, ...data }: copyTaskParams) => new Promise(
 })
 
 interface updateTaskTextParams extends updateTaskTextOptions {
-    token: string
+    accessToken: string
 }
 
-export const updateTaskText = ({ id, token, ...data }: updateTaskTextParams) => new Promise(async (resolve, reject) => {
+export const updateTaskText = ({ id, accessToken, ...data }: updateTaskTextParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.put(`/tasks/${id}/text`, data, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.put(`/tasks/${id}/text`, data, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -129,12 +129,12 @@ export const updateTaskText = ({ id, token, ...data }: updateTaskTextParams) => 
 })
 
 interface updateTaskDescriptionParams extends updateTaskDescriptionOptions {
-    token: string
+    accessToken: string
 }
 
-export const updateTaskDescription = ({ id, token, ...data }: updateTaskDescriptionParams) => new Promise(async (resolve, reject) => {
+export const updateTaskDescription = ({ id, accessToken, ...data }: updateTaskDescriptionParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.put(`/tasks/${id}/description`, data, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.put(`/tasks/${id}/description`, data, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -143,12 +143,12 @@ export const updateTaskDescription = ({ id, token, ...data }: updateTaskDescript
 })
 
 interface updateTaskDueDateParams extends updateTaskDueDateOptions {
-    token: string
+    accessToken: string
 }
 
-export const updateTaskDueDate = ({ id, token, ...data }: updateTaskDueDateParams) => new Promise(async (resolve, reject) => {
+export const updateTaskDueDate = ({ id, accessToken, ...data }: updateTaskDueDateParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.put(`/tasks/${id}/dueDate`, data, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.put(`/tasks/${id}/dueDate`, data, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -157,13 +157,13 @@ export const updateTaskDueDate = ({ id, token, ...data }: updateTaskDueDateParam
 })
 
 interface getTaskMembersParams extends getTaskMembersOptions {
-    token: string
+    accessToken: string
 }
 
-export const getTaskMembers = ({ id, token }: getTaskMembersParams) => new Promise(async (resolve, reject) => {
+export const getTaskMembers = ({ id, accessToken }: getTaskMembersParams) => new Promise(async (resolve, reject) => {
     try {
         if(!id) return resolve({ data: [] })
-        const resp = await base.get(`/tasks/${id}/members`, {}, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.get(`/tasks/${id}/members`, {}, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -172,12 +172,12 @@ export const getTaskMembers = ({ id, token }: getTaskMembersParams) => new Promi
 })
 
 interface updateTaskMemberParams extends updateTaskMemberOptions {
-    token: string
+    accessToken: string
 }
 
-export const updateTaskMember = ({ id, token, ...data }: updateTaskMemberParams) => new Promise(async (resolve, reject) => {
+export const updateTaskMember = ({ id, accessToken, ...data }: updateTaskMemberParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.put(`/tasks/${id}/members`, data, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.put(`/tasks/${id}/members`, data, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -186,13 +186,13 @@ export const updateTaskMember = ({ id, token, ...data }: updateTaskMemberParams)
 })
 
 interface getTaskLabelsParams extends getTaskLabelsOptions {
-    token: string
+    accessToken: string
 }
 
-export const getTaskLabels = ({ id, token }: getTaskLabelsParams) => new Promise(async (resolve, reject) => {
+export const getTaskLabels = ({ id, accessToken }: getTaskLabelsParams) => new Promise(async (resolve, reject) => {
     try {
         if(!id) return resolve({ data: [] })
-        const resp = await base.get(`/tasks/${id}/labels`, {}, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.get(`/tasks/${id}/labels`, {}, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -201,12 +201,12 @@ export const getTaskLabels = ({ id, token }: getTaskLabelsParams) => new Promise
 })
 
 interface updateTaskLabelParams extends updateTaskLabelOptions {
-    token: string
+    accessToken: string
 }
 
-export const updateTaskLabel = ({ id, token, ...data }: updateTaskLabelParams) => new Promise(async (resolve, reject) => {
+export const updateTaskLabel = ({ id, accessToken, ...data }: updateTaskLabelParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.put(`/tasks/${id}/labels`, data, { headers: { Authorization: `Bearer ${token}` }  })
+        const resp = await base.put(`/tasks/${id}/labels`, data, { headers: { Authorization: `Bearer ${accessToken}` }  })
         return resolve(resp)
     } catch (error) {
         console.error(error)

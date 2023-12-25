@@ -39,10 +39,10 @@ const useFetchData = <T>(
 
     const fetchData = async () => {
         try {
-            const token = localStorage.getItem('accessToken')
+            const accessToken = localStorage.getItem('accessToken')
             setLoading(true)
             setError(null)
-            const response: AxiosResponse = await request({ id, page, limit, ...parseJSON(query as string), token })
+            const response: AxiosResponse = await request({ id, page, limit, ...parseJSON(query as string), accessToken })
             if(Array.isArray(response.data)) {
                 setData(response.data)
             } else if (response.data && !isNaN(response.data.count)) {

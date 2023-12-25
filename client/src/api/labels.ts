@@ -2,12 +2,12 @@ import base from './base'
 import { getLabelsOptions, createLabelOptions } from '@interfaces/Label'
 
 interface getLabelsParams extends getLabelsOptions {
-    token: string
+    accessToken: string
 }
 
-export const getLabels = ({ token, ...data }: getLabelsParams) => new Promise(async (resolve, reject) => {
+export const getLabels = ({ accessToken, ...data }: getLabelsParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get('/labels', data, { headers: { Authorization: `Bearer ${token}` } })
+        const resp = await base.get('/labels', data, { headers: { Authorization: `Bearer ${accessToken}` } })
         resolve(resp)
     } catch (error) {
         reject(error)
@@ -15,12 +15,12 @@ export const getLabels = ({ token, ...data }: getLabelsParams) => new Promise(as
 })
 
 interface createLabelParams extends createLabelOptions {
-    token: string
+    accessToken: string
 }
 
-export const createLabel = ({ token, ...data }: createLabelParams) => new Promise(async (resolve, reject) => {
+export const createLabel = ({ accessToken, ...data }: createLabelParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.post('/labels', data, { headers: { Authorization: `Bearer ${token}` } })
+        const resp = await base.post('/labels', data, { headers: { Authorization: `Bearer ${accessToken}` } })
         resolve(resp)
     } catch (error) {
         reject(error)

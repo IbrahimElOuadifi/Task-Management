@@ -2,12 +2,13 @@ import base from 'api/base'
 import { getMembersOptions } from '@interfaces/User'
 
 interface getMembersParams extends getMembersOptions {
-    token: string
+    accessToken: string
 }
 
-export const getMembers = ({ token, ...data }: getMembersParams) => new Promise(async (resolve, reject) => {
+export const getMembers = ({ accessToken, ...data }: getMembersParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get('/members', data, { headers: { Authorization: `Bearer ${token}` } })
+        console.log(data)
+        const resp = await base.get('/members', data, { headers: { Authorization: `Bearer ${accessToken}` } })
         resolve(resp)
     } catch (error) {
         console.error(error)

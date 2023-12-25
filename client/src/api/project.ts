@@ -2,20 +2,20 @@ import base from './base'
 import { getProjectsOptions, getProjectOptions, createProjectOptions } from '@interfaces/Project'
 
 export interface getProjectsParams extends getProjectsOptions {
-    token: string;
+    accessToken: string;
 }
 
 export interface getProjectParams extends getProjectOptions {
-    token: string;
+    accessToken: string;
 }
 
 export interface createProjectParams extends createProjectOptions {
-    token: string;
+    accessToken: string;
 }
 
-export const getProject = ({ id: projectId, token }: getProjectParams) => new Promise(async (resolve, reject) => {
+export const getProject = ({ id: projectId, accessToken }: getProjectParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get(`/projects/${projectId}`, {}, { headers: { Authorization: `Bearer ${token}` } })
+        const resp = await base.get(`/projects/${projectId}`, {}, { headers: { Authorization: `Bearer ${accessToken}` } })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -23,9 +23,9 @@ export const getProject = ({ id: projectId, token }: getProjectParams) => new Pr
     }
 })
 
-export const getProjects = ({ token }: getProjectsParams) => new Promise(async (resolve, reject) => {
+export const getProjects = ({ accessToken }: getProjectsParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get('/projects', {}, { headers: { Authorization: `Bearer ${token}` } })
+        const resp = await base.get('/projects', {}, { headers: { Authorization: `Bearer ${accessToken}` } })
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -33,9 +33,9 @@ export const getProjects = ({ token }: getProjectsParams) => new Promise(async (
     }
 })
 
-export const createProject = ({ token, ...data }: createProjectParams) => new Promise(async (resolve, reject) => {
+export const createProject = ({ accessToken, ...data }: createProjectParams) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.post('/projects', data, { headers: { Authorization: `Bearer ${token}` } })
+        const resp = await base.post('/projects', data, { headers: { Authorization: `Bearer ${accessToken}` } })
         return resolve(resp)
     } catch (error) {
         console.error(error)
