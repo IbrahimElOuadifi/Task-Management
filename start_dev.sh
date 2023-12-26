@@ -1,25 +1,14 @@
 #!/bin/bash
 
-# Navigate to the server directory and run 'npm run watch'
-echo "Starting 'npm run watch' on the server..."
+# Start the server
 cd server
-yarn watch &
+npm run watch & # Assuming this is a background process that compiles your code
+npm run dev &
 
-# Wait for 'npm run watch' to set up
-# You might need to adjust the sleep duration based on how long 'npm run watch' takes to start
-echo "Waiting for 'npm run watch' to initialize..."
-sleep 5
-
-# In the background, start 'npm run dev' on the server
-echo "Starting 'npm run dev' on the server..."
-yarn dev &
-
-# Navigate to the client directory and run 'npm run dev'
-echo "Starting 'npm run dev' on the client..."
+# Start the client
 cd ../client
-yarn dev &
+npm run dev &
 
-# Wait for both 'npm run dev' processes to start
 wait
 
-echo "Client and Server are both running in development mode."
+echo "Client and server started"
