@@ -7,12 +7,20 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependency directories
 node_modules
 dist
 dist-ssr
 *.local
+
+# Yarn lock file
+yarn.lock
+
+# NPM lock file
 package-lock.json
 
+
+# dotenv environment variables
 .env
 .env.local
 .env.development.local
