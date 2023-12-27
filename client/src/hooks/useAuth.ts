@@ -77,9 +77,8 @@ const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
         try {
             setError(null)
             dispatch(setCredentials({ user: null, accessToken: null, loading: true }))
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await checkSession({ accessToken }) as AxiosResponse<{ user: User }>
-            dispatch(setCredentials({  user: response.data.user, accessToken, loading: false }))
+            const response = await checkSession() as AxiosResponse<{ user: User }>
+            dispatch(setCredentials({  user: response.data.user, accessToken: response.config.headers.Authorization?.toString().split(' ')[1], loading: false }))
         } catch (error: any) {
             if(error.status === 401) {
                 handleTokenRefresh()

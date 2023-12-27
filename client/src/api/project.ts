@@ -1,21 +1,10 @@
 import base from './base'
 import { getProjectsOptions, getProjectOptions, createProjectOptions } from '@interfaces/Project'
 
-export interface getProjectsParams extends getProjectsOptions {
-    accessToken: string;
-}
 
-export interface getProjectParams extends getProjectOptions {
-    accessToken: string;
-}
-
-export interface createProjectParams extends createProjectOptions {
-    accessToken: string;
-}
-
-export const getProject = ({ id: projectId, accessToken }: getProjectParams) => new Promise(async (resolve, reject) => {
+export const getProject = ({ id: projectId }: getProjectOptions) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get(`/projects/${projectId}`, {}, { headers: { Authorization: `Bearer ${accessToken}` } })
+        const resp = await base.get(`/projects/${projectId}`)
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -23,9 +12,9 @@ export const getProject = ({ id: projectId, accessToken }: getProjectParams) => 
     }
 })
 
-export const getProjects = ({ accessToken }: getProjectsParams) => new Promise(async (resolve, reject) => {
+export const getProjects = ({}: getProjectsOptions) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get('/projects', {}, { headers: { Authorization: `Bearer ${accessToken}` } })
+        const resp = await base.get('/projects')
         return resolve(resp)
     } catch (error) {
         console.error(error)
@@ -33,9 +22,9 @@ export const getProjects = ({ accessToken }: getProjectsParams) => new Promise(a
     }
 })
 
-export const createProject = ({ accessToken, ...data }: createProjectParams) => new Promise(async (resolve, reject) => {
+export const createProject = (data: createProjectOptions) => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.post('/projects', data, { headers: { Authorization: `Bearer ${accessToken}` } })
+        const resp = await base.post('/projects', data)
         return resolve(resp)
     } catch (error) {
         console.error(error)

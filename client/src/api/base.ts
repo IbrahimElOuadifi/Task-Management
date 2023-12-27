@@ -7,6 +7,14 @@ const base = axios.create({
     } 
 })
 
+base.interceptors.request.use((config) => {
+    const accessToken = localStorage.getItem('accessToken')
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`
+    }
+    return config
+})
+
 const get = (path: string, params?: any, config?: AxiosRequestConfig) => new Promise<AxiosResponse>(async (resolve, reject) => {
     try {
         const resp = await base.get(path, { params, ...config })
@@ -50,6 +58,5 @@ const del = (path: string, config?: AxiosRequestConfig) => new Promise<AxiosResp
         reject(respError)
     }
 })
-
 
 export default { get, post, put, del }

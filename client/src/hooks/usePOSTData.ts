@@ -22,10 +22,9 @@ const usePOSTData = <T>(
 
     const postData = async (data: T) => {
         try {
-            const accessToken = localStorage.getItem('accessToken')
             setLoading(true)
             setError(null)
-            const response: AxiosResponse = await request({ ...data, accessToken })
+            const response: AxiosResponse = await request(data)
             setData(Array.isArray(response.data) ? response.data : [response.data])
             if(onSuccess) onSuccess(response)
         } catch (error: any) {

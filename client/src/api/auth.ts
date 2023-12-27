@@ -1,5 +1,5 @@
 import base from './base'
-import { UserLogin, UserRegister, Session, refreshProps, logoutProps } from '@interfaces/User'
+import { UserLogin, UserRegister, refreshProps, logoutProps } from '@interfaces/User'
 
 export const login = (data: UserLogin) => new Promise(async (resolve, reject) => {
     try {
@@ -31,9 +31,9 @@ export const refreshSession = ({ refreshToken }: refreshProps) => new Promise(as
     }
 })
 
-export const checkSession = ({ accessToken }: Session) => new Promise(async (resolve, reject) => {
+export const checkSession = () => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get('/auth/session', {}, { headers: { Authorization: `Bearer ${accessToken || ''}` } })
+        const resp = await base.get('/auth/session')
         return resolve(resp)
     } catch (error) {
         console.error(error)
