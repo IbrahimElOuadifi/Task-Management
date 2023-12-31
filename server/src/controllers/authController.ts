@@ -30,7 +30,8 @@ export const register = async (req: Request, res: Response) => {
         })
         await session.save()
         const accessToken = jwt.sign({ id: resp._id }, JWT_SECRET_KEY, { expiresIn: ACCESS_TOKEN_EXPIRATION })
-        res.status(201).json({ accessToken, refreshToken, user: {...resp.toJSON(), password: undefined } })
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000, sameSite: 'strict' })
+        res.status(201).json({ accessToken, user: {...resp.toJSON(), password: undefined } })
     } catch (error: any) {
         console.log(error)
         res.status(400).json({ message: error.message })
@@ -51,7 +52,8 @@ export const login = async (req: Request, res: Response) => {
         })
         await session.save()
         const accessToken = jwt.sign({ id: user._id }, JWT_SECRET_KEY, { expiresIn: ACCESS_TOKEN_EXPIRATION })
-        res.status(200).json({ accessToken, refreshToken, user: {...user.toJSON(), password: undefined } })
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000, sameSite: 'strict' })
+        res.status(200).json({ accessToken, user: {...user.toJSON(), password: undefined } })
     } catch (error: any) {
         console.log(error)
         res.status(400).json({ message: error.message })
@@ -60,7 +62,8 @@ export const login = async (req: Request, res: Response) => {
 
 export const refresh = async (req: Request, res: Response) => {
     try {
-        const { refreshToken } = req.body
+        const { refreshToken } = req.cookies
+        if(!refreshToken) return res.status(401).json({ message: 'No refresh token' })
         const decoded: any = jwt.verify(refreshToken, JWT_SECRET_KEY)
         const user = await User.findById(decoded.id, { password: 0 })
         if (!user) {
@@ -90,7 +93,8 @@ export const session = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
     try {
-        const { refreshToken } = req.body
+        const { refreshToken } = req.cookies
+        res.clearCookie('refreshToken')
         const decoded: any = jwt.verify(refreshToken, JWT_SECRET_KEY)
         const session = await Session.findOneAndDelete({ token: refreshToken, userId: decoded.id })
         if (!session) {

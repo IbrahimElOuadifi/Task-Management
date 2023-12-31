@@ -1,25 +1,22 @@
 import { FC } from "react"
 import { Link, NavLink, useLocation } from "react-router-dom"
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar"
 import { Button } from "@components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@components/ui/dropdown-menu"
 import { MdClose, MdPerson, MdSecurity, MdSettings } from 'react-icons/md'
-import { logout } from "@store-actions/authSlice"
 import { AuthSession } from "@interfaces/User"
 import userPic from '@assets/svg/user.svg'
 
-const NavBar: FC = () => {
+interface Props {
+    handleLogout: () => void
+}
 
-    const dispatch = useDispatch()
+const NavBar: FC<Props> = ({ handleLogout }) => {
+
     const { pathname } = useLocation()
 
     const { user } = useSelector((state:  { auth: AuthSession }) => state.auth)
-
-    const handleLogout = () => {
-        localStorage.removeItem('token')
-        dispatch(logout())
-    }
 
     return (
         <div className="flex flex-row justify-between items-center px-8 h-16 drop-shadow-sm">

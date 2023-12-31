@@ -9,17 +9,14 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const handleTokenRefresh = async () => {
-  const refreshToken = localStorage.getItem('refreshToken')
-  if(refreshToken) {
-    try {
-      const { data: { accessToken, user } } = await refreshSession({ refreshToken }) as AxiosResponse<{ user: User, accessToken: string }>
-      localStorage.setItem('accessToken', accessToken)
-      return { accessToken, user }
-    } catch (error: any) {
-      throw new Error(error.message)
+  try {
+    const { data: { accessToken, user } } = await refreshSession() as AxiosResponse<{ user: User, accessToken: string }>
+    localStorage.setItem('accessToken', accessToken)
+    return { accessToken, user }
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('accessToken')
     }
-  } else {
-    localStorage.removeItem('accessToken')
-    throw new Error('no refresh token')
+    throw new Error(error.message)
   }
 }

@@ -61,12 +61,9 @@ const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
 
     const logoutHandler = async () => {
         try {
-            const refreshToken = localStorage.getItem('refreshToken')
-            if (refreshToken)
-                await logoutUser({ refreshToken })
             localStorage.removeItem('accessToken')
-            localStorage.removeItem('refreshToken')
             dispatch(logout())
+            await logoutUser()
         } catch (error) {
             console.log(error)
         } 

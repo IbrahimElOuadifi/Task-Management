@@ -1,10 +1,15 @@
 import { FC, ReactNode } from 'react'
 import NavBar from '@components/navbar'
 
-const HomeLayout: FC<{ children: ReactNode }> = ({ children }) => {
+interface Props {
+    children: ReactNode,
+    handleLogout: () => void
+}
+
+const HomeLayout: FC<Props> = ({ children, handleLogout }) => {
     return (
         <div className="flex flex-col h-screen">
-            <NavBar />
+            <NavBar handleLogout={handleLogout} />
             <div className="flex flex-col flex-1 overflow-y-auto">
                 <div className="h-full">
                     {children}

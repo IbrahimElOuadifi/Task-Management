@@ -3,8 +3,9 @@ import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 const base = axios.create({ 
     baseURL: import.meta.env.VITE_API_URL,
     headers: { 
-        "Content-Type": "application/json",
-    } 
+        "Content-Type": "application/json"
+    },
+    // withCredentials: true
 })
 
 base.interceptors.request.use((config) => {

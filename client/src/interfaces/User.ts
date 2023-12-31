@@ -28,7 +28,7 @@ export interface Session {
 }
 
 export interface refreshProps {
-    refreshToken: string
+    // refreshToken: string
 }
 
 export interface logoutProps {

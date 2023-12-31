@@ -37,9 +37,7 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
 }
 
 export const validateRefresh = async (req: Request, res: Response, next: NextFunction) => {
-    const schema = yup.object().shape({
-        refreshToken: yup.string().required(),
-    })
+    const schema = yup.object().shape({})
     try {
         await schema.validate(req.body)
         next()
@@ -50,11 +48,10 @@ export const validateRefresh = async (req: Request, res: Response, next: NextFun
 }
 
 export const validateLogout = async (req: Request, res: Response, next: NextFunction) => {
-    const schema = yup.object().shape({
-        refreshToken: yup.string().required(),
-    })
+    const schema = yup.object().shape({})
     try {
         await schema.validate(req.body)
+        console.log('logout')
         next()
     } catch (error: any) {
         console.log(error)

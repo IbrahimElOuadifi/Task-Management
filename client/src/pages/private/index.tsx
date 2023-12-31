@@ -14,7 +14,7 @@ import { ILabel } from '@interfaces/Label'
 
 const Private: FC = () => {
 
-  const { user, loading } = useAuth()
+  const { user, loading, logout } = useAuth()
   const dispatch = useDispatch()
 
   const { postData: loadMembers } = usePOSTData(getMembers, ({ data }: { data: IMember[] }) => dispatch(setMembers(data)))
@@ -35,7 +35,7 @@ const Private: FC = () => {
   )
 
   return (
-    <MainLayout>
+    <MainLayout handleLogout={logout}>
       <Outlet />
     </MainLayout>
   )
