@@ -3,11 +3,6 @@ import yup from 'yup'
 import { RequestWithUser } from '../middlewares/auth.js'
 import { Project } from '../models/index.js'
 
-const createProjectSchema = yup.object().shape({
-    name: yup.string().required(),
-    description: yup.string(),
-})
-
 export const getProjects = async (req: RequestWithUser, res: Response) => {
     try {
         const projects = await Project.find({ ownerId: req.user?._id })
@@ -28,13 +23,11 @@ export const getProject = async (req: RequestWithUser, res: Response) => {
 
 export const createProject = async (req: RequestWithUser, res: Response) => {
     try {
-        const { name, description } = await createProjectSchema.validate(req.body)
-        const user = req.user?._id
-        if (!user) throw new Error('User not found')
+        const { name, description } = req.body
         const project = new Project({
             name,
             description,
-            ownerId: user._id,
+            ownerId: req.user!._id,
         })
         await project.save()
         res.status(201).json(project)

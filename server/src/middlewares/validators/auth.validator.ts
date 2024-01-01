@@ -35,26 +35,3 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
         res.status(400).json({ message: error.message })
     }
 }
-
-export const validateRefresh = async (req: Request, res: Response, next: NextFunction) => {
-    const schema = yup.object().shape({})
-    try {
-        await schema.validate(req.body)
-        next()
-    } catch (error: any) {
-        console.log(error)
-        res.status(400).json({ message: error.message })
-    }
-}
-
-export const validateLogout = async (req: Request, res: Response, next: NextFunction) => {
-    const schema = yup.object().shape({})
-    try {
-        await schema.validate(req.body)
-        console.log('logout')
-        next()
-    } catch (error: any) {
-        console.log(error)
-        res.status(400).json({ message: error.message })
-    }
-}

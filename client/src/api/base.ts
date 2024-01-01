@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
+import { checkTokenIsExpired } from '@utils'
 
 const base = axios.create({ 
     baseURL: import.meta.env.VITE_API_URL,
@@ -8,12 +9,30 @@ const base = axios.create({
     // withCredentials: true
 })
 
-base.interceptors.request.use((config) => {
-    const accessToken = localStorage.getItem('accessToken')
-    if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`
+/**
+ * Adds an authorization header with the access token
+ * to requests if one exists in local storage.
+ */
+base.interceptors.request.use(async (config) => {
+  try {
+    let accessToken = localStorage.getItem("accessToken");
+    if (checkTokenIsExpired(accessToken)) {
+      accessToken = (await axios.post(`${import.meta.env.VITE_API_URL}/auth/refresh`, {}, { withCredentials: true })).data.accessToken as string;
+      localStorage.setItem("accessToken", accessToken);
+    //   console.log("accessToken refreshed");
     }
-    return config
+
+    config.headers.Authorization = `Bearer ${accessToken}`;
+
+    return config;
+  } catch (error) {
+    return config;
+  }
+});
+
+base.interceptors.response.use((response) => {
+    console.log(response.data)
+    return response;
 })
 
 const get = (path: string, params?: any, config?: AxiosRequestConfig) => new Promise<AxiosResponse>(async (resolve, reject) => {

@@ -77,7 +77,7 @@ const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
             const response = await checkSession() as AxiosResponse<{ user: User }>
             dispatch(setCredentials({  user: response.data.user, accessToken: response.config.headers.Authorization?.toString().split(' ')[1], loading: false }))
         } catch (error: any) {
-            if(error.status === 401) {
+            if(error.status === 401 && false) {
                 handleTokenRefresh()
                     .then(({ accessToken, user }) => {
                         dispatch(setCredentials({  user, accessToken, loading: false }))

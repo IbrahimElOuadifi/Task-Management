@@ -20,3 +20,11 @@ export const handleTokenRefresh = async () => {
     throw new Error(error.message)
   }
 }
+
+export const checkTokenIsExpired = (token: string | null) => {
+  if (!token) return true;
+  const payload = token.split(".")[1];
+  const decoded = JSON.parse(atob(payload));
+  const now = Math.floor(Date.now() / 1000);
+  return decoded.exp < now || Date.now() - decoded.iat < 2000;
+};

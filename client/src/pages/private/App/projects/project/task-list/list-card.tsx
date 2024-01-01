@@ -49,7 +49,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId, onSuccessful }) => {
     const { data, refetch } = useFetchData<ITask>(getTasks, { query: JSON.stringify({ listId: list._id }) })
     const { postData: postCreateTasks } = usePOSTData<createTaskOptions>(createTask, refetch, refetch)
     const { postData: postUpdateTasks } = usePOSTData<updateManyTasksOptions>(updateManyTasks, refetch, refetch)
-    const { postData: postUpdateListTitle } = usePOSTData<updateListTitleOptions>(updateListTitle, onSuccessful, onSuccessful) 
+    const { postData: postUpdateListTitle } = usePOSTData<updateListTitleOptions>(updateListTitle, onSuccessful, onSuccessful)
     
     const onSubmit = (data: createTaskOptions) => {
         setSubmitting(true)
@@ -93,7 +93,8 @@ const ListCard: FC<ListCardProps> = ({ list, projectId, onSuccessful }) => {
     }, [list])
 
     useEffect(() => {
-       postUpdateListTitle({ title, id: list._id })
+        if(title)
+            postUpdateListTitle({ title, id: list._id })
     }, [title])
     
     useOutsideAlerter(cardRef, handleCancel)

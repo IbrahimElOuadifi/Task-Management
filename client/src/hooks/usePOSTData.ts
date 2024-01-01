@@ -28,7 +28,7 @@ const usePOSTData = <T>(
             setData(Array.isArray(response.data) ? response.data : [response.data])
             if(onSuccess) onSuccess(response)
         } catch (error: any) {
-            if(error.status === 401) {
+            if(error.status === 401 && false) {
                 handleTokenRefresh()
                     .then(({ user, accessToken }) => {
                         dispatch(setCredentials({ user, accessToken, loading: false }))

@@ -53,7 +53,7 @@ const useFetchData = <T>(
             // setData(Array.isArray(response.data) ? response.data : [response.data])
             if (callback && response) callback(response)
         } catch (error: any) {
-            if(error.status === 401) {
+            if(error.status === 401 && false) {
                 handleTokenRefresh()
                     .then(({ accessToken, user }) => {
                         dispatch(setCredentials({ user, accessToken, loading: false }))

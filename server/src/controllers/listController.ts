@@ -1,13 +1,6 @@
 import { Response } from 'express'
-import yup from 'yup'
 import { RequestWithUser } from '../middlewares/auth.js'
 import { List, IList, Project } from '../models/index.js'
-
-const createListSchema = yup.object().shape({
-    title: yup.string().required(),
-    description: yup.string(),
-    projectId: yup.string().required(),
-})
 
 export const getLists = async (req: RequestWithUser, res: Response) => {
     try {
@@ -32,10 +25,9 @@ export const getList = async (req: RequestWithUser, res: Response) => {
 
 export const createList = async (req: RequestWithUser, res: Response) => {
     try {
-        const { title, description, projectId } = await createListSchema.validate(req.body)
-        const user = req.user?._id
-        if (!user) throw new Error('User not found')
-        const ProjectIsExist = await Project.findOne({ _id: projectId, ownerId: user })
+        const { title, description, projectId } = req.body
+
+        const ProjectIsExist = await Project.findOne({ _id: projectId, ownerId: req.user?._id })
         if (!ProjectIsExist) throw new Error('Project not found')
         const index = await List.countDocuments({ projectId })
         const list = new List({
@@ -43,7 +35,7 @@ export const createList = async (req: RequestWithUser, res: Response) => {
             description,
             index,
             projectId,
-            createdBy: user._id,
+            createdBy: req.user!._id
         })
         await list.save()
         res.status(201).json(list)
@@ -55,11 +47,9 @@ export const createList = async (req: RequestWithUser, res: Response) => {
 export const updateManyLists = async (req: RequestWithUser, res: Response) => {
     try {
         const { lists, projectId } = req.body
-        const user = req.user?._id
-        if (!user) throw new Error('User not found')
         const updatedLists = await Promise.all(lists.map(async (list: IList, index: number) => {
             const { _id } = list
-            const updatedList = await List.findOneAndUpdate({ _id, createdBy: user }, { index, project: projectId }, { new: true })
+            const updatedList = await List.findOneAndUpdate({ _id, createdBy: req.user!.id }, { index, project: projectId }, { new: true })
             return updatedList
         }))
         res.json(updatedLists)

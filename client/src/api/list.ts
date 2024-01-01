@@ -3,6 +3,7 @@ import { getListOptions, getListsOptions, createListOptions, updateManyListsOpti
 
 export const getList = ({ id }: getListOptions) => new Promise(async (resolve, reject) => {
     try {
+        if (!id) return reject('No list id provided')
         const resp = await base.get(`/lists/${id}`)
         return resolve(resp)
     } catch (error) {

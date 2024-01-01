@@ -3,18 +3,11 @@ import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, D
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { Label } from '@components/ui/label'
-import { Select, SelectContent, SelectItem, SelectValue, SelectTrigger } from '@components/ui/select'
 import { Separator } from '@components/ui/separator'
 import { Controller, useForm } from 'react-hook-form'
 // import {  usePOSTData } from 'hooks/index'
 import {  } from 'api/auth'
 import { User } from '@interfaces/User'
-
-const roles = [
-    { value: 'admin', label: 'Admin' },
-    { value: 'user', label: 'User' },
-    { value: 'guest', label: 'Guest' },
-]
 
 interface Props {
     user: User | undefined
@@ -29,7 +22,6 @@ const EditDialog: FC<Props> = ({ user }) => {
             firstName: '',
             lastName: '',
             username: '',
-            role: undefined,
         }
     })
     
@@ -51,7 +43,6 @@ const EditDialog: FC<Props> = ({ user }) => {
             setValue('firstName', user.firstName)
             setValue('lastName', user.lastName)
             setValue('username', user.username)
-            setValue('role', user.role)
         }
     }, [user])
     
@@ -99,35 +90,11 @@ const EditDialog: FC<Props> = ({ user }) => {
                             rules={{ required: true }} />
                     </div>
                     <div className='col-span-12'>
-                        <Label htmlFor='role'>Role</Label>
-                        <Controller
-                            name='role'
-                            control={control}
-                            render={({ field: { onChange, ref, ...field }, fieldState: { error } }) => (
-                                <Select {...field} onValueChange={onChange}>
-                                    {/* @ts-ignore */}
-                                    <SelectTrigger id='role' error={Boolean(error)} ref={ref}>
-                                        <SelectValue placeholder='Select Role'>{roles.find(r => r.value === field.value)?.label || 'invalid'}</SelectValue>
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {
-                                            roles.map((role) => (
-                                                <SelectItem key={role.value} value={role.value}>
-                                                    {role.label}
-                                                </SelectItem>
-                                            ))
-                                        }
-                                    </SelectContent>
-                                </Select>
-                            )}
-                            rules={{ required: true }} />
-                    </div>
-                    <div className='col-span-12'>
                         <Label htmlFor='confirm-password'>Confirm Your Password</Label>
                         <Controller
                             name='password'
                             control={control}
-                            render={({ field, fieldState: { error } }) => <Input id='confirm-password' {...field} error={Boolean(error)} type='password' />}
+                            render={({ field, fieldState: { error } }) => <Input id='confirm-password' {...field} error={Boolean(error)} type='password' autoComplete='password' />}
                             rules={{ required: true }} />
                     </div>
                     <div className='col-span-12 py-2 flex justify-end items-center'>

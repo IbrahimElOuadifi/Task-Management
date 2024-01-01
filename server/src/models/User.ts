@@ -28,16 +28,22 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        enum: ['admin', 'user', 'guest'],
+        default: 'user',
+    },
+    sessions: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Session',
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now()
     },
     updatedAt: Date,
-    role: {
-        type: String,
-        enum: ['admin', 'user', 'guest'],
-        default: 'user',
-    }
 })
 
 export default model<IUser>('User', userSchema)
