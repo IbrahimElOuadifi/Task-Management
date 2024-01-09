@@ -12,7 +12,8 @@ export default async (req: RequestWithUser, res: Response, next: NextFunction) =
         if (!token) return res.status(401).json({ message: 'Unauthorized' })
         const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY || 'secret')
         console.log(decoded)
-        const user = await User.findById(decoded.id, { password: 0 })
+        const user = await User.findById(decoded.id)
+        // const user = await User.findById(decoded.id, { password: 0 })
         if (!user) return res.status(401).json({ message: 'Unauthorized' })
         req.user = user
         next()

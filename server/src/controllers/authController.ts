@@ -63,15 +63,15 @@ export const login = async (req: Request, res: Response) => {
 export const refresh = async (req: Request, res: Response) => {
     try {
         const { refreshToken } = req.cookies
-        if(!refreshToken) return res.status(401).json({ message: 'No refresh token' })
+        if(!refreshToken) return res.status(400).json({ message: 'No refresh token' })
         const decoded: any = jwt.verify(refreshToken, JWT_SECRET_KEY)
         const user = await User.findById(decoded.id, { password: 0 })
         if (!user) {
-            return res.status(401).json({ message: 'Invalid refresh token' })
+            return res.status(400).json({ message: 'Invalid refresh token' })
         }
         const session = await Session.findOne({ token: refreshToken, userId: user._id  })
         if (!session) {
-            return res.status(401).json({ message: 'Invalid refresh token' })
+            return res.status(400).json({ message: 'Invalid refresh token' })
         }
         const accessToken = jwt.sign({ id: user._id }, JWT_SECRET_KEY, { expiresIn: ACCESS_TOKEN_EXPIRATION })
         res.status(200).json({ accessToken, user })
@@ -81,10 +81,9 @@ export const refresh = async (req: Request, res: Response) => {
     }
 }
 
-export const session = async (req: Request, res: Response) => {
+export const session = async (req: RequestWithUser, res: Response) => {
     try {
-        const user = (req as RequestWithUser).user
-        res.status(200).json({ user })
+        res.status(200).json({ user: {...req.user!.toJSON(), password: undefined } })
     } catch (error: any) {
         console.log(error)
         res.status(400).json({ message: error.message })
@@ -101,6 +100,22 @@ export const logout = async (req: Request, res: Response) => {
             return res.status(401).json({ message: 'Invalid refresh token' })
         }
         res.status(200).json({ message: 'Logout successful' })
+    } catch (error: any) {
+        console.log(error)
+        res.status(400).json({ message: error.message })
+    }
+}
+
+export const updatePassword = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { oldPassword, newPassword, confirmPassword } = req.body
+        const isMatch = await bcrypt.compare(oldPassword, req.user!.password!)
+        if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' })
+        if (newPassword!== confirmPassword) return res.status(400).json({ message: 'Passwords must match' })
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(newPassword, salt)
+        await User.findByIdAndUpdate(req.user!._id, { password: hashedPassword })
+        res.status(200).json({ message: 'Password updated' })
     } catch (error: any) {
         console.log(error)
         res.status(400).json({ message: error.message })
