@@ -1,5 +1,5 @@
-import { useState, FC, useEffect } from 'react'
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader } from '@components/ui/dialog'
+import { FC, useEffect } from 'react'
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader } from '@components/ui/dialog'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { Label } from '@components/ui/label'
@@ -10,99 +10,69 @@ import {  } from 'api/auth'
 import { User } from '@interfaces/User'
 
 interface Props {
+    isOpen: boolean
     user: User | undefined
+    onOpenChange: (open: boolean) => void
 }
 
-const EditDialog: FC<Props> = ({ user }) => {
+interface IForm {
+    confirmPassword: string
+}
 
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+const EditDialog: FC<Props> = ({ isOpen, user, onOpenChange }) => {
     
-    const { handleSubmit, control, setValue, reset } = useForm<User>({
+    const { handleSubmit, control, reset } = useForm<IForm>({
         defaultValues: {
-            firstName: '',
-            lastName: '',
-            username: '',
+            confirmPassword: ''
         }
     })
     
-    const onSubmit = (data: User) => {
-        console.log(data)
+    const onSubmit = (data: IForm) => {
+        console.log(data, user)
+        onOpenChange(false)
     }
     
     const onError = (error: any) => {
         console.log(error)
     }
 
-    const onOpenChange = (open: boolean) => {
-        setIsOpen(open)
-    }
-
     useEffect(() => {
         reset()
-        if (user && user._id) {
-            setValue('firstName', user.firstName)
-            setValue('lastName', user.lastName)
-            setValue('username', user.username)
-        }
-    }, [user])
+    }, [isOpen])
     
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>
+            {/* <DialogTrigger asChild>
                 <Button type='button' variant='default'>
                     Edit Profile
                 </Button>
-            </DialogTrigger>
+            </DialogTrigger> */}
             <DialogContent className='w-11/12 max-w-2xl'>
                 <DialogHeader>
                     <DialogTitle>
-                        Edit Profile
+                        Confirm Password
                     </DialogTitle>
                     <DialogDescription className='text-sm'>
-                        Edit your profile information.
+                        Please enter your password to confirm your changes.
                     </DialogDescription>
                 </DialogHeader>
                 {/* divider */}
                 <Separator />
                 <form className='container grid grid-cols-12 gap-4' onSubmit={handleSubmit(onSubmit, onError)}>
                     <div className='col-span-12'>
-                        <Label htmlFor='firstName'>First Name</Label>
-                        <Controller
-                            name='firstName'
-                            control={control}
-                            render={({ field, fieldState: { error } }) => <Input id='firstName' {...field} error={Boolean(error)} />}
-                            rules={{ required: true }} />
-                    </div>
-                    <div className='col-span-12'>
-                        <Label htmlFor='lastName'>Last Name</Label>
-                        <Controller
-                            name='lastName'
-                            control={control}
-                            render={({ field, fieldState: { error } }) => <Input id='lastName' {...field} error={Boolean(error)} />}
-                            rules={{ required: true }} />
-                    </div>
-                    <div className='col-span-12'>
-                        <Label htmlFor='username'>Username</Label>
-                        <Controller
-                            name='username'
-                            control={control}
-                            render={({ field, fieldState: { error } }) => <Input id='username' {...field} error={Boolean(error)} />}
-                            rules={{ required: true }} />
-                    </div>
-                    <div className='col-span-12'>
                         <Label htmlFor='confirm-password'>Confirm Your Password</Label>
                         <Controller
-                            name='password'
+                            name='confirmPassword'
                             control={control}
                             render={({ field, fieldState: { error } }) => <Input id='confirm-password' {...field} error={Boolean(error)} type='password' autoComplete='password' />}
                             rules={{ required: true }} />
                     </div>
                     <div className='col-span-12 py-2 flex justify-end items-center'>
-                        <Button type='button' variant='outline' className='mr-2' onClick={() => onOpenChange?.(false)}>
+                        <Button type='button' variant='outline' className='mr-2' onClick={() => onOpenChange(false)}>
                             Cancel
                         </Button>
                         <Button type='submit' variant='default'>
-                            Update Profile
+                            Confirm
                         </Button>
                     </div>
                 </form>

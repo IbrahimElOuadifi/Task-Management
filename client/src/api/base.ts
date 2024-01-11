@@ -29,10 +29,6 @@ base.interceptors.request.use(async (config) => {
   }
 });
 
-base.interceptors.response.use((response) => {
-    return response;
-})
-
 /*
 base.interceptors.response.use(undefined, async (error) => {
     let retry = false;
