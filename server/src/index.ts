@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import express, { Request, Response } from 'express'
+import expressForm from 'express-form-data'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { config } from 'dotenv'
@@ -15,11 +16,14 @@ const port = process.env.PORT || 3000
 const corsOptions = {
   origin: 'http://localhost:5173', // or your client-side application's origin
   credentials: true, // to allow credentials
-};
+}
 
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
+app.use(expressForm.parse())
+
+app.use("/uploads", express.static("uploads"))
 
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/projects', projectRouter)

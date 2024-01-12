@@ -32,7 +32,7 @@ const Profile: FC = () => {
         setValue('avatar', user.avatar)
     }
 
-    const { data: [data] } = useFetchData<{ user: User } | undefined>(checkSession, {});
+    const { data: [data], refetch } = useFetchData<{ user: User } | undefined>(checkSession, {});
 
     const [isEdit, setIsEdit] = useState<boolean>(false)
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -54,11 +54,11 @@ const Profile: FC = () => {
 
     const renderAvatar = (file: File | string | undefined) => {
         if (typeof file ==='string')
-            return <AvatarImage src={file} alt='avatar' />
+            return <AvatarImage src={`${import.meta.env.VITE_SERVER_URL}${file}`} alt='avatar' />
         else if (file instanceof File)
             return <AvatarImage src={URL.createObjectURL(file)} alt='avatar' />
         else
-            return null
+            return <></>
     }
 
     return (
@@ -78,7 +78,15 @@ const Profile: FC = () => {
                 ) : (
                     <Button type="button" className="my-4" variant="default" onClick={() => setIsEdit(true)}>Edit Profile</Button>
                 )}
-                <EditDialog isOpen={isOpen} onOpenChange={(open: boolean) => setIsOpen(open)} user={getValues()} />
+                <EditDialog
+                    isOpen={isOpen}
+                    onOpenChange={(open: boolean) => setIsOpen(open)}
+                    user={getValues()}
+                    onSuccess={() => {
+                        refetch()
+                        setIsEdit(false)
+                        setIsOpen(false)
+                    }} />
             </div>
             <Separator className="my-4" />
             <form className='container max-w-4xl grid grid-cols-12 gap-4' onSubmit={handleSubmit(onSubmit, onError)}>

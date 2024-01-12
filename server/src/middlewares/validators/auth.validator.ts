@@ -35,12 +35,11 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
     }
 }
 
-export const validateUpdate = async (req: Request, res: Response, next: NextFunction) => {
+export const validateUpdatePassword = async (req: Request, res: Response, next: NextFunction) => {
     const schema = yup.object().shape({
-        firstName: yup.string().optional(),
-        lastName: yup.string().optional(),
-        username: yup.string().optional().min(3).max(8),
-        confirmPassword: yup.string().optional(),
+        oldPassword: yup.string().required(),
+        newPassword: yup.string().required().min(6).max(256),
+        confirmPassword: yup.string().required().oneOf([yup.ref("newPassword")], "Passwords must match"),
     })
     try {
         await schema.validate(req.body)
@@ -51,11 +50,13 @@ export const validateUpdate = async (req: Request, res: Response, next: NextFunc
     }
 }
 
-export const validateUpdatePassword = async (req: Request, res: Response, next: NextFunction) => {
+export const validateUpdateProfile = async (req: Request, res: Response, next: NextFunction) => {
     const schema = yup.object().shape({
-        oldPassword: yup.string().required(),
-        newPassword: yup.string().required().min(6).max(256),
-        confirmPassword: yup.string().required().oneOf([yup.ref("newPassword")], "Passwords must match"),
+        firstName: yup.string().optional(),
+        lastName: yup.string().optional(),
+        username: yup.string().optional().min(3).max(8),
+        email: yup.string().email().optional(),
+        confirmPassword: yup.string().required(),
     })
     try {
         await schema.validate(req.body)

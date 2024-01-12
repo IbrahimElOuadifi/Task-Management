@@ -5,21 +5,24 @@ import { Input } from '@components/ui/input'
 import { Label } from '@components/ui/label'
 import { Separator } from '@components/ui/separator'
 import { Controller, useForm } from 'react-hook-form'
-// import {  usePOSTData } from 'hooks/index'
-import {  } from 'api/auth'
+import {  usePOSTData } from 'hooks/index'
+import { updateProfile } from 'api/auth'
 import { User } from '@interfaces/User'
 
 interface Props {
     isOpen: boolean
     user: User | undefined
-    onOpenChange: (open: boolean) => void
+    onOpenChange: (open: boolean) => void,
+    onSuccess: () => void
 }
 
 interface IForm {
     confirmPassword: string
 }
 
-const EditDialog: FC<Props> = ({ isOpen, user, onOpenChange }) => {
+const EditDialog: FC<Props> = ({ isOpen, user, onOpenChange, onSuccess }) => {
+
+    const { postData } = usePOSTData<User>(updateProfile, onSuccess, console.error)
     
     const { handleSubmit, control, reset } = useForm<IForm>({
         defaultValues: {
@@ -28,7 +31,7 @@ const EditDialog: FC<Props> = ({ isOpen, user, onOpenChange }) => {
     })
     
     const onSubmit = (data: IForm) => {
-        console.log(data, user)
+        if(user) postData({...user, ...data})
         onOpenChange(false)
     }
     

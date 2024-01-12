@@ -121,3 +121,18 @@ export const updatePassword = async (req: RequestWithUser, res: Response) => {
         res.status(400).json({ message: error.message })
     }
 }
+
+export const updateProfile = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { firstName, lastName, username, avatar, email } = req.body
+        if (username && username.trim()!== req.user!.username) {
+            const user = await User.findOne({ username: { $regex: username.trim(), $options: 'i' } })
+            if (user) return res.status(400).json({ message: 'User already exists' })
+        }
+        await User.findByIdAndUpdate(req.user!._id, { firstName, lastName, username: username.trim(), avatar, email })
+        res.status(200).json({ message: 'Profile updated' })
+    } catch (error: any) {
+        console.log(error)
+        res.status(400).json({ message: error.message })
+    }
+}

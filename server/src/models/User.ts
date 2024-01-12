@@ -4,8 +4,10 @@ export interface IUser extends Document {
     firstName: string;
     lastName: string;
     username: string;
+    email: string;
     password: string;
     role: [string];
+    avatar?: string;
     createdAt: Date;
     updatedAt?: Date;
 }
@@ -24,6 +26,11 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     password: {
         type: String,
         required: true,
@@ -33,12 +40,9 @@ const userSchema = new Schema({
         enum: ['admin', 'user', 'guest'],
         default: 'user',
     },
-    sessions: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Session',
-        }
-    ],
+    avatar: {
+        type: String,
+    },
     createdAt: {
         type: Date,
         default: Date.now()
