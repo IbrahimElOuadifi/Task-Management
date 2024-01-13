@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { AxiosResponse } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { logout, setCredentials } from '@store-actions/authSlice'
-import { handleTokenRefresh } from '@utils'
+import { logout } from '@store-actions/authSlice'
 import { useToast } from "@components/ui/use-toast"
 
 const usePOSTData = <T>(

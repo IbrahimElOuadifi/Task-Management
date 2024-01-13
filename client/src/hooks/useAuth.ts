@@ -5,7 +5,6 @@ import { checkSession, login, register, logoutUser } from 'api/auth'
 import { AuthSession, User, UserLogin, UserRegister } from '@interfaces/User'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, setCredentials } from '@store-actions/authSlice'
-import { handleTokenRefresh } from '@utils'
 import { useToast } from "@components/ui/use-toast"
 
 const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
