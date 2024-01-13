@@ -53,21 +53,30 @@ const useFetchData = <T>(
             // setData(Array.isArray(response.data) ? response.data : [response.data])
             if (callback && response) callback(response)
         } catch (error: any) {
-            if(error.status === 401 && false) {
-                handleTokenRefresh()
-                    .then(({ accessToken, user }) => {
-                        dispatch(setCredentials({ user, accessToken, loading: false }))
-                        fetchData()
-                    }).catch(error => {
-                        navigate('/login')
-                        setError(error)
-                        dispatch(logout())
-                        toast({
-                            description: error.message,
-                            duration: 2000,
-                            variant: 'destructive'
-                        })
-                    })
+            if(error.status === 401) {
+                // handleTokenRefresh()
+                //     .then(({ accessToken, user }) => {
+                //         dispatch(setCredentials({ user, accessToken, loading: false }))
+                //         fetchData()
+                //     }).catch(error => {
+                //         navigate('/login')
+                //         setError(error)
+                //         dispatch(logout())
+                //         toast({
+                //             description: error.message,
+                //             duration: 2000,
+                //             variant: 'destructive'
+                //         })
+                //     })
+
+                navigate('/login')
+                setError(error)
+                dispatch(logout())
+                toast({
+                    description: error.message,
+                    duration: 2000,
+                    variant: 'destructive'
+                })
             } else {
                 setError(error)
             }

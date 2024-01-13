@@ -78,22 +78,23 @@ const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
             dispatch(setCredentials({  user: response.data.user, accessToken: response.config.headers.Authorization?.toString().split(' ')[1], loading: false }))
         } catch (error: any) {
             if(error.status === 401) {
-                handleTokenRefresh()
-                    .then(({ accessToken, user }) => {
-                        dispatch(setCredentials({  user, accessToken, loading: false }))
-                        if(page !== 'private') navigate('/')
-                    }).catch(error => {
-                        setError(error)
-                        dispatch(setCredentials({ user: null, accessToken: null, loading: false }))
-                        if(page === 'private') {
-                            toast({
-                                description: error.message,
-                                duration: 2000,
-                                variant: 'destructive'
-                            })
-                            navigate('/login')
-                        }
-                    })
+                // handleTokenRefresh()
+                //     .then(({ accessToken, user }) => {
+                //         dispatch(setCredentials({  user, accessToken, loading: false }))
+                //         if(page !== 'private') navigate('/')
+                //     }).catch(error => {
+                //         setError(error)
+                //         dispatch(setCredentials({ user: null, accessToken: null, loading: false }))
+                //         if(page === 'private') {
+                //             toast({
+                //                 description: error.message,
+                //                 duration: 2000,
+                //                 variant: 'destructive'
+                //             })
+                //             navigate('/login')
+                //         }
+                //     })
+                navigate('/login')
             } else {
                 setError(error)
             }

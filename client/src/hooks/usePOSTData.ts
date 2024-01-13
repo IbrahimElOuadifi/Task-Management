@@ -28,21 +28,30 @@ const usePOSTData = <T>(
             setData(Array.isArray(response.data) ? response.data : [response.data])
             if(onSuccess) onSuccess(response)
         } catch (error: any) {
-            if(error.status === 401 && false) {
-                handleTokenRefresh()
-                    .then(({ user, accessToken }) => {
-                        dispatch(setCredentials({ user, accessToken, loading: false }))
-                        postData(data)
-                    }).catch(error => {
-                        navigate('/login')
-                        setError(error)
-                        dispatch(logout())
-                        toast({
-                            description: error.message,
-                            duration: 2000,
-                            variant: 'destructive'
-                        })
-                    })
+            if(error.status === 401) {
+                // handleTokenRefresh()
+                //     .then(({ user, accessToken }) => {
+                //         dispatch(setCredentials({ user, accessToken, loading: false }))
+                //         postData(data)
+                //     }).catch(error => {
+                //         navigate('/login')
+                //         setError(error)
+                //         dispatch(logout())
+                //         toast({
+                //             description: error.message,
+                //             duration: 2000,
+                //             variant: 'destructive'
+                //         })
+                //     })
+
+                navigate('/login')
+                setError(error)
+                dispatch(logout())
+                toast({
+                    description: error.message,
+                    duration: 2000,
+                    variant: 'destructive'
+                })
             } else {
                 setError(error)
                 if(onFailure) onFailure(error)
