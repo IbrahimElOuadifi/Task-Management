@@ -136,3 +136,15 @@ export const updateProfile = async (req: RequestWithUser, res: Response) => {
         res.status(400).json({ message: error.message })
     }
 }
+
+export const updateProfilePic = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { path } = req.file as Express.Multer.File
+        console.log(path)
+        await User.findByIdAndUpdate(req.user!._id, { avatar: path })
+        res.status(200).json({ message: 'Profile picture updated' })
+    } catch (error: any) {
+        console.log(error)
+        res.status(400).json({ message: error.message })
+    }
+}

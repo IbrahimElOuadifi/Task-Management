@@ -4,7 +4,8 @@ export interface User {
     lastName: string
     username: string
     email: string
-    avatar?: string | File
+    avatar?: string | null
+    // avatar?: string | File
     password?: string
     role?: 'admin' | 'user' | 'guest'
     createdAt: Date

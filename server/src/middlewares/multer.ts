@@ -5,12 +5,11 @@ const storage = multer.diskStorage({
         cb(null, './uploads/profiles')
     },
     filename: (req, file, cb) => {
-        const filename = new Date().getTime() + '-' + Math.random().toString(36).substring(2) + '.' + file.originalname.split('.').pop()
-        req.body.avatar = '/uploads/profiles/' + filename
-        
+        const filename = new Date().getTime() + '-' + Math.random().toString(36).substring(2) + '.' + file.originalname.split('.').pop()        
         let error = null
         if (!file.originalname.match(/\.(jpg|jpeg|png|gif|svg)$/))
             error = new Error('Only image files are allowed')
+            cb(error, filename)
         cb(error, filename)
     },
 })

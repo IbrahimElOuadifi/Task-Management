@@ -53,14 +53,30 @@ export const logoutUser = () => new Promise(async (resolve, reject) => {
 
 export const updateProfile = (data: User) => new Promise(async (resolve, reject) => {
     try {
-        // const formData = new FormData()
-        // formData.append('avatar', data.avatar || '')
-        // formData.append('firstName', data.firstName)
-        // formData.append('lastName', data.lastName)
-        // formData.append('email', data.email)
-        // formData.append('username', data.username)
-        // formData.append('confirmPassword', data.password || '')
-        const resp = await base.put('/auth/profile', data, { headers: { 'Content-Type':'multipart/form-data' } })
+        const resp = await base.put('/auth/profile', data)
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const updatePassword = (data: User) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.put('/auth/password', data)
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const updateProfilePicture = (data: { avatar: File }) => new Promise(async (resolve, reject) => {
+    try {
+        const formData = new FormData()
+        if(!data.avatar) return reject('No file selected')
+        formData.append('avatar', data.avatar)
+        const resp = await base.put('/auth/profile/picture', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
         return resolve(resp)
     } catch (error) {
         console.error(error)

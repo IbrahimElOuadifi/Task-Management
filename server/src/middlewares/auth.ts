@@ -28,7 +28,6 @@ export const passwordMiddleware = async (req: RequestWithUser, res: Response, ne
         const user = req.user
         if (!user) return res.status(401).json({ message: 'Unauthorized' })
         const { confirmPassword } = req.body
-        console.log(confirmPassword, req.body)
         if (!confirmPassword) return res.status(400).json({ message: 'Please enter a password' })
         const isMatch = await bcryptjs.compare(confirmPassword, user.password)
         if (!isMatch) return res.status(400).json({ message: 'Passwords do not match' })
