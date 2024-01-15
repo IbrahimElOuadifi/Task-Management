@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, useRef } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar'
 import { Separator } from '@components/ui/separator'
 import { MdPerson } from 'react-icons/md'
@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { useFetchData, usePOSTData } from 'hooks/index'
 import { checkSession, updateProfilePicture } from 'api/auth'
 import { User } from '@interfaces/User'
-import EditDialog from './edit-dialog'
+import EditDialog from './confirm-dialog'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { Label } from '@components/ui/label'
@@ -15,6 +15,8 @@ import { Controller, useForm } from 'react-hook-form'
 const Profile: FC = () => {
 
     const [avatar, setAvatar] = useState<string | null>(null)
+
+    const submitRef = useRef<HTMLButtonElement>(null)
 
     const { handleSubmit, control, setValue, getValues } = useForm<User>({
         defaultValues: {
@@ -89,9 +91,9 @@ const Profile: FC = () => {
                         <Button type='button' variant='outline' className='mr-2' onClick={() => setIsEdit(false)}>
                             Cancel
                         </Button>
-                        {/* <Button type='submit' variant='default'>
+                        <Button type='button' variant='default'>
                             Update Profile
-                        </Button> */}
+                        </Button>
                     </div>
                 ) : (
                     <Button type="button" className="my-4" variant="default" onClick={() => setIsEdit(true)}>Edit Profile</Button>
@@ -119,55 +121,55 @@ const Profile: FC = () => {
                     </Label>
                     <input className='hidden' type='file' id='avatar' onChange={handleUpdatePicture} accept='image/*' />
                 </div>
-                    <div className='col-span-12 md:col-span-6'>
-                        <Label htmlFor='firstName'>First Name</Label>
-                        <Controller
-                            name='firstName'
-                            control={control}
-                            render={({ field, fieldState: { error } }) => <Input id='firstName' {...field} error={Boolean(error)} readOnly={!isEdit} />}
-                            rules={{ required: true }} />
-                    </div>
-                    <div className='col-span-12 md:col-span-6'>
-                        <Label htmlFor='lastName'>Last Name</Label>
-                        <Controller
-                            name='lastName'
-                            control={control}
-                            render={({ field, fieldState: { error } }) => <Input id='lastName' {...field} error={Boolean(error)} readOnly={!isEdit} />}
-                            rules={{ required: true }} />
-                    </div>
-                    <div className='col-span-12'>
-                        <Label htmlFor='username'>Username</Label>
-                        <Controller
-                            name='username'
-                            control={control}
-                            render={({ field, fieldState: { error } }) => <Input id='username' {...field} error={Boolean(error)} readOnly={!isEdit} />}
-                            rules={{ required: true }} />
-                    </div>
-                    <div className='col-span-12'>
-                        <Label htmlFor='email'>Email</Label>
-                        <Controller
-                            name='email'
-                            control={control}
-                            render={({ field, fieldState: { error } }) => <Input id='email' {...field} error={Boolean(error)} type='email' autoComplete='email' readOnly={!isEdit} />}
-                            rules={{ required: true }} />
-                    </div>
-                    <div className='col-span-12'>
-                        <Label htmlFor='create-date'>Create At</Label>
-                        <Input id='create-date' type='datetime-local' value={dayjs(data?.user?.createdAt).format("YYYY-MM-DDTHH:mm")} readOnly />
-                    </div>
-                    {
-                        isEdit && (
-                            <div className='col-span-12 py-2 flex justify-end items-center'>
-                                {/* <Button type='button' variant='outline' className='mr-2' onClick={() => setIsEdit(false)}>
-                                    Cancel
-                                </Button> */}
-                                <Button type='submit' variant='default'>
-                                    Update Profile
-                                </Button>
-                            </div>
-                        )
-                    }
-                </form>
+                <div className='col-span-12 md:col-span-6'>
+                    <Label htmlFor='firstName'>First Name</Label>
+                    <Controller
+                        name='firstName'
+                        control={control}
+                        render={({ field, fieldState: { error } }) => <Input id='firstName' {...field} error={Boolean(error)} readOnly={!isEdit} />}
+                        rules={{ required: true }} />
+                </div>
+                <div className='col-span-12 md:col-span-6'>
+                    <Label htmlFor='lastName'>Last Name</Label>
+                    <Controller
+                        name='lastName'
+                        control={control}
+                        render={({ field, fieldState: { error } }) => <Input id='lastName' {...field} error={Boolean(error)} readOnly={!isEdit} />}
+                        rules={{ required: true }} />
+                </div>
+                <div className='col-span-12'>
+                    <Label htmlFor='username'>Username</Label>
+                    <Controller
+                        name='username'
+                        control={control}
+                        render={({ field, fieldState: { error } }) => <Input id='username' {...field} error={Boolean(error)} readOnly={!isEdit} />}
+                        rules={{ required: true }} />
+                </div>
+                <div className='col-span-12'>
+                    <Label htmlFor='email'>Email</Label>
+                    <Controller
+                        name='email'
+                        control={control}
+                        render={({ field, fieldState: { error } }) => <Input id='email' {...field} error={Boolean(error)} type='email' autoComplete='email' readOnly={!isEdit} />}
+                        rules={{ required: true }} />
+                </div>
+                <div className='col-span-12'>
+                    <Label htmlFor='create-date'>Create At</Label>
+                    <Input id='create-date' type='datetime-local' value={dayjs(data?.user?.createdAt).format("YYYY-MM-DDTHH:mm")} readOnly />
+                </div>
+                {
+                    isEdit && (
+                        <div className='col-span-12 py-2 flex justify-end items-center'>
+                            {/* <Button type='button' variant='outline' className='mr-2' onClick={() => setIsEdit(false)}>
+                                Cancel
+                            </Button> */}
+                            <Button ref={submitRef} type='submit' variant='default'>
+                                Update Profile
+                            </Button>
+                        </div>
+                    )
+                }
+            </form>
         </div>
     )
 }

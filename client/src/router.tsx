@@ -77,11 +77,35 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: 'security',
-                                element: <SecurityPage />
+                                element: <SecurityPage />,
+                                children: [
+                                    {
+                                        path: '',
+                                        element: <Navigate to='/account/security/password' />
+                                    },
+                                    {
+                                        path: 'password',
+                                        element: <h1>Change Password</h1>
+                                    },
+                                    {
+                                        path: 'devices',
+                                        element: <h1>Devices</h1>
+                                    }
+                                ]
                             },
                             {
                                 path: 'settings',
-                                element: <SettingsPage />
+                                element: <SettingsPage />,
+                                children: [
+                                    {
+                                        path: '',
+                                        element: <Navigate to='/account/settings/app' />
+                                    },
+                                    {
+                                        path: 'app',
+                                        element: <h1>Application Setting</h1>
+                                    }
+                                ]
                             },
                         ]
                     }

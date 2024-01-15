@@ -20,7 +20,7 @@ interface IForm {
     confirmPassword: string
 }
 
-const EditDialog: FC<Props> = ({ isOpen, user, onOpenChange, onSuccess }) => {
+const ConfirmDialog: FC<Props> = ({ isOpen, user, onOpenChange, onSuccess }) => {
 
     const { postData } = usePOSTData<User>(updateProfile, onSuccess, console.error)
     
@@ -84,4 +84,4 @@ const EditDialog: FC<Props> = ({ isOpen, user, onOpenChange, onSuccess }) => {
     )
 }
 
-export default EditDialog
+export default ConfirmDialog
