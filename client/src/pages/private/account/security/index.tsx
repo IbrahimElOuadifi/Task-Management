@@ -17,7 +17,7 @@ const Security: FC = () => {
                     <NavLink
                         to='/account/security/devices'
                         children={({ isActive }) => (
-                            <Button type="button" className="my-4 ml-2" variant={isActive ? 'default' : 'outline'}>Change Password</Button>
+                            <Button type="button" className="my-4 ml-2" variant={isActive ? 'default' : 'outline'}>Devices</Button>
                         )} />
                 </div>
             </div>

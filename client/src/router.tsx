@@ -14,7 +14,10 @@ import TaskDialog from 'pages/private/app/projects/project/task-dialog/index'
 import AccountPage from 'pages/private/account/index'
 import ProfilePage from 'pages/private/account/profile/index'
 import SecurityPage from 'pages/private/account/security'
+import SecurityDevices from 'pages/private/account/security/devices'
+import ChangePassword from 'pages/private/account/security/change-password'
 import SettingsPage from 'pages/private/account/settings'
+import ApplicationSetting from 'pages/private/account/settings/application-setting'
 
 const router = createBrowserRouter([
     {
@@ -85,11 +88,11 @@ const router = createBrowserRouter([
                                     },
                                     {
                                         path: 'password',
-                                        element: <h1>Change Password</h1>
+                                        element: <ChangePassword />
                                     },
                                     {
                                         path: 'devices',
-                                        element: <h1>Devices</h1>
+                                        element: <SecurityDevices />
                                     }
                                 ]
                             },
@@ -103,7 +106,7 @@ const router = createBrowserRouter([
                                     },
                                     {
                                         path: 'app',
-                                        element: <h1>Application Setting</h1>
+                                        element: <ApplicationSetting />
                                     }
                                 ]
                             },
