@@ -7,12 +7,13 @@ export const validateRegister = async (req: Request, res: Response, next: NextFu
         firstName: yup.string().required(),
         lastName: yup.string().required(),
         username: yup.string().required().min(3).max(8),
+        email: yup.string().required().email(),
         password: yup.string().required().min(6).max(256),
         confirmPassword: yup.string().required(),
     })
     try {
-        const { firstName, lastName, username, password, confirmPassword } = req.body
-        await schema.validate({ firstName, lastName, username, password, confirmPassword })
+        const { firstName, lastName, username, email, password, confirmPassword } = req.body
+        await schema.validate({ firstName, lastName, username, email, password, confirmPassword })
         if (password !== confirmPassword) return res.status(400).json({ message: 'Passwords do not match' })
         next()
     } catch (error: any) {

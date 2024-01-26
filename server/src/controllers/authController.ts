@@ -11,7 +11,7 @@ const REFRESH_TOKEN_EXPIRATION = process.env.REFRESH_TOKEN_EXPIRATION || '7d'
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { firstName, lastName, username, password } = req.body
+        const { firstName, lastName, username, email, password } = req.body
         const user = await User.findOne({ username: { $regex: username.trim(), $options: 'i' } })
         if (user) return res.status(400).json({ message: 'User already exists' })
         const salt = await bcrypt.genSalt(10)
@@ -20,6 +20,7 @@ export const register = async (req: Request, res: Response) => {
             firstName,
             lastName,
             username: username.trim(),
+            email: email.trim(),
             password: hashedPassword,
         })
         const resp = await newUser.save()

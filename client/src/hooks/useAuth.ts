@@ -93,7 +93,14 @@ const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
                 //             navigate('/login')
                 //         }
                 //     })
-                navigate('/login')
+                if(page === 'private') {
+                    toast({
+                        description: error.message,
+                        duration: 2000,
+                        variant: 'destructive'
+                    })
+                    navigate('/login')
+                }
             } else {
                 setError(error)
             }

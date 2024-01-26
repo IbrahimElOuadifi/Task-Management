@@ -18,6 +18,7 @@ const Register: FC = () => {
             firstName: '',
             lastName: '',
             username: '',
+            email: '',
             password: '',
             confirmPassword: '',
         },
@@ -85,6 +86,21 @@ const Register: FC = () => {
                              }}
                             render={({ field }) => <Input className='mb-4' error={Boolean(errors.username)} {...field} placeholder='Username' autoComplete='username' />}
                         />
+                        <Controller
+                            name="email"
+                            control={control}
+                            defaultValue=""
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: 'Email is required'
+                                },
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: 'Invalid email address'
+                                },
+                            }}
+                            render={({ field }) => <Input className='mb-4' error={Boolean(errors.email)} {...field} placeholder='Email' autoComplete='email' />} />
                         <Controller
                             name="password"
                             control={control}
