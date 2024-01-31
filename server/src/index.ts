@@ -14,7 +14,7 @@ const db_url = process.env.DB_URL || 'mongodb://localhost:27017'
 const port = process.env.PORT || 3000
 
 const corsOptions = {
-  origin: 'http://localhost:5173', // or your client-side application's origin
+  origin: 'http://localhost:4173', // or your client-side application's origin
   credentials: true, // to allow credentials
 }
 

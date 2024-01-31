@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  database:
+    image: mongo
+    container_name: mongo
+    # ports:
+      # - 27017:27017
+    restart: always
+    # volumes:
+    #   -./data/db:/data/db
+    #   -./data/configdb:/data/configdb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+  server:
+    build: server
+    container_name: server
+    ports:
+      - 3000:3000
+    restart: always
+    # volumes:
+    #   - ./server:/server
+    environment:
+      - DB_URL=mongodb://root:secret@database:27017
+      - PORT=3000
+      - JWT_SECRET_KEY=secret
+      - REFRESH_TOKEN_EXPIRATION=7d
+      - ACCESS_TOKEN_EXPIRATION=1h
+    depends_on:
+      - database
+  client:
+    build: client
+    container_name: client
+    ports:
+      - 4173:4173
+    restart: always
+    environment:
+      - VITE_API_URL=http://server:3000/api/v1

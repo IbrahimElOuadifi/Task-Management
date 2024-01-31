@@ -62,7 +62,7 @@ const Register: FC = () => {
                                         value: true,
                                         message: 'Last name is required'
                                     }
-                                 }}
+                                }}
                                 render={({ field }) => <Input error={Boolean(errors.lastName)} {...field} placeholder='Last Name' />}
                             />
                         </div>

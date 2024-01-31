@@ -5,6 +5,8 @@ import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { Label } from '@components/ui/label'
 import { Controller, useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
+import { AuthSession } from '@interfaces/User'
 
 interface IForm {
     oldPassword: string
@@ -13,6 +15,8 @@ interface IForm {
 }
 
 const ChangePassword: FC = () => {
+
+    const { user } = useSelector((state: { auth: AuthSession }) => state.auth)
 
     const submitRef = useRef<HTMLButtonElement>(null)
 
@@ -24,11 +28,10 @@ const ChangePassword: FC = () => {
         }
     })
 
-    const { postData } = usePOSTData(updatePassword, console.log, console.log)
+    const { postData } = usePOSTData(updatePassword, reset, console.log)
 
     const onSubmit = (fields: IForm) => {
-        console.log(fields)
-        postData(fields).then(() => reset())
+        postData(fields)
     }
     
     const onError = (error: any) => {
@@ -37,7 +40,10 @@ const ChangePassword: FC = () => {
 
     return (
         <div>
-            <form className='container max-w-4xl grid grid-cols-12 gap-4' onSubmit={handleSubmit(onSubmit, onError)}>
+            <form className='container grid max-w-4xl grid-cols-12 gap-4' onSubmit={handleSubmit(onSubmit, onError)}>
+                <div className='hidden col-span-12'>
+                    <Input type='text' autoComplete='username' value={user?.username || ''} disabled />
+                </div>
                 <div className='col-span-12'>
                     <Label htmlFor='old-password'>Old Password</Label>
                     <Controller
@@ -69,7 +75,7 @@ const ChangePassword: FC = () => {
                     autoComplete="email username"
                     readOnly
                     style={{ display: 'none' }} />
-                <div className='col-span-12 py-2 flex justify-end items-center'>
+                <div className='flex items-center justify-end col-span-12 py-2'>
                     <Button ref={submitRef} type='submit' variant='default'>
                         Update Password
                     </Button>
