@@ -2,8 +2,8 @@ import { FC, Fragment } from "react"
 import { Button } from "@components/ui/button"
 import { Separator } from "@components/ui/separator"
 import { MdClose } from "react-icons/md"
-import { useFetchData } from "hooks/index"
-import { getSessions } from "api/auth"
+import { useFetchData, usePOSTData } from "hooks/index"
+import { getSessions,deleteSession } from "api/auth"
 import { IMember } from "@interfaces/User"
 import dayjs from "dayjs"
 
@@ -11,12 +11,15 @@ interface Isession {
     _id: string
     user: IMember
     token: string
-    createAt: Date
+    createAt: Date,
+    current: boolean
 }
 
 const SecurityDevices: FC = () => {
 
-    const { data, loading, error, refetch } = useFetchData<Isession>(getSessions, {});
+    const { data, loading, error, refetch } = useFetchData<Isession>(getSessions, {})
+
+    const { postData } = usePOSTData<string>(deleteSession, refetch)
     
     return (
         <div>
@@ -29,10 +32,10 @@ const SecurityDevices: FC = () => {
                     {data && data.length > 0 && data.map((session) => (
                         <Fragment key={session._id}>
                             <div className='flex items-center justify-between col-span-12' >
-                                <p className='text-lg'>{session.user.username}</p>
+                                <p className='text-lg'>{session.user.username} {session.current ? '(current)' : ''}</p>
                                 <p className="text-lg">{dayjs(session.createAt).format('DD/MM/YYYY HH:mm:ss')}</p>
-                                <Button type='button' variant='link' size='icon' className='ml-4' onClick={refetch}>
-                                    <MdClose size={18} />
+                                <Button type='button' variant='link' size='icon' className='ml-4' onClick={postData.bind(null, session._id)}>
+                                    <MdClose className='text-red-600' size={18} />
                                 </Button>
                             </div>
                             <Separator className='my-4' />

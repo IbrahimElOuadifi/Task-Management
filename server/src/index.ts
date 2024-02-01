@@ -12,7 +12,7 @@ const app = express()
 const db_url = process.env.DB_URL || 'mongodb://localhost:27017'
 const port = process.env.PORT || 3000
 const dev_mode = process.env.NODE_ENV !== 'production'
-const origin = dev_mode ? 'http://localhost:5173' : 'http://localhost:4173'
+const origin = `http://localhost:${dev_mode ? '5173' : '5173'}`
 
 const corsOptions = {
   origin, // or your client-side application's origin

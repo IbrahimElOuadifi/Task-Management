@@ -86,7 +86,17 @@ export const updateProfilePicture = (data: { avatar: File }) => new Promise(asyn
 
 export const getSessions = () => new Promise(async (resolve, reject) => {
     try {
-        const resp = await base.get('/auth/sessions')
+        const resp = await base.get('/auth/sessions', {}, { withCredentials: true })
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})
+
+export const deleteSession = (id: string) => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.del(`/auth/sessions/${id}`, { withCredentials: true })
         return resolve(resp)
     } catch (error) {
         console.error(error)

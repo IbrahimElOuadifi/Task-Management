@@ -94,16 +94,14 @@ export const session = async (req: RequestWithUser, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
     try {
         const { refreshToken } = req.cookies
-        res.clearCookie('refreshToken')
         const decoded: any = jwt.verify(refreshToken, JWT_SECRET_KEY)
-        const session = await Session.findOneAndDelete({ token: refreshToken, userId: decoded.id })
-        if (!session) {
-            return res.status(401).json({ message: 'Invalid refresh token' })
-        }
+        await Session.findOneAndDelete({ token: refreshToken, userId: decoded.id })
+        res.clearCookie('refreshToken')
         res.status(200).json({ message: 'Logout successful' })
     } catch (error: any) {
         console.log(error)
         res.status(400).json({ message: error.message })
+    } finally {
     }
 }
 
@@ -152,8 +150,25 @@ export const updateProfilePic = async (req: RequestWithUser, res: Response) => {
 
 export const getSessions = async (req: RequestWithUser, res: Response) => {
     try {
+        const { refreshToken } = req.cookies
         const sessions = await Session.find({ user: req.user!._id }).populate({ path: 'user', select: '-password' })
-        res.status(200).json(sessions)
+        res.status(200).json(sessions.map(s => ({...s.toJSON(), current: s.token === refreshToken })))
+    } catch (error: any) {
+        console.log(error)
+        res.status(400).json({ message: error.message })
+    }
+}
+
+export const deleteSession = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { id } = req.params
+        const { refreshToken } = req.cookies
+        const userId = req.user!._id
+        const session = await Session.findOne({ _id: id, user: userId })
+        if (!session) return res.status(403).json({ message: 'Invalid session' })
+        else if(session.token === refreshToken) return res.status(400).json({ message: 'Cannot delete current session' })
+        await session.deleteOne()
+        res.status(200).json({ message: 'Session deleted' })
     } catch (error: any) {
         console.log(error)
         res.status(400).json({ message: error.message })

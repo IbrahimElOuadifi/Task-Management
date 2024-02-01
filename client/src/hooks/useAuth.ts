@@ -60,12 +60,13 @@ const useAuth = (page: 'login' | 'register' | 'private' = 'private') => {
 
     const logoutHandler = async () => {
         try {
-            localStorage.removeItem('accessToken')
-            dispatch(logout())
             await logoutUser()
         } catch (error) {
             console.log(error)
-        } 
+        } finally {
+            localStorage.removeItem('accessToken')
+            dispatch(logout())
+        }
     }
 
 

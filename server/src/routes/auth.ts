@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { register, login, session, refresh, logout, updateProfile, updatePassword, updateProfilePic, getSessions } from '../controllers/authController.js'
+import { register, login, session, refresh, logout, updateProfile, updatePassword, updateProfilePic, getSessions, deleteSession } from '../controllers/authController.js'
 import authMiddleware, { passwordMiddleware } from '../middlewares/auth.js'
 import multerMiddleware from '../middlewares/multer.js'
 import { validateLogin, validateRegister, validateUpdateProfile } from '../middlewares/validators/auth.validator.js'
@@ -15,5 +15,6 @@ router.put('/password', authMiddleware, updatePassword)
 router.put('/profile', authMiddleware, validateUpdateProfile, passwordMiddleware, updateProfile)
 router.put('/profile/picture', authMiddleware, multerMiddleware.single('avatar'), updateProfilePic)
 router.get('/sessions', authMiddleware, getSessions)
+router.delete('/sessions/:id', authMiddleware, deleteSession)
 
 export default router
