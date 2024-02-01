@@ -1,8 +1,10 @@
 const SecurityDevices = () => {
     return (
         <div>
-            <h1>Security Devices</h1>
-        </div>
+            <div className='container grid max-w-4xl grid-cols-12 gap-4'>
+
+            </div>
+        </div>   
     )
 }
 

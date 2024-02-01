@@ -11,6 +11,7 @@ import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 import { Label } from '@components/ui/label'
 import { Controller, useForm } from 'react-hook-form'
+import { MdClose, MdEdit } from 'react-icons/md'
 
 const Profile: FC = () => {
 
@@ -86,18 +87,9 @@ const Profile: FC = () => {
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">Profile</h1>
                 {/* {!isEdit && <Button type="button" className="my-4" variant="default" onClick={() => setIsEdit(true)}>Edit Profile</Button>} */}
-                {isEdit ? (
-                    <div className='col-span-12 my-4 flex justify-end items-center'>
-                        <Button type='button' variant='outline' className='mr-2' onClick={() => setIsEdit(false)}>
-                            Cancel
-                        </Button>
-                        <Button type='button' variant='default'>
-                            Update Profile
-                        </Button>
-                    </div>
-                ) : (
-                    <Button type="button" className="my-4" variant="default" onClick={() => setIsEdit(true)}>Edit Profile</Button>
-                )}
+                    <Button type="button" className="my-4" variant="ghost" size="icon" onClick={() => setIsEdit(prev =>!prev)}>
+                        {isEdit ? <MdClose size={24} /> : <MdEdit size={24} />}
+                    </Button>
                 <EditDialog
                     isOpen={isOpen}
                     onOpenChange={(open: boolean) => setIsOpen(open)}
@@ -109,11 +101,11 @@ const Profile: FC = () => {
                     }} />
             </div>
             <Separator className="my-4" />
-            <form className='container max-w-4xl grid grid-cols-12 gap-4' onSubmit={handleSubmit(onSubmit, onError)}>
-                <div className="col-span-12 flex justify-center items-center p-4">
+            <form className='container grid max-w-4xl grid-cols-12 gap-4' onSubmit={handleSubmit(onSubmit, onError)}>
+                <div className="flex items-center justify-center col-span-12 p-4">
                     <Label htmlFor='avatar'>
                         <Avatar className="w-24 h-24">
-                            <AvatarFallback className='bg-blue-300 text-xl text-white'>
+                            <AvatarFallback className='text-xl text-white bg-blue-300'>
                                 <MdPerson size={36} />
                             </AvatarFallback>
                             {renderAvatar(avatar)}
@@ -159,10 +151,10 @@ const Profile: FC = () => {
                 </div>
                 {
                     isEdit && (
-                        <div className='col-span-12 py-2 flex justify-end items-center'>
-                            {/* <Button type='button' variant='outline' className='mr-2' onClick={() => setIsEdit(false)}>
+                        <div className='flex items-center justify-end col-span-12 py-2'>
+                            <Button type='button' variant='outline' className='mr-2' onClick={() => setIsEdit(false)}>
                                 Cancel
-                            </Button> */}
+                            </Button>
                             <Button ref={submitRef} type='submit' variant='default'>
                                 Update Profile
                             </Button>
