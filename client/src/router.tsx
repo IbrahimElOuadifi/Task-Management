@@ -84,7 +84,7 @@ const router = createBrowserRouter([
                                 children: [
                                     {
                                         path: '',
-                                        element: <Navigate to='/account/security/password' />
+                                        element: <Navigate to='/account/security/devices' />
                                     },
                                     {
                                         path: 'password',

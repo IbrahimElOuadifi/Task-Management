@@ -83,3 +83,13 @@ export const updateProfilePicture = (data: { avatar: File }) => new Promise(asyn
         reject(error)
     }
 })
+
+export const getSessions = () => new Promise(async (resolve, reject) => {
+    try {
+        const resp = await base.get('/auth/sessions')
+        return resolve(resp)
+    } catch (error) {
+        console.error(error)
+        reject(error)
+    }
+})

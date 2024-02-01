@@ -1,14 +1,14 @@
 import { Schema, model, Document } from 'mongoose'
 
 export interface ISession extends Document {
-    userId: string;
+    user: string;
     token: string;
     createdAt: Date;
     updatedAt?: Date;
 }
 
 const sessionSchema = new Schema({
-    userId: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,

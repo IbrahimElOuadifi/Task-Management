@@ -26,7 +26,7 @@ export const register = async (req: Request, res: Response) => {
         const resp = await newUser.save()
         const refreshToken = jwt.sign({ id: resp._id }, JWT_SECRET_KEY, { expiresIn: REFRESH_TOKEN_EXPIRATION })
         const session = new Session({
-            userId: resp._id,
+            user: resp._id,
             token: refreshToken,
         })
         await session.save()
@@ -48,7 +48,7 @@ export const login = async (req: Request, res: Response) => {
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' })
         const refreshToken = jwt.sign({ id: user._id }, JWT_SECRET_KEY, { expiresIn: REFRESH_TOKEN_EXPIRATION })
         const session = new Session({
-            userId: user._id,
+            user: user._id,
             token: refreshToken,
         })
         await session.save()
@@ -70,7 +70,7 @@ export const refresh = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(401).json({ message: 'Invalid refresh token' })
         }
-        const session = await Session.findOne({ token: refreshToken, userId: user._id  })
+        const session = await Session.findOne({ token: refreshToken, user: user._id  })
         if (!session) {
             return res.status(401).json({ message: 'Invalid refresh token' })
         }
@@ -144,6 +144,16 @@ export const updateProfilePic = async (req: RequestWithUser, res: Response) => {
         console.log(path)
         await User.findByIdAndUpdate(req.user!._id, { avatar: path })
         res.status(200).json({ message: 'Profile picture updated' })
+    } catch (error: any) {
+        console.log(error)
+        res.status(400).json({ message: error.message })
+    }
+}
+
+export const getSessions = async (req: RequestWithUser, res: Response) => {
+    try {
+        const sessions = await Session.find({ user: req.user!._id }).populate({ path: 'user', select: '-password' })
+        res.status(200).json(sessions)
     } catch (error: any) {
         console.log(error)
         res.status(400).json({ message: error.message })
