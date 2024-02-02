@@ -28,6 +28,8 @@ export const register = async (req: Request, res: Response) => {
         const session = new Session({
             user: resp._id,
             token: refreshToken,
+            userAgent: req.headers['user-agent'],
+            ip: req.ip || req.headers['x-forwarded-for']
         })
         await session.save()
         const accessToken = jwt.sign({ id: resp._id }, JWT_SECRET_KEY, { expiresIn: ACCESS_TOKEN_EXPIRATION })
@@ -50,6 +52,8 @@ export const login = async (req: Request, res: Response) => {
         const session = new Session({
             user: user._id,
             token: refreshToken,
+            userAgent: req.headers['user-agent'],
+            ip: req.ip || req.headers['x-forwarded-for']
         })
         await session.save()
         const accessToken = jwt.sign({ id: user._id }, JWT_SECRET_KEY, { expiresIn: ACCESS_TOKEN_EXPIRATION })

@@ -75,7 +75,7 @@ const Profile: FC = () => {
 
     const renderAvatar = (file: File | string | null) => {
         if (typeof file ==='string')
-            return <AvatarImage src={`${import.meta.env.VITE_SERVER_URL}/${file}`} alt='avatar' />
+            return <AvatarImage src={`${import.meta.env.VITE_SERVER_URL || process.env.VITE_SERVER_URL}/${file}`} alt='avatar' />
         else if (file instanceof File)
             return <AvatarImage src={URL.createObjectURL(file)} alt='avatar' />
         else

@@ -10,6 +10,11 @@ RUN npm install
 # Copy the source code into the Docker image
 COPY . .
 
+# Set the environment variables
+ENV NODE_ENV production
+ENV VITE_SERVER_URL http://localhost:3000
+ENV VITE_API_URL http://localhost:3000/api/v1
+
 # Expose the port that the app will be running on
 EXPOSE 4173
 

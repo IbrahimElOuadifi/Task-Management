@@ -26,6 +26,7 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.6.0",
+    "bowser": "^2.11.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",

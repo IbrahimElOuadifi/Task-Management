@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import { checkTokenIsExpired } from '@utils'
 
 const base = axios.create({ 
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: import.meta.env.VITE_API_URL || process.env.VITE_API_URL,
     headers: { 
         "Content-Type": "application/json"
     },
@@ -17,7 +17,7 @@ base.interceptors.request.use(async (config) => {
   try {
     let accessToken = localStorage.getItem("accessToken")
     if (checkTokenIsExpired(accessToken)) {
-      accessToken = (await axios.post<{ accessToken: string }>(`${import.meta.env.VITE_API_URL}/auth/refresh`, {}, { withCredentials: true })).data.accessToken
+      accessToken = (await axios.post<{ accessToken: string }>(`${import.meta.env.VITE_API_URL || process.env.VITE_API_URL}/auth/refresh`, {}, { withCredentials: true })).data.accessToken
       localStorage.setItem("accessToken", accessToken)
     }
 
@@ -55,7 +55,7 @@ base.interceptors.response.use(undefined, async (error) => {
         config._retry = true
         if (error.response?.status === 401) {
             try {
-                const response = (await axios.post<{ accessToken: string }>(`${import.meta.env.VITE_API_URL}/auth/refresh`, {}, { withCredentials: true }))
+                const response = (await axios.post<{ accessToken: string }>(`${import.meta.env.VITE_API_URL || process.env.VITE_API_URL}/auth/refresh`, {}, { withCredentials: true }))
                 const accessToken = response.data.accessToken
                 localStorage.setItem("accessToken", accessToken)
                 config.headers.Authorization = `Bearer ${accessToken}`

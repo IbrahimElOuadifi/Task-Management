@@ -3,6 +3,8 @@ import { Schema, model, Document } from 'mongoose'
 export interface ISession extends Document {
     user: string;
     token: string;
+    ip: string;
+    userAgent: string;
     createdAt: Date;
     updatedAt?: Date;
 }
@@ -14,6 +16,14 @@ const sessionSchema = new Schema({
         required: true,
     },
     token: {
+        type: String,
+        required: true,
+    },
+    ip: {
+        type: String,
+        required: true,
+    },
+    userAgent: {
         type: String,
         required: true,
     },

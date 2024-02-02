@@ -27,6 +27,9 @@ services:
       - JWT_SECRET_KEY=secret
       - REFRESH_TOKEN_EXPIRATION=7d
       - ACCESS_TOKEN_EXPIRATION=1h
+      - NODE_ENV=production
+    volumes:
+      - ./uploads:/app/server/uploads
     depends_on:
       - database
   client:
@@ -36,4 +39,6 @@ services:
       - 4173:4173
     restart: always
     environment:
+      - VITE_SERVER_URL=http://localhost:3000
       - VITE_API_URL=http://server:3000/api/v1
+      - NODE_ENV=production

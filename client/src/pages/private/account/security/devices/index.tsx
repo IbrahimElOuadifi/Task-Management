@@ -6,20 +6,25 @@ import { useFetchData, usePOSTData } from "hooks/index"
 import { getSessions,deleteSession } from "api/auth"
 import { IMember } from "@interfaces/User"
 import dayjs from "dayjs"
+import Bowser from 'bowser'
 
 interface Isession {
     _id: string
     user: IMember
     token: string
+    ip: string
+    userAgent: string
     createAt: Date,
     current: boolean
 }
 
 const SecurityDevices: FC = () => {
-
+    
     const { data, loading, error, refetch } = useFetchData<Isession>(getSessions, {})
-
+    
     const { postData } = usePOSTData<string>(deleteSession, refetch)
+    
+    const isLocalhost = (ip: string): boolean =>  ip.includes('127.0.0.1') || ip.includes('::1')
     
     return (
         <div>
@@ -32,11 +37,18 @@ const SecurityDevices: FC = () => {
                     {data && data.length > 0 && data.map((session) => (
                         <Fragment key={session._id}>
                             <div className='flex items-center justify-between col-span-12' >
-                                <p className='text-lg'>{session.user.username} {session.current ? '(current)' : ''}</p>
+                                <p className='text-lg'>{isLocalhost(session.ip) ? 'localhost' : session.ip}</p>
+                                <p className='text-lg'>{Bowser.getParser(session.userAgent).getBrowserName()} - {Bowser.getParser(session.userAgent).getBrowserVersion()}</p>
+                                <p className='text-lg'>{Bowser.getParser(session.userAgent).getOSName()}{/* - {Bowser.getParser(session.userAgent).getOSVersion()}*/}</p>
                                 <p className="text-lg">{dayjs(session.createAt).format('DD/MM/YYYY HH:mm:ss')}</p>
-                                <Button type='button' variant='link' size='icon' className='ml-4' onClick={postData.bind(null, session._id)}>
-                                    <MdClose className='text-red-600' size={18} />
-                                </Button>
+                                {
+                                    session.current ? 
+                                    '(current)' : (
+                                        <Button type='button' variant='link' size='icon' className='ml-4' onClick={postData.bind(null, session._id)}>
+                                            <MdClose className='text-red-600' size={18} />
+                                        </Button>
+                                    )
+                                }
                             </div>
                             <Separator className='my-4' />
                         </Fragment>
