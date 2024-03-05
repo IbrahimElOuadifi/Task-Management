@@ -12,10 +12,11 @@ const app = express()
 const db_url = process.env.DB_URL || 'mongodb://localhost:27017'
 const port = process.env.PORT || 3000
 const dev_mode = process.env.NODE_ENV !== 'production'
-const origin = `http://localhost:${dev_mode ? '5173' : '4173'}`
+const origin = process.env.ALLOWED_ORIGINS?.split(',') || '*'
+// `http://localhost:${dev_mode ? '5173' : '4173'}`
 
 const corsOptions = {
-  origin, // or your client-side application's origin
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*', // or your client-side application's origin
   credentials: true, // to allow credentials
 }
 
@@ -23,6 +24,8 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 // app.use(expressForm.parse())
+
+console.log(origin)
 
 app.use("/uploads", express.static("uploads"))
 

@@ -18,6 +18,7 @@ import SecurityDevices from 'pages/private/account/security/devices'
 import ChangePassword from 'pages/private/account/security/change-password'
 import SettingsPage from 'pages/private/account/settings'
 import ApplicationSetting from 'pages/private/account/settings/application-setting'
+import LabelsSetting from 'pages/private/account/settings/labels-setting'
 
 const router = createBrowserRouter([
     {
@@ -107,6 +108,10 @@ const router = createBrowserRouter([
                                     {
                                         path: 'app',
                                         element: <ApplicationSetting />
+                                    },
+                                    {
+                                        path: 'labels',
+                                        element: <LabelsSetting />
                                     }
                                 ]
                             },

@@ -32,8 +32,8 @@ const Project: FC = () => {
 
     return (
         <div className='overflow-x-auto -mr-4 h-[calc(100%-64px)] justify-start align-top'>
-            <div className='flex flex-nowrap justify-start align-top'>
-                <ReactSortable list={lists.map((props) => ({ id: props._id, ...props }))} setList={handleUpdate} className='flex flex-nowrap justify-start align-top' animation={150} handle='.handle'>
+            <div className='flex justify-start align-top flex-nowrap'>
+                <ReactSortable list={lists.map((props) => ({ id: props._id, ...props }))} setList={handleUpdate} className='flex justify-start align-top flex-nowrap' animation={150} handle='.handle'>
                     {
                         loading && !lists.length ? <p>Loading...</p> :
                         error ? <p>{error.message}</p> :

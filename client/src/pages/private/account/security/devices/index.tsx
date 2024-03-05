@@ -37,7 +37,7 @@ const SecurityDevices: FC = () => {
                     {data && data.length > 0 && data.map((session) => (
                         <Fragment key={session._id}>
                             <div className='flex items-center justify-between col-span-12' >
-                                <p className='text-lg'>{isLocalhost(session.ip) ? 'localhost' : session.ip}</p>
+                                <p className='text-lg'>{isLocalhost(session.ip) ? 'localhost' : session.ip.replace('::ffff:', '')}</p>
                                 <p className='text-lg'>{Bowser.getParser(session.userAgent).getBrowserName()} - {Bowser.getParser(session.userAgent).getBrowserVersion()}</p>
                                 <p className='text-lg'>{Bowser.getParser(session.userAgent).getOSName()}{/* - {Bowser.getParser(session.userAgent).getOSVersion()}*/}</p>
                                 <p className="text-lg">{dayjs(session.createAt).format('DD/MM/YYYY HH:mm:ss')}</p>

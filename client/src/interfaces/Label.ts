@@ -21,6 +21,7 @@ export interface createLabelOptions {
 export interface updateLabelOptions {
     name?: string;
     color?: string;
+    _id: string;
 }
 
 export interface deleteLabelOptions {

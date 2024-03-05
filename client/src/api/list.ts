@@ -15,6 +15,7 @@ export const getList = ({ id }: getListOptions) => new Promise(async (resolve, r
 export const getLists = ({ projectId }: getListsOptions) => new Promise(async (resolve, reject) => {
     try {
         const resp = await base.get('/lists', { projectId })
+        console.log(resp.data)
         return resolve(resp)
     } catch (error) {
         console.error(error)

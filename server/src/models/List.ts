@@ -5,6 +5,7 @@ export interface IList extends Document {
     title: string;
     description: string;
     index: number;
+    tasks?: ITask[];
     projectId: string;
     createdBy: string;
     createdAt: Date;

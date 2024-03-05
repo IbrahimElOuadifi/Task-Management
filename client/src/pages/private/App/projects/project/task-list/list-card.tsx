@@ -126,7 +126,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId, onSuccessful }) => {
                     {
                         open ?
                         (
-                            <form onSubmit={handleSubmit(onSubmit, onError)} className='flex flex-col gap-4 w-full'>
+                            <form onSubmit={handleSubmit(onSubmit, onError)} className='flex flex-col w-full gap-4'>
                                 <Separator />
                                 <Controller
                                     name='text'
@@ -136,7 +136,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId, onSuccessful }) => {
                                         <Input {...field} placeholder='List title' error={Boolean(error)} />
                                     )}
                                 />
-                                <div className='flex flex-row justify-between items-center gap-1'>
+                                <div className='flex flex-row items-center justify-between gap-1'>
                                     <Button type='submit' className='flex-1' disabled={submitting}>
                                         {submitting ? 'Creating...' : 'Create Task'}
                                     </Button>
@@ -148,7 +148,7 @@ const ListCard: FC<ListCardProps> = ({ list, projectId, onSuccessful }) => {
                         )
                         : 
                         (
-                            <Button variant='outline' className='text-sm w-full' onClick={() => setOpen(true)}>Add Task</Button>
+                            <Button variant='outline' className='w-full text-sm' onClick={() => setOpen(true)}>Add Task</Button>
                         )
                     }
                 </CardFooter>

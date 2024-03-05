@@ -37,3 +37,26 @@ export const createLabel = async (req: RequestWithUser, res: Response) => {
         res.status(400).json({ message: error.message })
     }
 }
+
+export const updateLabel = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { id } = req.params
+        const { name, color } = req.body
+        const label = await Label.findByIdAndUpdate(id, { name, color }, { new: true })
+        res.status(200).json(label)
+    } catch (error: any) {
+        console.log(error)
+        res.status(400).json({ message: error.message })
+    }
+}
+
+export const deleteLabel = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { id } = req.params
+        const label = await Label.findByIdAndDelete(id)
+        res.status(200).json(label)
+    } catch (error: any) {
+        console.log(error)
+        res.status(400).json({ message: error.message })
+    }
+}
